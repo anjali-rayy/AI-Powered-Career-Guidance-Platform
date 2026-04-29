@@ -10,7 +10,7 @@ require('dotenv').config();
 
 const app = express();
 app.use(cors());
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json({ limit: '20mb' }));
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -44,6 +44,7 @@ const userSchema = new mongoose.Schema({
   interest:   { type: String, default: '' },
   skills:     { type: [String], default: [] },
   googleId:   { type: String, default: null },
+  resume:     { type: String, default: '' },
   createdAt:  { type: Date, default: Date.now }
 });
 
@@ -339,6 +340,34 @@ Rules:
     const cleaned = raw.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```\s*$/i, '').trim();
     res.json(JSON.parse(cleaned));
 
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// UPLOAD RESUME
+app.post('/api/resume/upload', authMiddleware, async (req, res) => {
+  try {
+    const { resumeBase64 } = req.body;
+    if (!resumeBase64) return res.status(400).json({ error: 'No resume data provided' });
+
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { resume: resumeBase64 },
+      { new: true }
+    );
+    res.json({ message: 'Resume uploaded successfully', user: safeUser(user) });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET RESUME
+app.get('/api/resume/me', authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user.resume) return res.status(404).json({ error: 'No resume uploaded yet' });
+    res.json({ resume: user.resume });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

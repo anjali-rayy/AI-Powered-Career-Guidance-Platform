@@ -459,3 +459,14 @@
   .sidebar { display: none; }
   .dash-main { margin-left: 0; }
 }
+
+.qa-badge {
+  margin-top: 6px;
+  font-size: 10px;
+  background: rgba(212,175,55,0.12);
+  color: #C9A227;
+  border: 1px solid rgba(212,175,55,0.2);
+  padding: 2px 8px;
+  border-radius: 4px;
+  display: inline-block;
+}

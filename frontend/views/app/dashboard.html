@@ -70,10 +70,12 @@
           Job Matches
           <span class="nav-badge">12</span>
         </a>
-        <a href="#" class="nav-item" onclick="showToast('Resume builder coming soon!')">
+        <a href="#" class="nav-item" onclick="viewResume()">
           <svg viewBox="0 0 24 24">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
             <polyline points="14 2 14 8 20 8" />
+            <line x1="16" y1="13" x2="8" y2="13" />
+            <line x1="16" y1="17" x2="8" y2="17" />
           </svg>
           My Resume
         </a>
@@ -189,7 +191,7 @@
           </div>
           <div class="welcome-actions">
             <button class="btn-outline" style="padding:9px 18px;font-size:13px"
-              onclick="showToast('Opening resume editor...')">Update Resume</button>
+              onclick="uploadResume()">Update Resume</button>
             <button class="btn-primary" style="padding:9px 20px;font-size:13px"
               onclick="showToast('Running full analysis...')">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
@@ -262,7 +264,7 @@
             <div class="qa-label">Track Skills</div>
             <div class="qa-sub">Add new skills</div>
           </button>
-          <button class="qa-btn" onclick="showToast('Resume builder coming soon...')">
+          <button class="qa-btn" onclick="window.open('https://flowcv.com','_blank')">
             <div class="qa-icon"><svg viewBox="0 0 24 24">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                 <polyline points="14 2 14 8 20 8" />
@@ -404,23 +406,7 @@
                   <div class="profile-bar-fill" id="dash-completion-bar" style="width:72%"></div>
                 </div>
               </div>
-              <div class="profile-items">
-                <div class="profile-item">
-                  <div class="pi-check done">✓</div><span class="pi-label">Basic profile added</span>
-                </div>
-                <div class="profile-item">
-                  <div class="pi-check done">✓</div><span class="pi-label">Education details filled</span>
-                </div>
-                <div class="profile-item">
-                  <div class="pi-check done">✓</div><span class="pi-label">Skills list updated</span>
-                </div>
-                <div class="profile-item">
-                  <div class="pi-check todo">○</div><span class="pi-label todo">Upload resume (PDF)</span>
-                </div>
-                <div class="profile-item">
-                  <div class="pi-check todo">○</div><span class="pi-label todo">Add work experience</span>
-                </div>
-              </div>
+              <div class="profile-items" id="dash-profile-items"></div>
             </div>
           </div>
         </div>

@@ -70,20 +70,33 @@ requireAuth().then(function() {
   (function updateCompletion() {
     const p = JSON.parse(localStorage.getItem('profileData') || '{}');
     const checks = [
-      !!(p.fname || userName),
-      !!(p.email || userEmail),
-      !!p.location,
-      !!p.eduLevel,
-      !!(p.skills && p.skills.length >= 3),
-      !!p.bio
+      { done: !!(p.fname || userName),                  label: 'Basic profile added',       doneLabel: 'Basic profile added ✓' },
+      { done: !!(p.email || userEmail),                 label: 'Email added',               doneLabel: 'Email added ✓' },
+      { done: !!p.location,                             label: 'Location added',            doneLabel: 'Location added ✓' },
+      { done: !!p.eduLevel,                             label: 'Education details filled',  doneLabel: 'Education details filled ✓' },
+      { done: !!(p.skills && p.skills.length >= 3),     label: 'Add at least 3 skills',     doneLabel: 'Skills list updated ✓' },
+      { done: !!p.bio,                                  label: 'Write a bio',               doneLabel: 'Bio written ✓' },
     ];
-    const done = checks.filter(Boolean).length;
+    const done = checks.filter(c => c.done).length;
     const pct  = Math.round((done / checks.length) * 100);
+
     const pctEl = document.getElementById('dash-completion-pct');
     const barEl = document.getElementById('dash-completion-bar');
     if (pctEl) pctEl.textContent = pct + '%';
     if (barEl) barEl.style.width = pct + '%';
+
+    const container = document.getElementById('dash-profile-items') || document.querySelector('.profile-items');
+    if (container) {
+      container.innerHTML = checks.map(c => `
+        <div class="profile-item">
+          <div class="pi-check ${c.done ? 'done' : 'todo'}">${c.done ? '✓' : '○'}</div>
+          <span class="pi-label ${c.done ? '' : 'todo'}">${c.done ? c.doneLabel : c.label}</span>
+        </div>
+      `).join('');
+    }
   })();
+
+  
 
   /* ── AVATAR DROPDOWN ── */
   function toggleAvatarMenu() {
@@ -126,3 +139,4 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2800);
 }
 window.showToast = showToast;
+

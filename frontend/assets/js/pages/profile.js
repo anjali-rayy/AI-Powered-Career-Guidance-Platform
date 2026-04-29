@@ -202,6 +202,13 @@ document.addEventListener('click', function(e) {
   if (menu && !menu.contains(e.target) && !document.getElementById('topbar-av').contains(e.target)) {
     menu.style.display = 'none';
   }
+  // Close social action rows if clicking outside
+  if (!e.target.closest('.p-social-row')) {
+    ['linkedin', 'github', 'portfolio'].forEach(n => {
+      const a = document.getElementById('actions-' + n);
+      if (a) a.style.display = 'none';
+    });
+  }
 });
 
 /* ── SIGN OUT ── */
@@ -310,7 +317,9 @@ function loadSocialLinks() {
     if (saved) {
       lbl.textContent       = saved;
       lbl.style.color       = '#4CAF70';
-      icon.textContent      = '↗';
+      icon.textContent      = '⋯';
+      icon.style.cursor     = 'pointer';
+      icon.onclick = (e) => { e.stopPropagation(); showSocialActions(name); };
       icon.style.color      = '#4CAF70';
       btn.style.borderColor = 'rgba(76,175,112,0.2)';
     } else {
@@ -318,6 +327,7 @@ function loadSocialLinks() {
       lbl.style.color       = '';
       icon.textContent      = '+';
       icon.style.color      = '';
+      icon.onclick          = null;
       btn.style.borderColor = '';
     }
   });
@@ -339,9 +349,8 @@ function handleSocialClick(name) {
   });
 
   if (saved) {
-    // Connected — toggle action row (open link + edit + disconnect)
-    const isOpen = actRow.style.display === 'flex';
-    actRow.style.display = isOpen ? 'none' : 'flex';
+    openSocialLink(name);
+    return;
   } else {
     // Not connected — show input row
     const isOpen = inputRow.style.display === 'flex';
@@ -350,9 +359,19 @@ function handleSocialClick(name) {
   }
 }
 
+function showSocialActions(name) {
+  const actRow = document.getElementById('actions-' + name);
+  const isOpen = actRow && actRow.style.display === 'flex';
+  ['linkedin', 'github', 'portfolio'].forEach(n => {
+    const a = document.getElementById('actions-' + n);
+    if (a) a.style.display = 'none';
+  });
+  if (actRow && !isOpen) actRow.style.display = 'flex';
+}
+
 function openSocialLink(name) {
   let url = getSocialVal(name);
-  if (!url) return;
+  if (!url) { window.location.href = '../auth/settings.html'; return; }
   if (!url.startsWith('http://') && !url.startsWith('https://')) url = 'https://' + url;
   window.open(url, '_blank', 'noopener,noreferrer');
 }
@@ -409,3 +428,4 @@ window.cancelSocialLink     = cancelSocialLink;
 window.openSocialLink       = openSocialLink;
 window.editSocialLink       = editSocialLink;
 window.disconnectSocialLink = disconnectSocialLink;
+window.showSocialActions = showSocialActions;

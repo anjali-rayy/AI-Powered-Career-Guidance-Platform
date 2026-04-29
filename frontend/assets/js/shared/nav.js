@@ -108,3 +108,47 @@ function signOut() {
   settingsKeys.forEach(({ k, v }) => localStorage.setItem(k, v));
   window.location.href = '../public/index.html';
 }
+
+function viewResume() {
+  const cached = localStorage.getItem('userResume');
+  if (cached) {
+    const win = window.open();
+    win.document.write('<iframe src="' + cached + '" width="100%" height="100%" style="border:none;margin:0;padding:0"></iframe>');
+    return;
+  }
+  showToast('Fetching your resume...');
+  apiFetch('/resume/me').then(function(data) {
+    localStorage.setItem('userResume', data.resume);
+    const win = window.open();
+    win.document.write('<iframe src="' + data.resume + '" width="100%" height="100%" style="border:none;margin:0;padding:0"></iframe>');
+  }).catch(function() {
+    showToast('No resume uploaded yet. Click Update Resume to upload.');
+  });
+}
+
+function uploadResume() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'application/pdf';
+  input.onchange = function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) { showToast('File too large. Max 5MB.'); return; }
+    showToast('Uploading resume...');
+    const reader = new FileReader();
+    reader.onload = function() {
+      const base64 = reader.result;
+      apiFetch('/resume/upload', {
+        method: 'POST',
+        body: JSON.stringify({ resumeBase64: base64 })
+      }).then(function() {
+        localStorage.setItem('userResume', base64);
+        showToast('Resume uploaded successfully!');
+      }).catch(function() {
+        showToast('Upload failed. Try again.');
+      });
+    };
+    reader.readAsDataURL(file);
+  };
+  input.click();
+}
