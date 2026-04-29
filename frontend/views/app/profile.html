@@ -74,7 +74,7 @@
                 Job Matches
                 <span class="nav-badge">12</span>
             </a>
-            <a href="#" class="nav-item" onclick="showToast('Resume builder coming soon!')">
+            <a href="#" class="nav-item" onclick="viewResume()">
                 <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                 My Resume
             </a>
@@ -266,7 +266,7 @@
                                   <div style="font-size:13px;color:var(--text)">LinkedIn Profile</div>
                                   <div style="font-size:11px;color:var(--subtle);margin-top:1px" id="lbl-social-linkedin">Not connected — click to add</div>
                                 </div>
-                                <span id="icon-social-linkedin" style="font-size:13px;color:var(--subtle)">+</span>
+                                <span id="icon-social-linkedin" style="font-size:16px;color:var(--subtle);letter-spacing:1px;padding:4px 8px" onclick="event.stopPropagation();showSocialActions('linkedin')">⋯</span>
                               </button>
                               <div class="p-social-action-row" id="actions-linkedin" style="display:none">
                                 <button class="p-social-action-btn open"   onclick="openSocialLink('linkedin')">↗ Open</button>
@@ -288,7 +288,7 @@
                                   <div style="font-size:13px;color:var(--text)">GitHub Profile</div>
                                   <div style="font-size:11px;color:var(--subtle);margin-top:1px" id="lbl-social-github">Not connected — click to add</div>
                                 </div>
-                                <span id="icon-social-github" style="font-size:13px;color:var(--subtle)">+</span>
+                                <span id="icon-social-github" style="font-size:16px;color:var(--subtle);letter-spacing:1px;padding:4px 8px" onclick="event.stopPropagation();showSocialActions('github')">⋯</span>
                               </button>
                               <div class="p-social-action-row" id="actions-github" style="display:none">
                                 <button class="p-social-action-btn open"   onclick="openSocialLink('github')">↗ Open</button>
@@ -310,7 +310,7 @@
                                   <div style="font-size:13px;color:var(--text)">Portfolio Website</div>
                                   <div style="font-size:11px;color:var(--subtle);margin-top:1px" id="lbl-social-portfolio">Not connected — click to add</div>
                                 </div>
-                                <span id="icon-social-portfolio" style="font-size:13px;color:var(--subtle)">+</span>
+                                <span id="icon-social-portfolio" style="font-size:16px;color:var(--subtle);letter-spacing:1px;padding:4px 8px" onclick="event.stopPropagation();showSocialActions('portfolio')">⋯</span>
                               </button>
                               <div class="p-social-action-row" id="actions-portfolio" style="display:none">
                                 <button class="p-social-action-btn open"   onclick="openSocialLink('portfolio')">↗ Open</button>

@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
+
   <title>Settings | PathwayAI</title>
   <link rel="stylesheet" href="../../assets/css/shared.css" />
   <link rel="stylesheet" href="../../assets/css/dashboard.css" />
@@ -708,9 +708,9 @@
       background: rgba(6, 11, 24, .93)
     }
 
-    
 
-body.no-animations *,
+
+    body.no-animations *,
     body.no-animations *::before,
     body.no-animations *::after {
       transition: none !important;
@@ -1024,11 +1024,8 @@ body.no-animations *,
             <rect x="2" y="7" width="20" height="14" rx="2" />
             <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
           </svg>Job Matches <span class="nav-badge">12</span></a>
-        <a href="#" class="nav-item" onclick="showToast('Colleges coming soon!')"><svg viewBox="0 0 24 24">
-            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-            <path d="M6 12v5c3 3 9 3 12 0v-5" />
-          </svg>Colleges</a>
-        <a href="#" class="nav-item" onclick="showToast('Resume builder coming soon!')"><svg viewBox="0 0 24 24">
+        
+        <a href="#" class="nav-item" onclick="viewResume()"><svg viewBox="0 0 24 24">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
             <polyline points="14 2 14 8 20 8" />
           </svg>My Resume</a>
@@ -1168,7 +1165,7 @@ body.no-animations *,
                     style="display:flex;align-items:center;gap:18px;padding:4px 0 22px;border-bottom:1px solid rgba(255,255,255,.05);margin-bottom:20px">
                     <div id="settings-av"
                       style="width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,rgba(212,175,55,.2),rgba(212,175,55,.08));border:2px solid rgba(212,175,55,.3);display:grid;place-items:center;font-family:'Playfair Display',serif;font-size:22px;font-weight:600;color:var(--gold);flex-shrink:0">
-                      </div>
+                    </div>
                     <div style="flex:1">
                       <div id="settings-av-name"
                         style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:3px"></div>
@@ -1380,18 +1377,7 @@ body.no-animations *,
                     <button class="s-connect-btn" id="btn-portfolio"
                       onclick="openConnectModal('portfolio')">Connect</button>
                   </div>
-                  <div class="s-account-row">
-                    <div class="s-account-icon"><svg viewBox="0 0 24 24">
-                        <path
-                          d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.5C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z" />
-                        <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" />
-                      </svg></div>
-                    <div class="s-account-info">
-                      <div class="s-account-name">Google Account</div>
-                      <div class="s-account-status" id="status-google">Not connected</div>
-                    </div>
-                    <button class="s-connect-btn" id="btn-google" onclick="openConnectModal('google')">Connect</button>
-                  </div>
+
                 </div>
               </div>
             </div>
@@ -1556,7 +1542,7 @@ body.no-animations *,
                   </div>
                   <div class="s-save-bar"><span class="s-save-hint">Your data is never sold to third
                       parties</span><button class="btn-primary" style="padding:9px 20px;font-size:13px"
-                      onclick="showToast('Privacy settings saved!')">Save Settings &rarr;</button></div>
+                      onclick="saveAllPrivacy()">Save Settings &rarr;</button></div>
                 </div>
               </div>
             </div>
@@ -1764,10 +1750,8 @@ body.no-animations *,
     function openConnectModal(name) {
       const isConnected = S.get('connected-' + name, false);
       if (isConnected) {
-        if (confirm('Disconnect ' + name.charAt(0).toUpperCase() + name.slice(1) + '?')) {
-          setDisconnected(name);
-          showToast(name.charAt(0).toUpperCase() + name.slice(1) + ' disconnected.');
-        }
+        setDisconnected(name);
+        showToast(name.charAt(0).toUpperCase() + name.slice(1) + ' disconnected.');
         return;
       }
       _connectTarget = name;
@@ -1846,18 +1830,18 @@ body.no-animations *,
        ════════════════════════════════════════ */
     // ── INSTANT CACHE RESTORE (prevents blank UI on refresh) ──
     (function restoreFromCache() {
-      const userName  = localStorage.getItem('userName')  || '';
+      const userName = localStorage.getItem('userName') || '';
       const userEmail = localStorage.getItem('userEmail') || '';
-      const userRole  = localStorage.getItem('userRole')  || 'PathwayAI Member';
-      const parts     = userName.trim().split(' ');
-      const initials  = parts.length >= 2 ? (parts[0][0] + parts[1][0]).toUpperCase() : (userName.slice(0,2).toUpperCase() || 'SA');
-      if (document.getElementById('sidebar-av'))      document.getElementById('sidebar-av').textContent      = initials;
-      if (document.getElementById('sidebar-name'))    document.getElementById('sidebar-name').textContent    = userName || 'User';
-      if (document.getElementById('sidebar-role'))    document.getElementById('sidebar-role').textContent    = userRole;
-      if (document.getElementById('topbar-av'))       document.getElementById('topbar-av').textContent       = initials;
-      if (document.getElementById('settings-av'))     document.getElementById('settings-av').textContent     = initials;
-      if (document.getElementById('settings-av-name'))document.getElementById('settings-av-name').textContent= userName || 'User';
-      if (document.getElementById('settings-av-email'))document.getElementById('settings-av-email').textContent= userEmail || '—';
+      const userRole = localStorage.getItem('userRole') || 'PathwayAI Member';
+      const parts = userName.trim().split(' ');
+      const initials = parts.length >= 2 ? (parts[0][0] + parts[1][0]).toUpperCase() : (userName.slice(0, 2).toUpperCase() || 'SA');
+      if (document.getElementById('sidebar-av')) document.getElementById('sidebar-av').textContent = initials;
+      if (document.getElementById('sidebar-name')) document.getElementById('sidebar-name').textContent = userName || 'User';
+      if (document.getElementById('sidebar-role')) document.getElementById('sidebar-role').textContent = userRole;
+      if (document.getElementById('topbar-av')) document.getElementById('topbar-av').textContent = initials;
+      if (document.getElementById('settings-av')) document.getElementById('settings-av').textContent = initials;
+      if (document.getElementById('settings-av-name')) document.getElementById('settings-av-name').textContent = userName || 'User';
+      if (document.getElementById('settings-av-email')) document.getElementById('settings-av-email').textContent = userEmail || '—';
       const p = JSON.parse(localStorage.getItem('profileData') || '{}');
       const n = userName.split(' ');
       if (document.getElementById('acc-fname')) document.getElementById('acc-fname').value = p.fname || n[0] || '';
@@ -1891,7 +1875,7 @@ body.no-animations *,
         document.getElementById('acc-lname').value = p.lname || n.slice(1).join(' ') || '';
         document.getElementById('acc-email').value = p.email || userEmail || '';
         document.getElementById('acc-phone').value = p.phone || '';
-document.body.classList.add('data-ready');
+        document.body.classList.add('data-ready');
       })();
 
       (function loadAllSettings() {
@@ -1910,7 +1894,13 @@ document.body.classList.add('data-ready');
 
         // ── NOTIFICATIONS with defaults ──
         const ndefs = { 'job-matches': true, 'career-updates': true, 'app-reminders': false, 'skill-alerts': true, 'courses': false, 'profile-tips': true, 'newsletter': false };
-        Object.entries(ndefs).forEach(([k, def]) => { const el = document.getElementById('n-' + k); if (el) el.checked = S.get('notif-' + k, def); });
+        Object.entries(ndefs).forEach(([k, def]) => {
+          const el = document.getElementById('n-' + k);
+          if (el) {
+            el.checked = S.get('notif-' + k, def);
+            el.addEventListener('change', function () { saveNotif(k, this.checked); });
+          }
+        });
 
         // ── PRIVACY with defaults ──
         const pdefs = { 'personalized': true, 'show-employers': true, 'analytics': false, 'open-to-work': true };
@@ -1919,11 +1909,9 @@ document.body.classList.add('data-ready');
         selectVisibility(S.get('visibility', 'public'), true);
 
         // ── CONNECTED ACCOUNTS restore ──
-        ['linkedin', 'github', 'portfolio', 'google'].forEach(name => {
-          if (S.get('connected-' + name, false)) {
-            const h = S.get('connected-' + name + '-handle', '');
-            if (h) setConnected(name, h, true);
-          }
+        ['linkedin', 'github', 'portfolio'].forEach(name => {
+          const h = S.get('connected-' + name + '-handle', '');
+          if (h) setConnected(name, h, true);
         });
 
         // ── ACCOUNT selects ──
@@ -1962,38 +1950,47 @@ document.body.classList.add('data-ready');
 
     function doSignOut(e) { e.preventDefault(); if (confirm('Sign out of PathwayAI?')) signOut(); }
 
-    function saveAccount() {
-      const fname = document.getElementById('acc-fname').value.trim();
-      const lname = document.getElementById('acc-lname').value.trim();
-      const email = document.getElementById('acc-email').value.trim();
-      const phone = document.getElementById('acc-phone').value.trim();
-      const lang = document.getElementById('acc-lang').value;
-      const tz = document.getElementById('acc-tz').value;
-      const ctry = document.getElementById('acc-country').value;
-      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        document.getElementById('acc-email').classList.add('error');
-        showToast('Please enter a valid email address.'); return;
-      }
-      document.getElementById('acc-email').classList.remove('error');
-      const p = JSON.parse(localStorage.getItem('profileData') || '{}');
-      Object.assign(p, { fname, lname, email, phone });
-      localStorage.setItem('profileData', JSON.stringify(p));
-      S.set('account-settings', { lang, tz, country: ctry });
-      const full = lname ? fname + ' ' + lname : fname;
-      if (full.trim()) {
-        localStorage.setItem('userName', full);
-        const pts = full.trim().split(' ');
-        const ini = pts.length >= 2 ? (pts[0][0] + pts[1][0]).toUpperCase() : full.slice(0, 2).toUpperCase();
-        document.getElementById('sidebar-av').textContent = ini;
-        document.getElementById('topbar-av').textContent = ini;
-        document.getElementById('sidebar-name').textContent = full;
-      }
-      if (email) localStorage.setItem('userEmail', email);
-      const hint = document.getElementById('acc-saved-hint');
-      hint.textContent = 'Saved at ' + new Date().toLocaleTimeString(); hint.style.color = '#4CAF70';
-      setTimeout(() => { hint.textContent = 'Changes are saved to your browser'; hint.style.color = ''; }, 3000);
-      showToast('Account info saved!');
+    async function saveAccount() {
+  const fname = document.getElementById('acc-fname').value.trim();
+  const lname = document.getElementById('acc-lname').value.trim();
+  const email = document.getElementById('acc-email').value.trim();
+  const phone = document.getElementById('acc-phone').value.trim();
+  const lang = document.getElementById('acc-lang').value;
+  const tz = document.getElementById('acc-tz').value;
+  const ctry = document.getElementById('acc-country').value;
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    document.getElementById('acc-email').classList.add('error');
+    showToast('Please enter a valid email address.'); return;
+  }
+  document.getElementById('acc-email').classList.remove('error');
+  try {
+    showToast('Saving...');
+    await apiUpdateProfile({ fname, lname, phone });
+    const p = JSON.parse(localStorage.getItem('profileData') || '{}');
+    Object.assign(p, { fname, lname, email, phone });
+    localStorage.setItem('profileData', JSON.stringify(p));
+    S.set('account-settings', { lang, tz, country: ctry });
+    const full = lname ? fname + ' ' + lname : fname;
+    if (full.trim()) {
+      localStorage.setItem('userName', full);
+      const pts = full.trim().split(' ');
+      const ini = pts.length >= 2 ? (pts[0][0] + pts[1][0]).toUpperCase() : full.slice(0, 2).toUpperCase();
+      document.getElementById('sidebar-av').textContent = ini;
+      document.getElementById('topbar-av').textContent = ini;
+      document.getElementById('sidebar-name').textContent = full;
+      document.getElementById('settings-av').textContent = ini;
+      document.getElementById('settings-av-name').textContent = full;
     }
+    if (email) localStorage.setItem('userEmail', email);
+    const hint = document.getElementById('acc-saved-hint');
+    hint.textContent = 'Saved to MongoDB at ' + new Date().toLocaleTimeString();
+    hint.style.color = '#4CAF70';
+    setTimeout(() => { hint.textContent = 'Changes are saved to your browser'; hint.style.color = ''; }, 3000);
+    showToast('Account info saved to MongoDB!');
+  } catch (err) {
+    showToast(err.message || 'Failed to save. Try again.');
+  }
+}
 
     function togglePwdField(id, btn) {
       const inp = document.getElementById(id); const hidden = inp.type === 'password';
@@ -2023,16 +2020,24 @@ document.body.classList.add('data-ready');
     }
 
     async function changePassword() {
-      const cur = document.getElementById('pwd-current').value, nw = document.getElementById('pwd-new').value, cf = document.getElementById('pwd-confirm').value;
+      const cur = document.getElementById('pwd-current').value;
+      const nw = document.getElementById('pwd-new').value;
+      const cf = document.getElementById('pwd-confirm').value;
       if (!cur) { showToast('Enter your current password.'); return; }
       if (!nw) { showToast('Enter a new password.'); return; }
       if (nw.length < 8) { showToast('Password must be at least 8 characters.'); return; }
       if (nw !== cf) { showToast('New passwords do not match!'); return; }
-      showToast('Password updated successfully!');
-      ['pwd-current', 'pwd-new', 'pwd-confirm'].forEach(id => document.getElementById(id).value = '');
-      checkPwdStrength(''); document.getElementById('confirm-match').style.display = 'none';
+      try {
+        showToast('Updating password...');
+        await apiChangePassword(cur, nw);
+        showToast('Password updated successfully!');
+        ['pwd-current', 'pwd-new', 'pwd-confirm'].forEach(id => document.getElementById(id).value = '');
+        checkPwdStrength('');
+        document.getElementById('confirm-match').style.display = 'none';
+      } catch (err) {
+        showToast(err.message || 'Failed to update password. Try again.');
+      }
     }
-
     function handle2FAToggle(type, checkbox) {
       if (checkbox.checked) {
         if (type === 'totp') openModal('modal-2fa');
@@ -2070,6 +2075,7 @@ document.body.classList.add('data-ready');
     /* NOTIFICATIONS */
     function saveNotif(key, val) {
       S.set('notif-' + key, val);
+      showToast('Preference saved!');
       const h = document.getElementById('notif-saved-hint');
       if (h) { h.textContent = 'Saved at ' + new Date().toLocaleTimeString(); h.style.color = '#4CAF70'; setTimeout(() => { h.textContent = 'Preferences saved automatically per toggle'; h.style.color = ''; }, 2500); }
     }
@@ -2083,6 +2089,17 @@ document.body.classList.add('data-ready');
     }
 
     function savePrivacy(key, val) { S.set('privacy-' + key, val); showToast('Privacy setting updated.'); }
+
+    function saveAllPrivacy() {
+      ['personalized', 'show-employers', 'analytics', 'open-to-work'].forEach(k => {
+        const el = document.getElementById('p-' + k);
+        if (el) S.set('privacy-' + k, el.checked);
+      });
+      S.set('visibility', S.get('visibility', 'public'));
+      const h = document.querySelector('#panel-privacy .s-save-hint');
+      if (h) { h.textContent = 'Saved at ' + new Date().toLocaleTimeString(); h.style.color = '#4CAF70'; setTimeout(() => { h.textContent = 'Your data is never sold to third parties'; h.style.color = ''; }, 2500); }
+      showToast('Privacy settings saved!');
+    }
 
     function selectVisibility(val, silent) {
       ['public', 'recruiters', 'private'].forEach(v => document.getElementById('vis-' + v).classList.toggle('selected', v === val));
