@@ -1,0 +1,1 @@
+window.ENV_BACKEND_URL = 'https://your-node-service.up.railway.app';

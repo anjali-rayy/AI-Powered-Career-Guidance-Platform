@@ -14,7 +14,7 @@ app.use(express.json({ limit: '20mb' }));
 
 const upload = multer({ storage: multer.memoryStorage() });
 
-const PYTHON_SERVICE = 'http://localhost:5000';
+const PYTHON_SERVICE = process.env.PYTHON_SERVICE_URL || 'http://localhost:5000';
 const JWT_SECRET = process.env.JWT_SECRET || 'pathwayai-secret-key';
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/pathwayai';
 
