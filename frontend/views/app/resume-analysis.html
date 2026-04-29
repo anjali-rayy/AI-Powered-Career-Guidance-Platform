@@ -1607,7 +1607,7 @@
     <script>
         const _fetch = window.fetch.bind(window);
         function escHtml(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-        const API_BASE = 'http://localhost:3000';
+        const API_BASE = window.ENV_BACKEND_URL || 'http://localhost:3000';
 
         // ── PDF.js worker setup ──
         if (typeof pdfjsLib !== 'undefined') {
