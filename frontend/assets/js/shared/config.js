@@ -1,1 +1,1 @@
-window.ENV_BACKEND_URL = 'https://your-node-service.up.railway.app';
+window.ENV_BACKEND_URL = 'https://pathwayai-backend.up.railway.app';
