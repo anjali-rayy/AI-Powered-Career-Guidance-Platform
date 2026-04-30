@@ -414,6 +414,15 @@
     .toast.show { transform: translateX(-50%) translateY(0); }
 
 .page-content { padding-top: 64px; }
+@media (max-width: 600px) {
+  .form-row { flex-direction: column; }
+  .form-row > div[style*="flex:0 0 160px"] { flex: 1 !important; width: 100% !important; }
+  .career-form { padding: 20px 16px; }
+  .roadmap-hero { padding: 90px 20px 50px; }
+  .regen-row { flex-direction: column; align-items: stretch; }
+  .regen-row button { width: 100%; }
+  .summary-bar { flex-direction: column; align-items: flex-start; }
+}
   </style>
 </head>
 <body>
@@ -463,7 +472,23 @@
       </div>
     </li>
   </ul>
-  <div class="nav-actions">
+  <button class="nav-hamburger" aria-label="Menu">
+  <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="../public/index.html">Home</a>
+  <a href="../public/about.html">About</a>
+  <a href="../public/features.html">Features</a>
+  <a href="../app/quiz.html">Career Quiz</a>
+  <a href="../app/resume-analysis.html">Resume Analysis</a>
+  <a href="../app/career-tree.html">3D Career Tree</a>
+  <a href="../app/roadmap.html" class="active">AI Roadmap</a>
+  <div style="border-top:1px solid rgba(255,255,255,0.07);margin:8px 0;padding-top:8px;display:flex;gap:10px">
+    <a href="../auth/login.html" style="flex:1;text-align:center;padding:10px;border:1px solid rgba(255,255,255,0.1);border-radius:8px">Sign in</a>
+    <a href="../auth/register.html" style="flex:1;text-align:center;padding:10px;background:var(--gold);color:#0A0A0A;border-radius:8px;font-weight:600">Get started</a>
+  </div>
+</div>
+<div class="nav-actions">
     <a href="../auth/login.html"><button class="btn-ghost">Sign in</button></a>
     <a href="../auth/register.html"><button class="btn-gold">Get started</button></a>
   </div>
@@ -616,6 +641,17 @@ function showToast(msg){var t=document.getElementById('toast');if(!t)return;t.te
 <script src="../../assets/js/shared/config.js"></script>
 <script src="../../assets/js/shared/nav.js"></script>
 <script src="../../assets/js/shared/footer.js"></script>
+<script>
+  const hamburger = document.querySelector('.nav-hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+  if (hamburger && mobileMenu) {
+    hamburger.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+    document.addEventListener('click', e => {
+      if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target))
+        mobileMenu.classList.remove('open');
+    });
+  }
+</script>
 
 <script>
 

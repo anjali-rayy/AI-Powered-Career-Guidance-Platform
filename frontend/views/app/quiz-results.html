@@ -67,7 +67,22 @@
   </div>
 </li>
   </ul>
-  <div class="nav-actions">
+  <button class="nav-hamburger" aria-label="Menu">
+  <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="../public/index.html">Home</a>
+  <a href="../public/about.html">About</a>
+  <a href="../public/features.html">Features</a>
+  <a href="../app/quiz.html" class="active">Career Quiz</a>
+  <a href="../app/resume-analysis.html">Resume Analysis</a>
+  <a href="../app/career-tree.html">3D Career Tree</a>
+  <a href="../app/roadmap.html">AI Roadmap</a>
+  <div style="border-top:1px solid rgba(255,255,255,0.07);margin:8px 0;padding-top:8px">
+    <a href="../auth/login.html" style="display:block;text-align:center;padding:10px;background:var(--gold);color:#0A0A0A;border-radius:8px;font-weight:600">Sign in</a>
+  </div>
+</div>
+<div class="nav-actions">
     <a href="../auth/login.html"><button class="btn-gold">Sign in</button></a>
   </div>
 </nav>
@@ -224,5 +239,16 @@
 <script src="../../assets/js/shared/nav.js"></script>
 <script src="../../assets/js/shared/footer.js"></script>
 <script src="../../assets/js/pages/quiz-results.js"></script>
+<script>
+  const hamburger = document.querySelector('.nav-hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+  if (hamburger && mobileMenu) {
+    hamburger.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+    document.addEventListener('click', e => {
+      if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target))
+        mobileMenu.classList.remove('open');
+    });
+  }
+</script>
 </body>
 </html>

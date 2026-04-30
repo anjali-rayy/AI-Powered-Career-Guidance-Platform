@@ -573,3 +573,15 @@
   .cta-card { padding: 40px 24px; }
   .ecosystem-wrap { height: 320px; }
 }
+
+@media (max-width: 600px) {
+  .careers-grid { grid-template-columns: 1fr !important; }
+  .stats-section { grid-template-columns: 1fr 1fr !important; gap: 12px; }
+  .skills-inner { flex-direction: column; gap: 24px; }
+  .match-ring-wrap { transform: scale(0.85); margin: -10px auto; }
+  .cta-btns { flex-direction: column; align-items: stretch; }
+  .cta-btns a, .cta-btns button { width: 100%; justify-content: center; }
+}
+@media (max-width: 380px) {
+  .stats-section { grid-template-columns: 1fr !important; }
+}

@@ -509,3 +509,10 @@
   opacity: 0.75;
   text-decoration: underline;
 }
+
+@media (max-width: 400px) {
+  .quiz-nav { flex-direction: column-reverse; }
+  .quiz-next-btn,
+  .quiz-back-btn { width: 100%; text-align: center; justify-content: center; }
+  .hub-cards { grid-template-columns: 1fr; }
+}

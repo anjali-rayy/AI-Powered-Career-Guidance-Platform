@@ -716,6 +716,14 @@
       transition: none !important;
       animation: none !important
     }
+    @media (max-width: 860px) {
+      .settings-tabs { position: static; flex-direction: row; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+      .settings-tab { width: auto; flex: 1 1 auto; justify-content: center; font-size: 12px; padding: 8px 10px; }
+      .settings-tab-label, .settings-tab-divider { display: none; }
+    }
+    @media (max-width: 480px) {
+      .settings-tab svg { display: none; }
+    }
 
     .modal-overlay {
       position: fixed;
@@ -1050,9 +1058,13 @@
           </svg>Sign out</a>
       </div>
     </aside>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
     <div class="dash-main">
       <header class="dash-topbar">
+        <button class="dash-topbar-menu-btn" id="sidebar-toggle" aria-label="Toggle sidebar">
+          <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
         <div class="topbar-left">
           <h1>My <em>Settings</em></h1>
         </div>
@@ -1631,6 +1643,18 @@
   <script src="../../assets/js/shared/nav.js"></script>
   <script src="../../assets/js/shared/footer.js"></script>
   <script src="../../assets/js/pages/settings-apply.js"></script>
+  <script>
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const sidebar = document.querySelector('.sidebar');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+    function openSidebar() { sidebar.classList.add('open'); sidebarOverlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeSidebar() { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('open'); document.body.style.overflow = ''; }
+    if (sidebarToggle) sidebarToggle.addEventListener('click', openSidebar);
+    if (sidebarOverlay) sidebarOverlay.addEventListener('click', closeSidebar);
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', () => { if (window.innerWidth <= 900) closeSidebar(); });
+    });
+  </script>
   <script>
     const S = {
       get: (k, def) => { try { const v = localStorage.getItem('settings_' + k); return v === null ? def : JSON.parse(v); } catch (e) { return def; } },

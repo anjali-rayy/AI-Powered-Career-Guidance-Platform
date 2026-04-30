@@ -152,3 +152,34 @@ function uploadResume() {
   };
   input.click();
 }
+
+// Mobile nav toggle (shared navbar)
+const hamburger = document.querySelector('.nav-hamburger');
+const mobileMenu = document.querySelector('.mobile-menu');
+if (hamburger && mobileMenu) {
+  hamburger.addEventListener('click', () => {
+    mobileMenu.classList.toggle('open');
+  });
+  document.addEventListener('click', (e) => {
+    if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) {
+      mobileMenu.classList.remove('open');
+    }
+  });
+}
+
+// Dashboard sidebar toggle
+const menuBtn = document.querySelector('.dash-topbar-menu-btn');
+const sidebar = document.querySelector('.sidebar');
+const overlay = document.querySelector('.sidebar-overlay');
+if (menuBtn && sidebar) {
+  menuBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('open');
+    if (overlay) overlay.classList.toggle('open');
+  });
+  if (overlay) {
+    overlay.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('open');
+    });
+  }
+}

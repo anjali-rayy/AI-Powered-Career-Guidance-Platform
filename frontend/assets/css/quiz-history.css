@@ -80,3 +80,13 @@
 .qh-card.expanded .qh-card-details { display: block; }
 .qh-expand-btn { background: none; border: none; color: var(--subtle); cursor: pointer; font-size: 18px; padding: 4px 8px; transition: color 0.2s, transform 0.2s; }
 .qh-card.expanded .qh-expand-btn { transform: rotate(180deg); color: var(--gold); }
+
+@media (max-width: 600px) {
+  .qh-card-main { flex-wrap: wrap; gap: 10px; }
+  .qh-card-score { margin-left: auto; }
+  .qh-footer-actions { flex-wrap: wrap; width: 100%; }
+  .qh-footer-actions .qh-action-btn { flex: 1; text-align: center; }
+  .qh-stats { grid-template-columns: 1fr 1fr; }
+  .qh-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .qh-header .btn-primary { width: 100%; justify-content: center; }
+}

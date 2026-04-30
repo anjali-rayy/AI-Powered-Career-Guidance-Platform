@@ -252,7 +252,13 @@
         </div>
       </li>
     </ul>
-    <div class="nav-actions">
+    <button class="nav-hamburger" aria-label="Menu">
+  <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+<div class="mobile-menu">
+  <!-- copy your same nav links here -->
+</div>
+<div class="nav-actions">
       <a href="../auth/login.html"><button class="btn-ghost">Sign in</button></a>
       <a href="../auth/register.html"><button class="btn-gold">Get started</button></a>
     </div>
@@ -513,5 +519,16 @@
   <div id="toast" class="toast"></div>
  <script src="../../assets/js/shared/nav.js"></script>
 <script src="../../assets/js/shared/footer.js"></script>
+<script>
+  const hamburger = document.querySelector('.nav-hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+  if (hamburger && mobileMenu) {
+    hamburger.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+    document.addEventListener('click', e => {
+      if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target))
+        mobileMenu.classList.remove('open');
+    });
+  }
+</script>
 </body>
 </html>
