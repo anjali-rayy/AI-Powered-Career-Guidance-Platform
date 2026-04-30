@@ -4,5 +4,6 @@
     { "source": "/auth/:path*", "destination": "/views/auth/:path*" },
     { "source": "/app/:path*", "destination": "/views/app/:path*" },
     { "source": "/public/:path*", "destination": "/views/public/:path*" }
-  ]
+  ],
+  "alias": ["pathwayai.vercel.app"]
 }
