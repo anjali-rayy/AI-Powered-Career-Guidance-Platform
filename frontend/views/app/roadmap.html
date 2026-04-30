@@ -638,6 +638,7 @@
 
 <script>
 function showToast(msg){var t=document.getElementById('toast');if(!t)return;t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
+function showAuthModal(){const e=document.getElementById('auth-modal-overlay');if(e)e.remove();const o=document.createElement('div');o.id='auth-modal-overlay';o.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;';o.innerHTML=`<div style="background:#111111;border:1px solid rgba(212,175,55,0.2);border-radius:20px;padding:40px 36px;max-width:420px;width:100%;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,0.8);"><div style="width:52px;height:52px;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.25);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div style="font-size:20px;font-weight:700;color:#F5F5F5;margin-bottom:8px;">Sign in to continue</div><div style="font-size:14px;color:#A1A1AA;margin-bottom:28px;line-height:1.6;">This feature requires a free PathwayAI account.<br/>Sign in or create an account to access it.</div><div style="display:flex;flex-direction:column;gap:10px;"><a href="../auth/login.html" style="display:block;background:#D4AF37;color:#0A0A0A;font-weight:700;font-size:14px;padding:13px;border-radius:10px;text-decoration:none;font-family:'Inter',sans-serif;">Sign In →</a><a href="../auth/register.html" style="display:block;background:rgba(255,255,255,0.05);color:#F5F5F5;font-weight:600;font-size:14px;padding:13px;border-radius:10px;text-decoration:none;border:1px solid rgba(255,255,255,0.1);font-family:'Inter',sans-serif;">Create Free Account</a><button onclick="document.getElementById('auth-modal-overlay').remove()" style="background:none;border:none;color:#71717A;font-size:13px;cursor:pointer;margin-top:4px;font-family:'Inter',sans-serif;padding:4px;">Maybe later</button></div></div>`;o.addEventListener('click',e=>{if(e.target===o)o.remove();});document.body.appendChild(o);}
 </script>
 <script src="../../assets/js/shared/config.js"></script>
 <script src="../../assets/js/shared/nav.js"></script>
@@ -719,7 +720,7 @@ const response = await fetch(`${API_BASE}/api/roadmap/generate`, {
 function generateRoadmap() {
   const token = localStorage.getItem('token');
   if (!token) {
-    window.location.href = '../auth/login.html';
+    showAuthModal();
     return;
   }
   const goal = document.getElementById('careerGoal').value.trim();
@@ -877,27 +878,27 @@ function resetForm() {
   //  AUTO-FILL FROM URL PARAM (?goal=...)
 // Pre-fill from quiz result if no URL param
 (function () {
-  const qr = JSON.parse(localStorage.getItem('quizResult') || 'null');
-  if (qr && qr.career) {
-    const input = document.getElementById('careerGoal');
-    if (input && !input.value) input.value = qr.career;
-  }
-})();
+  const params = new URLSearchParams(window.location.search);
+  const goal = params.get('goal');
+  if (goal) {
     document.getElementById('careerGoal').value = goal;
-
     const level = params.get('level');
     if (level) document.getElementById('expLevel').value = level;
-
     const skillsParam = params.get('skills');
     if (skillsParam) {
       currentSkills = skillsParam.split(',').map(s => s.trim()).filter(Boolean);
       renderTags();
     }
-
-    // Hide form and go straight to generating
     document.querySelector('.form-wrap').style.display = 'none';
     setTimeout(() => generateRoadmap(), 400);
-  ;
+  } else {
+    const qr = JSON.parse(localStorage.getItem('quizResult') || 'null');
+    if (qr && qr.career) {
+      const input = document.getElementById('careerGoal');
+      if (input && !input.value) input.value = qr.career;
+    }
+  }
+})();
 
   //  NEWSLETTER
 function handleSubscribe() {

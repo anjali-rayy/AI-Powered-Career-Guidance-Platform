@@ -21,18 +21,76 @@ async function apiFetch(endpoint, options = {}) {
 // ── AUTH GUARD: call on every protected page ──
 async function requireAuth() {
   const token = getToken();
-  if (!token) { window.location.replace('../auth/login.html'); return null; }
+  if (!token) { showAuthModal(); return null; }
 
   try {
     const data = await apiFetch('/verify');
-    if (!data.valid) { signOut(); return null; }
-    // Sync user data to localStorage for UI
+    if (!data.valid) { showAuthModal(); return null; }
     syncUserToStorage(data.user);
     return data.user;
   } catch {
-    signOut();
+    showAuthModal();
     return null;
   }
+}
+
+function showAuthModal() {
+  // Remove existing modal if any
+  const existing = document.getElementById('auth-modal-overlay');
+  if (existing) existing.remove();
+
+  const overlay = document.createElement('div');
+  overlay.id = 'auth-modal-overlay';
+  overlay.style.cssText = `
+    position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);
+    z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;
+  `;
+
+  overlay.innerHTML = `
+    <div style="
+      background:#111111;border:1px solid rgba(212,175,55,0.2);border-radius:20px;
+      padding:40px 36px;max-width:420px;width:100%;text-align:center;
+      box-shadow:0 30px 80px rgba(0,0,0,0.8);position:relative;
+    ">
+      <div style="width:52px;height:52px;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.25);
+        border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="1.8" stroke-linecap="round">
+          <rect x="3" y="11" width="18" height="11" rx="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+      </div>
+      <div style="font-size:20px;font-weight:700;color:#F5F5F5;margin-bottom:8px;">Sign in to continue</div>
+      <div style="font-size:14px;color:#A1A1AA;margin-bottom:28px;line-height:1.6;">
+        This feature requires a free PathwayAI account.<br/>Sign in or create an account to access it.
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <a href="../auth/login.html" style="
+          display:block;background:#D4AF37;color:#0A0A0A;font-weight:700;
+          font-size:14px;padding:13px;border-radius:10px;text-decoration:none;
+          font-family:'Inter',sans-serif;transition:opacity 0.2s;
+        " onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+          Sign In →
+        </a>
+        <a href="../auth/register.html" style="
+          display:block;background:rgba(255,255,255,0.05);color:#F5F5F5;font-weight:600;
+          font-size:14px;padding:13px;border-radius:10px;text-decoration:none;
+          border:1px solid rgba(255,255,255,0.1);font-family:'Inter',sans-serif;
+        " onmouseover="this.style.background='rgba(255,255,255,0.09)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">
+          Create Free Account
+        </a>
+        <button onclick="document.getElementById('auth-modal-overlay').remove()" style="
+          background:none;border:none;color:#71717A;font-size:13px;cursor:pointer;
+          margin-top:4px;font-family:'Inter',sans-serif;padding:4px;
+        ">Maybe later</button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+  // Close on backdrop click
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) overlay.remove();
+  });
 }
 
 // ── SYNC USER TO LOCALSTORAGE (for UI rendering) ──
