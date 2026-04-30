@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="../../assets/css/shared.css" />
   <link rel="stylesheet" href="../../assets/css/auth.css" />
   <script>
-    if (localStorage.getItem('authToken')) window.location.replace('../app/dashboard.html');
+    if (localStorage.getItem('token')) window.location.replace('../app/dashboard.html');
   </script>
 </head>
 
@@ -64,7 +64,7 @@
               <div class="nav-drop-sub">Find what skills you're missing</div>
             </div>
           </a>
-          <a href="#" class="nav-drop-item" onclick="showToast('Career Recommendation coming soon!')">
+          <a href="../app/quiz-results.html" class="nav-drop-item">
             <div class="nav-drop-icon">
               <svg viewBox="0 0 24 24">
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
