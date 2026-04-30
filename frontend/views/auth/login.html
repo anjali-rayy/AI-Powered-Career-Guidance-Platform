@@ -257,17 +257,6 @@
   <script src="../../assets/js/shared/nav.js"></script>
   <script src="../../assets/js/shared/footer.js"></script>
   <script src="../../assets/js/shared/auth.js"></script>
-  <script>
-    const hamburger = document.querySelector('.nav-hamburger');
-    const mobileMenu = document.getElementById('mobile-menu');
-    if (hamburger && mobileMenu) {
-      hamburger.addEventListener('click', () => mobileMenu.classList.toggle('open'));
-      document.addEventListener('click', e => {
-        if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target))
-          mobileMenu.classList.remove('open');
-      });
-    }
-  </script>
 </body>
 
 </html>
