@@ -44,7 +44,7 @@ const userSchema = new mongoose.Schema({
   interest:   { type: String, default: '' },
   skills:     { type: [String], default: [] },
   googleId:   { type: String, default: null },
-  resume:     { type: String, default: '' },
+  quizResult: { type: Object, default: null },
   createdAt:  { type: Date, default: Date.now }
 });
 
@@ -81,7 +81,7 @@ function authMiddleware(req, res, next) {
 // REGISTER — only fname, lname, email, password
 app.post('/api/register', async (req, res) => {
   try {
-    const { fname, lname, email, password } = req.body;
+    const { fname, lname, email, password, quizResult } = req.body;
 
     if (!fname || !email || !password)
       return res.status(400).json({ error: 'Name, email and password are required' });
@@ -90,7 +90,7 @@ app.post('/api/register', async (req, res) => {
       return res.status(400).json({ error: 'Email already registered' });
 
     const hashed = await bcrypt.hash(password, 10);
-    const user = await User.create({ fname, lname, email, password: hashed });
+    const user = await User.create({ fname, lname, email, password: hashed, quizResult: quizResult || null });
 
     res.json({ token: generateToken(user), user: safeUser(user) });
 
@@ -373,6 +373,41 @@ app.get('/api/resume/me', authMiddleware, async (req, res) => {
   }
 });
 
+const { spawn } = require('child_process');
+const path = require('path');
+
+app.post('/api/career-recommend', authMiddleware, async (req, res) => {
+  const { skills } = req.body;
+  if (!skills) return res.status(400).json({ error: 'Skills required' });
+
+  try {
+    const pyRes = await fetch(`${PYTHON_SERVICE}/recommend`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ skills })
+    });
+    const data = await pyRes.json();
+    if (!pyRes.ok) return res.status(500).json({ error: 'Recommender failed' });
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: 'Python service unavailable: ' + err.message });
+  }
+});
+
 app.listen(process.env.PORT || 3000, () => {
   console.log('✅ PathwayAI backend running on http://localhost:3000');
 });
+  const { skills } = req.body;
+  if (!skills) return res.status(400).json({ error: 'Skills required' });
+
+  const py = spawn('python3', [
+    path.join(__dirname, 'recommender.py'), skills
+  ]);
+  let out = '', err = '';
+  py.stdout.on('data', d => out += d);
+  py.stderr.on('data', d => err += d);
+  py.on('close', code => {
+    if (code !== 0) return res.status(500).json({ error: 'Recommender failed' });
+    try { res.json({ recommendations: JSON.parse(out) }); }
+    catch { res.status(500).json({ error: 'Parse error' }); }
+  });

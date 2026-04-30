@@ -84,7 +84,7 @@ function togglePwd(id, btn) {
 
 // Auth-aware nav buttons
 (function () {
-  const isLoggedIn = !!localStorage.getItem('authToken');
+  const isLoggedIn = !!localStorage.getItem('token');
   const containers = document.querySelectorAll('.nav-actions');
 
   containers.forEach(function (container) {
@@ -153,19 +153,23 @@ function uploadResume() {
   input.click();
 }
 
-// Mobile nav toggle (shared navbar)
-const hamburger = document.querySelector('.nav-hamburger');
-const mobileMenu = document.querySelector('.mobile-menu');
-if (hamburger && mobileMenu) {
-  hamburger.addEventListener('click', () => {
-    mobileMenu.classList.toggle('open');
-  });
+// Auth-aware mobile menu
+(function() {
+  const mobileAuthDiv = document.querySelector('.mobile-menu div[style]');
+  if (!mobileAuthDiv) return;
+  const isLoggedIn = !!localStorage.getItem('token');
+  if (isLoggedIn) {
+    mobileAuthDiv.innerHTML = `
+      <a href="../app/dashboard.html" style="display:block;text-align:center;padding:10px;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.2);border-radius:8px;color:#D4AF37">Dashboard</a>
+      <a href="#" onclick="signOut()" style="display:block;text-align:center;padding:10px;margin-top:8px;border:1px solid rgba(255,255,255,0.1);border-radius:8px">Sign out</a>
+    `;
+  }
+})();
   document.addEventListener('click', (e) => {
     if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) {
       mobileMenu.classList.remove('open');
     }
   });
-}
 
 // Dashboard sidebar toggle
 const menuBtn = document.querySelector('.dash-topbar-menu-btn');

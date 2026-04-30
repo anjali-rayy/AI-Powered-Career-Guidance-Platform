@@ -453,7 +453,7 @@
           <div class="nav-drop-icon"><svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></div>
           <div><div class="nav-drop-title">Skill Gap Detection</div><div class="nav-drop-sub">Find what skills you are missing</div></div>
         </a>
-        <a href="#" class="nav-drop-item" onclick="showToast('Career Recommendation coming soon!')">
+        <a href="../app/quiz-results.html" class="nav-drop-item">
           <div class="nav-drop-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></div>
           <div><div class="nav-drop-title">Career Recommendation</div><div class="nav-drop-sub">Personalized career matches</div></div>
         </a>
@@ -635,6 +635,7 @@
 <footer class="footer"></footer>
 
 <div id="toast" class="toast"></div>
+
 <script>
 function showToast(msg){var t=document.getElementById('toast');if(!t)return;t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
 </script>
@@ -716,6 +717,11 @@ const response = await fetch(`${API_BASE}/api/roadmap/generate`, {
 
   //  GENERATE ROADMAP
 function generateRoadmap() {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    window.location.href = '../auth/login.html';
+    return;
+  }
   const goal = document.getElementById('careerGoal').value.trim();
   if (!goal) { showToast('Please enter your target career goal.'); return; }
 
@@ -869,10 +875,14 @@ function resetForm() {
 }
 
   //  AUTO-FILL FROM URL PARAM (?goal=...)
+// Pre-fill from quiz result if no URL param
 (function () {
-  const params = new URLSearchParams(window.location.search);
-  const goal = params.get('goal');
-  if (goal) {
+  const qr = JSON.parse(localStorage.getItem('quizResult') || 'null');
+  if (qr && qr.career) {
+    const input = document.getElementById('careerGoal');
+    if (input && !input.value) input.value = qr.career;
+  }
+})();
     document.getElementById('careerGoal').value = goal;
 
     const level = params.get('level');
@@ -887,8 +897,7 @@ function resetForm() {
     // Hide form and go straight to generating
     document.querySelector('.form-wrap').style.display = 'none';
     setTimeout(() => generateRoadmap(), 400);
-  }
-})();
+  ;
 
   //  NEWSLETTER
 function handleSubscribe() {

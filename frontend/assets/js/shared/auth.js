@@ -167,7 +167,8 @@ async function handleRegister() {
       eduLevel, eduField, gradYear,
       experience, location,
       interest, bio,
-      skills: regSkills
+      skills: regSkills,
+      quizResult: JSON.parse(localStorage.getItem('quizResult') || 'null')
     });
     showToast('✓ Account created successfully!');
     setTimeout(() => window.location.href = '../app/dashboard.html', 900);

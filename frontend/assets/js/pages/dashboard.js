@@ -50,7 +50,9 @@ requireAuth().then(function() {
 
   const hour  = new Date().getHours();
   const greet = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
-  document.getElementById('dash-greeting').innerHTML  = greet + ', <em>' + displayFirst + '</em> 👋';
+  const qr = JSON.parse(localStorage.getItem('quizResult') || 'null');
+  const careerHint = qr ? ` · Your top match: <span style="color:var(--gold)">${qr.career}</span>` : '';
+  document.getElementById('dash-greeting').innerHTML  = greet + ', <em>' + displayFirst + '</em> 👋' + careerHint;
 
   /* ── SAVE & RESTORE STAT CARDS ── */
   (function syncStats() {
@@ -76,6 +78,8 @@ requireAuth().then(function() {
       { done: !!p.eduLevel,                             label: 'Education details filled',  doneLabel: 'Education details filled ✓' },
       { done: !!(p.skills && p.skills.length >= 3),     label: 'Add at least 3 skills',     doneLabel: 'Skills list updated ✓' },
       { done: !!p.bio,                                  label: 'Write a bio',               doneLabel: 'Bio written ✓' },
+      { done: !!localStorage.getItem('quizResult'),     label: 'Complete career quiz',       doneLabel: 'Career quiz completed ✓' },
+      { done: !!localStorage.getItem('userResume'),     label: 'Upload your resume',         doneLabel: 'Resume uploaded ✓' },
     ];
     const done = checks.filter(c => c.done).length;
     const pct  = Math.round((done / checks.length) * 100);
@@ -139,4 +143,3 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2800);
 }
 window.showToast = showToast;
-
