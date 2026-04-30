@@ -35,7 +35,7 @@ async function requireAuth() {
 }
 
 function showAuthModal() {
-  // Remove existing modal if any
+  localStorage.setItem('redirectAfterLogin', window.location.href);
   const existing = document.getElementById('auth-modal-overlay');
   if (existing) existing.remove();
 

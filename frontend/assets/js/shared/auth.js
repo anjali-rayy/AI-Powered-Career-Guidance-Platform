@@ -171,7 +171,9 @@ async function handleRegister() {
       quizResult: JSON.parse(localStorage.getItem('quizResult') || 'null')
     });
     showToast('✓ Account created successfully!');
-    setTimeout(() => window.location.href = '../app/dashboard.html', 900);
+    const redirect = localStorage.getItem('redirectAfterLogin');
+    localStorage.removeItem('redirectAfterLogin');
+    setTimeout(() => window.location.href = redirect || '../app/dashboard.html', 900);
   } catch (err) {
     if (apiErr) {
       apiErr.textContent = err.message;
@@ -216,7 +218,9 @@ async function handleLogin(e) {
   try {
     await apiLogin(email, pass);
     showToast('✓ Signed in successfully!');
-    setTimeout(() => window.location.href = '../app/dashboard.html', 900);
+    const redirect = localStorage.getItem('redirectAfterLogin');
+    localStorage.removeItem('redirectAfterLogin');
+    setTimeout(() => window.location.href = redirect || '../app/dashboard.html', 900);
   } catch (err) {
     if (apiErr) {
       apiErr.textContent = err.message;
@@ -253,7 +257,9 @@ async function signInWithGoogle() {
     setToken(data.token);
     syncUserToStorage(data.user);
     showToast('✓ Signed in with Google!');
-    setTimeout(() => window.location.href = '../app/dashboard.html', 900);
+    const redirect = localStorage.getItem('redirectAfterLogin');
+    localStorage.removeItem('redirectAfterLogin');
+    setTimeout(() => window.location.href = redirect || '../app/dashboard.html', 900);
 
   } catch (err) {
     showToast('Google sign-in failed: ' + err.message);
