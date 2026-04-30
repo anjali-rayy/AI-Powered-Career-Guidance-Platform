@@ -165,25 +165,23 @@ function uploadResume() {
     `;
   }
 })();
-  document.addEventListener('click', (e) => {
-    if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) {
-      mobileMenu.classList.remove('open');
-    }
-  });
+  
 
 // Dashboard sidebar toggle
-const menuBtn = document.querySelector('.dash-topbar-menu-btn');
-const sidebar = document.querySelector('.sidebar');
-const overlay = document.querySelector('.sidebar-overlay');
-if (menuBtn && sidebar) {
-  menuBtn.addEventListener('click', () => {
-    sidebar.classList.toggle('open');
-    if (overlay) overlay.classList.toggle('open');
-  });
-  if (overlay) {
-    overlay.addEventListener('click', () => {
-      sidebar.classList.remove('open');
-      overlay.classList.remove('open');
+(function() {
+  const menuBtn = document.querySelector('.dash-topbar-menu-btn');
+  const sidebarEl = document.querySelector('.sidebar');
+  const overlayEl = document.querySelector('.sidebar-overlay');
+  if (menuBtn && sidebarEl) {
+    menuBtn.addEventListener('click', () => {
+      sidebarEl.classList.toggle('open');
+      if (overlayEl) overlayEl.classList.toggle('open');
     });
+    if (overlayEl) {
+      overlayEl.addEventListener('click', () => {
+        sidebarEl.classList.remove('open');
+        overlayEl.classList.remove('open');
+      });
+    }
   }
-}
+})();
