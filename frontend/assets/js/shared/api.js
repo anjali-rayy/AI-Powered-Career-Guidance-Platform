@@ -1,9 +1,9 @@
 const API_URL = (window.ENV_BACKEND_URL || 'http://localhost:3000') + '/api';
 
 // ── TOKEN HELPERS ──
-function getToken()         { return localStorage.getItem('authToken'); }
-function setToken(token)    { localStorage.setItem('authToken', token); }
-function removeToken()      { localStorage.removeItem('authToken'); }
+function getToken()         { return localStorage.getItem('token'); }
+function setToken(token)    { localStorage.setItem('token', token); }
+function removeToken()      { localStorage.removeItem('token'); }
 
 // ── BASE FETCH ──
 async function apiFetch(endpoint, options = {}) {
@@ -59,7 +59,9 @@ function syncUserToStorage(user) {
     interest:   user.interest   || '',
     skills:     user.skills     || []
   }));
+  if (user.quizResult) localStorage.setItem('quizResult', JSON.stringify(user.quizResult));
 }
+
 
 // ── REGISTER ──
 async function apiRegister(data) {
