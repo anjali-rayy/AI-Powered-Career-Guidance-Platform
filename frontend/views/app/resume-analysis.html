@@ -1119,6 +1119,7 @@
         }
     </style>
 </head>
+
 <body>
 
     <nav class="navbar">
@@ -1166,7 +1167,7 @@
                             <div class="nav-drop-sub">Find what skills you're missing</div>
                         </div>
                     </a>
-                    <a href="#" class="nav-drop-item" onclick="showToast('Career Recommendation coming soon!')">
+                    <a href="../app/quiz-results.html" class="nav-drop-item">
                         <div class="nav-drop-icon"><svg viewBox="0 0 24 24">
                                 <circle cx="12" cy="12" r="3" />
                                 <path d="M12 2v3M12 19v3M2 12h3M19 12h3" />
@@ -1212,22 +1213,30 @@
             </li>
         </ul>
         <button class="nav-hamburger" aria-label="Menu">
-  <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-</button>
-<div class="mobile-menu" id="mobile-menu">
-  <a href="../public/index.html">Home</a>
-  <a href="../public/about.html">About</a>
-  <a href="../public/features.html">Features</a>
-  <a href="../app/quiz.html">Career Quiz</a>
-  <a href="../app/resume-analysis.html" class="active">Resume Analysis</a>
-  <a href="../app/career-tree.html">3D Career Tree</a>
-  <a href="../app/roadmap.html">AI Roadmap</a>
-  <div style="border-top:1px solid rgba(255,255,255,0.07);margin:8px 0;padding-top:8px;display:flex;gap:10px">
-    <a href="../auth/login.html" style="flex:1;text-align:center;padding:10px;border:1px solid rgba(255,255,255,0.1);border-radius:8px">Sign in</a>
-    <a href="../auth/register.html" style="flex:1;text-align:center;padding:10px;background:var(--gold);color:#0A0A0A;border-radius:8px;font-weight:600">Get started</a>
-  </div>
-</div>
-<div class="nav-actions">
+            <svg viewBox="0 0 24 24">
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+        </button>
+        <div class="mobile-menu" id="mobile-menu">
+            <a href="../public/index.html">Home</a>
+            <a href="../public/about.html">About</a>
+            <a href="../public/features.html">Features</a>
+            <a href="../app/quiz.html">Career Quiz</a>
+            <a href="../app/resume-analysis.html" class="active">Resume Analysis</a>
+            <a href="../app/career-tree.html">3D Career Tree</a>
+            <a href="../app/roadmap.html">AI Roadmap</a>
+            <div style="border-top:1px solid rgba(255,255,255,0.07);margin:8px 0;padding-top:8px;display:flex;gap:10px">
+                <a href="../auth/login.html"
+                    style="flex:1;text-align:center;padding:10px;border:1px solid rgba(255,255,255,0.1);border-radius:8px">Sign
+                    in</a>
+                <a href="../auth/register.html"
+                    style="flex:1;text-align:center;padding:10px;background:var(--gold);color:#0A0A0A;border-radius:8px;font-weight:600">Get
+                    started</a>
+            </div>
+        </div>
+        <div class="nav-actions">
             <a href="../auth/login.html"><button class="btn-ghost">Sign in</button></a>
             <a href="../auth/register.html"><button class="btn-gold">Get started</button></a>
         </div>
@@ -1599,6 +1608,23 @@
                     <div class="suggestions-grid" id="suggestionsGrid"></div>
                 </div>
 
+                <!-- CAREER RECOMMENDATIONS FROM RESUME SKILLS -->
+                <div class="suggestions-card reveal" id="careerRecoSection" style="--delay:0.16s;display:none">
+                    <div class="panel-section-title">
+                        <svg viewBox="0 0 24 24"
+                            style="width:18px;height:18px;stroke:var(--gold);fill:none;stroke-width:1.8;stroke-linecap:round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg>
+                        Career Recommendations Based on Your Resume
+                    </div>
+                    <div class="panel-section-sub">Matched using your extracted skills against 60 real career paths
+                    </div>
+                    <div id="careerRecoGrid" style="display:flex;flex-direction:column;gap:12px;margin-top:16px"></div>
+                </div>
+
                 <div class="action-btns reveal" style="--delay:0.18s">
                     <button class="btn-primary" onclick="goToRoadmap()">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -1618,21 +1644,21 @@
 
     <div id="toast" class="toast"></div>
     <script src="../../assets/js/shared/config.js"></script>
-<script src="../../assets/js/shared/nav.js"></script>
-<script src="../../assets/js/shared/footer.js"></script>
-<script>
-  const hamburger = document.querySelector('.nav-hamburger');
-  const mobileMenu = document.getElementById('mobile-menu');
-  if (hamburger && mobileMenu) {
-    hamburger.addEventListener('click', () => mobileMenu.classList.toggle('open'));
-    document.addEventListener('click', e => {
-      if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target))
-        mobileMenu.classList.remove('open');
-    });
-  }
-</script>
-<script>
-    const _fetch = window.fetch.bind(window);
+    <script src="../../assets/js/shared/nav.js"></script>
+    <script src="../../assets/js/shared/footer.js"></script>
+    <script>
+        const hamburger = document.querySelector('.nav-hamburger');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (hamburger && mobileMenu) {
+            hamburger.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+            document.addEventListener('click', e => {
+                if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target))
+                    mobileMenu.classList.remove('open');
+            });
+        }
+    </script>
+    <script>
+        const _fetch = window.fetch.bind(window);
         function escHtml(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
         const API_BASE = window.ENV_BACKEND_URL || 'http://localhost:3000';
 
@@ -1795,6 +1821,7 @@
         // ── ANALYSIS ──
         async function startAnalysis() {
             hideError();
+            if (!localStorage.getItem('token')) { window.location.href = '../auth/login.html'; return; }
             if (!selectedFile) { showError('No Resume', 'Please upload a resume file first.'); return; }
 
             // FIX: validate by word count not character count
@@ -2053,6 +2080,9 @@ Return raw JSON only — no backticks, no preamble, no explanation.`;
         // ── SHOW RESULTS ──
         function showResults(data) {
             document.getElementById('loadingOverlay').classList.remove('show');
+            // Fetch career recommendations using extracted skills
+            const presentSkills = (data.skills.present || []).join(' ');
+            if (presentSkills) fetchCareerRecommendations(presentSkills);
             document.getElementById('uploadCard').style.display = 'none';
             document.getElementById('resultsPanel').classList.add('show');
 
@@ -2131,7 +2161,7 @@ Return raw JSON only — no backticks, no preamble, no explanation.`;
             }, 100);
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        }  // ← closes showResults()
 
         // FIX: animateRing uses correct circumference constant
         function animateRing(id, value) {
@@ -2179,58 +2209,113 @@ Return raw JSON only — no backticks, no preamble, no explanation.`;
             window.location.href = 'roadmap.html?' + params.toString();
         }
 
+        async function fetchCareerRecommendations(skills) {
+            const section = document.getElementById('careerRecoSection');
+            const grid = document.getElementById('careerRecoGrid');
+            section.style.display = 'block';
+            grid.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:12px 0">Finding best career matches…</div>';
+
+            try {
+                const res = await _fetch(`${API_BASE}/api/career-recommend`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({ skills })
+                });
+
+                if (!res.ok) throw new Error('Recommender unavailable');
+                const data = await res.json();
+                const recs = data.recommendations || [];
+
+                if (!recs.length) {
+                    grid.innerHTML = '<div style="color:var(--muted);font-size:13px">No strong matches found.</div>';
+                    return;
+                }
+
+                grid.innerHTML = recs.slice(0, 6).map(r => `
+                    <div class="ats-item" style="justify-content:space-between;flex-wrap:wrap;gap:10px">
+                        <div style="display:flex;align-items:center;gap:12px;flex:1">
+                            <div style="width:28px;height:28px;border-radius:7px;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.2);display:grid;place-items:center;font-size:12px;font-weight:700;color:var(--gold);flex-shrink:0">#${r.rank}</div>
+                            <div>
+                                <div style="font-size:13.5px;font-weight:600;color:var(--text)">${escHtml(r.career)}</div>
+                                <div style="font-size:11.5px;color:var(--muted);margin-top:2px">${escHtml(r.category)}</div>
+                            </div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+                            <div style="display:flex;flex-wrap:wrap;gap:5px;max-width:240px">
+                                ${(r.matched_skills || []).slice(0, 4).map(s =>
+                    `<span class="chip present" style="font-size:11px;padding:3px 9px">${escHtml(s)}</span>`
+                ).join('')}
+                            </div>
+                            <div style="font-size:14px;font-weight:700;color:var(--gold);min-width:48px;text-align:right">${r.match_score}%</div>
+                        </div>
+                    </div>
+                `).join('');
+
+            } catch (err) {
+                grid.innerHTML = '<div style="color:var(--muted);font-size:13px">Career recommendations unavailable right now.</div>';
+            }
+        }
+        selectedFile = null;
+        extractedText = '';
+        fileInput.value = '';
+        document.getElementById('fileSelected').classList.remove('show');
+        document.getElementById('parsedPreview').classList.remove('show');
+
+        // FIX: reset all 3 dots including dot3
+        ['dot1', 'dot2', 'dot3'].forEach(id => {
+            document.getElementById(id).classList.remove('active', 'done');
+        });
+        document.getElementById('dot1').classList.add('active');
+
+        document.getElementById('uploadForm').style.display = '';
+        document.getElementById('loadingOverlay').classList.remove('show');
+        document.getElementById('uploadCard').style.display = '';
+        document.getElementById('resultsPanel').classList.remove('show');
+
+        ['skillChips', 'jobMatches', 'atsItems', 'strengthItems', 'suggestionsGrid', 'careerRecoGrid'].forEach(id => {
+            document.getElementById('careerRecoSection').style.display = 'none';
+            document.getElementById(id).innerHTML = '';
+        });
+        ['readinessScore', 'atsScore', 'matchScore'].forEach(id => {
+            document.getElementById(id).textContent = '—';
+        });
+
+        // FIX: reset rings using correct circumference constant
+        ['ring1', 'ring2', 'ring3'].forEach(id => {
+            document.getElementById(id).style.strokeDashoffset = RING_CIRCUMFERENCE;
+        });
+
+        ['ls1', 'ls2', 'ls3', 'ls4', 'ls5'].forEach(id => {
+            document.getElementById(id).classList.remove('active', 'done');
+        });
+
+        // FIX: reset badge classes so stale colors don't bleed into next analysis
+        ['readinessBadge', 'atsBadge', 'matchBadge'].forEach(id => {
+            document.getElementById(id).className = 'sc-badge good';
+            document.getElementById(id).textContent = '—';
+        });
+
         function analyzeAnother() {
-            selectedFile = null;
-            extractedText = '';
-            fileInput.value = '';
-            document.getElementById('fileSelected').classList.remove('show');
-            document.getElementById('parsedPreview').classList.remove('show');
-
-            // FIX: reset all 3 dots including dot3
-            ['dot1', 'dot2', 'dot3'].forEach(id => {
-                document.getElementById(id).classList.remove('active', 'done');
-            });
-            document.getElementById('dot1').classList.add('active');
-
-            document.getElementById('uploadForm').style.display = '';
-            document.getElementById('loadingOverlay').classList.remove('show');
-            document.getElementById('uploadCard').style.display = '';
-            document.getElementById('resultsPanel').classList.remove('show');
-
-            ['skillChips', 'jobMatches', 'atsItems', 'strengthItems', 'suggestionsGrid'].forEach(id => {
-                document.getElementById(id).innerHTML = '';
-            });
-            ['readinessScore', 'atsScore', 'matchScore'].forEach(id => {
-                document.getElementById(id).textContent = '—';
-            });
-
-            // FIX: reset rings using correct circumference constant
-            ['ring1', 'ring2', 'ring3'].forEach(id => {
-                document.getElementById(id).style.strokeDashoffset = RING_CIRCUMFERENCE;
-            });
-
-            ['ls1', 'ls2', 'ls3', 'ls4', 'ls5'].forEach(id => {
-                document.getElementById(id).classList.remove('active', 'done');
-            });
-
-            // FIX: reset badge classes so stale colors don't bleed into next analysis
-            ['readinessBadge', 'atsBadge', 'matchBadge'].forEach(id => {
-                document.getElementById(id).className = 'sc-badge good';
-                document.getElementById(id).textContent = '—';
-            });
-
-            document.getElementById('jobRole').value = '';
-            document.getElementById('expLevel').value = '';
-            hideError();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            async function fetchCareerRecommendations(skills) {
+            }
         }
 
         // ── SCROLL REVEAL ──
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-        }, { threshold: 0.1 });
+        // Pre-fill from quiz result if available
+        const qr = JSON.parse(localStorage.getItem('quizResult') || 'null');
+        if (qr && qr.career) {
+            const jobRoleInput = document.getElementById('jobRole');
+            if (jobRoleInput && !jobRoleInput.value) jobRoleInput.value = qr.career;
+        }
+        const observer = new IntersectionObserver(
+            entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+            { threshold: 0.1 }
+        );
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     </script>
-    </body>
+</body>
 
 </html>

@@ -246,7 +246,7 @@
           <div class="nav-drop-icon"><svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></div>
           <div><div class="nav-drop-title">Skill Gap Detection</div><div class="nav-drop-sub">Find what skills you're missing</div></div>
         </a>
-        <a href="#" class="nav-drop-item" onclick="showToast('Career Recommendation coming soon!')">
+        <a href="../app/quiz-results.html" class="nav-drop-item">
           <div class="nav-drop-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></div>
           <div><div class="nav-drop-title">Career Recommendation</div><div class="nav-drop-sub">Personalized career matches</div></div>
         </a>
@@ -662,6 +662,8 @@ canvas.addEventListener('wheel', e => {
 
 
 function handleGetRoadmap() {
+  const token = localStorage.getItem('token');
+  if (!token) { window.location.href = '../auth/login.html'; return; }
   if (!hoveredNode && !window._selectedNode) {
     showToast('Click a node first, then hit Get Roadmap');
     return;
@@ -777,9 +779,8 @@ if (hamburger && mobileMenu) {
   });
 }
 
-/* ── INIT ── */
-window.addEventListener('resize', () => { resize(); });
-resize();
+const token = localStorage.getItem('token');
+if (!token) window.location.href = '../auth/login.html';
 buildTree('tech');
 drawFrame();
 </script>

@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="../../assets/css/shared.css" />
   <link rel="stylesheet" href="../../assets/css/dashboard.css" />
   <script>
-    if (!localStorage.getItem('authToken')) window.location.replace('../auth/login.html');
+    if (!localStorage.getItem('token')) window.location.replace('../auth/login.html');
   </script>
 </head>
 
@@ -252,7 +252,7 @@
 
         <!-- Quick actions -->
         <div class="quick-actions">
-          <button class="qa-btn" onclick="showToast('Opening career quiz...')">
+          <button class="qa-btn" onclick="window.location.href='../app/quiz.html'">
             <div class="qa-icon"><svg viewBox="0 0 24 24">
                 <circle cx="12" cy="12" r="10" />
                 <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
