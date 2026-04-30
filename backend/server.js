@@ -397,17 +397,3 @@ app.post('/api/career-recommend', authMiddleware, async (req, res) => {
 app.listen(process.env.PORT || 3000, () => {
   console.log('✅ PathwayAI backend running on http://localhost:3000');
 });
-  const { skills } = req.body;
-  if (!skills) return res.status(400).json({ error: 'Skills required' });
-
-  const py = spawn('python3', [
-    path.join(__dirname, 'recommender.py'), skills
-  ]);
-  let out = '', err = '';
-  py.stdout.on('data', d => out += d);
-  py.stderr.on('data', d => err += d);
-  py.on('close', code => {
-    if (code !== 0) return res.status(500).json({ error: 'Recommender failed' });
-    try { res.json({ recommendations: JSON.parse(out) }); }
-    catch { res.status(500).json({ error: 'Parse error' }); }
-  });
