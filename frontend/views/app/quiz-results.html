@@ -40,7 +40,7 @@
       </div>
       <div><div class="nav-drop-title">Skill Gap Detection</div><div class="nav-drop-sub">Find what skills you're missing</div></div>
     </a>
-    <a href="#" class="nav-drop-item" onclick="showToast('Career Recommendation coming soon!')">
+    <a href="../app/quiz-results.html" class="nav-drop-item">
       <div class="nav-drop-icon">
         <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
       </div>
@@ -78,13 +78,12 @@
   <a href="../app/resume-analysis.html">Resume Analysis</a>
   <a href="../app/career-tree.html">3D Career Tree</a>
   <a href="../app/roadmap.html">AI Roadmap</a>
-  <div style="border-top:1px solid rgba(255,255,255,0.07);margin:8px 0;padding-top:8px">
-    <a href="../auth/login.html" style="display:block;text-align:center;padding:10px;background:var(--gold);color:#0A0A0A;border-radius:8px;font-weight:600">Sign in</a>
+  <div style="border-top:1px solid rgba(255,255,255,0.07);margin:8px 0;padding-top:8px;display:flex;gap:10px">
+    <a href="../auth/login.html" style="flex:1;text-align:center;padding:10px;border:1px solid rgba(255,255,255,0.1);border-radius:8px">Sign in</a>
+    <a href="../auth/register.html" style="flex:1;text-align:center;padding:10px;background:var(--gold);color:#0A0A0A;border-radius:8px;font-weight:600">Get started</a>
   </div>
 </div>
-<div class="nav-actions">
-    <a href="../auth/login.html"><button class="btn-gold">Sign in</button></a>
-  </div>
+<div class="nav-actions" id="nav-actions"></div>
 </nav>
 
 <!-- Particle canvas background -->
@@ -223,8 +222,8 @@
       <h2 class="cta-title">Ready to Start Your Journey?</h2>
       <p class="cta-sub">Save your results, explore colleges, and build your personalised career roadmap.</p>
       <div class="cta-btns" id="cta-btns">
-        <!-- Injected by JS based on auth state -->
-      </div>
+  <!-- injected by JS based on login state -->
+</div>
     </div>
   </section>
   <footer class="footer"></footer>

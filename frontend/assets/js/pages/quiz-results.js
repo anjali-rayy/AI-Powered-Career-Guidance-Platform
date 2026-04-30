@@ -63,13 +63,13 @@ function getCareerScores() {
   try {
     const stored = localStorage.getItem("quizCareerScores");
     if (stored) return JSON.parse(stored);
-  } catch (e) {}
+  } catch (e) { }
   // Fallback to hardcoded defaults
   return [
-    { name: "Frontend Engineer",  score: 91 },
-    { name: "Product Designer",   score: 78 },
-    { name: "Data Analyst",       score: 63 },
-    { name: "Backend Developer",  score: 54 }
+    { name: "Frontend Engineer", score: 91 },
+    { name: "Product Designer", score: 78 },
+    { name: "Data Analyst", score: 63 },
+    { name: "Backend Developer", score: 54 }
   ];
 }
 
@@ -94,7 +94,7 @@ function showToast(msg) {
 // ════════════════════════════════
 function animateRing(targetPct) {
   const circle = document.getElementById("ring-progress");
-  const pctEl  = document.getElementById("match-pct");
+  const pctEl = document.getElementById("match-pct");
   if (!circle || !pctEl) return;
   const circumference = 502;
   const offset = circumference - (targetPct / 100) * circumference;
@@ -111,8 +111,9 @@ function animateRing(targetPct) {
 // ── SET HERO ──
 function initHero() {
   const pill = document.getElementById("top-career-pill");
-  document.getElementById("pill-icon").textContent  = topCareer.icon;
-  document.getElementById("pill-name").textContent  = topCareer.name;
+  document.getElementById("pill-icon").textContent = topCareer.icon;
+  document.getElementById("pill-name").textContent = topCareer.name;
+  localStorage.setItem('quizResult', JSON.stringify({ career: topCareer.name, score: topCareer.score }));
   const sub = document.getElementById("hero-sub");
   if (sub) sub.textContent = `Based on your answers, our AI matched you to ${careers.length} career paths — here's where you shine.`;
   animateRing(topCareer.score);
@@ -156,10 +157,10 @@ function buildCareerCards() {
 // STATS ROW
 // ════════════════════════════════
 function buildStats() {
-  document.getElementById("stat-salary-val").textContent = topCareer.salary  || "Varies";
-  document.getElementById("stat-growth-val").textContent = topCareer.growth  || "Growing";
-  document.getElementById("stat-demand-val").textContent = topCareer.demand  || "High";
-  document.getElementById("stat-score-val").textContent  = topCareer.score   + "%";
+  document.getElementById("stat-salary-val").textContent = topCareer.salary || "Varies";
+  document.getElementById("stat-growth-val").textContent = topCareer.growth || "Growing";
+  document.getElementById("stat-demand-val").textContent = topCareer.demand || "High";
+  document.getElementById("stat-score-val").textContent = topCareer.score + "%";
 }
 
 // ════════════════════════════════
@@ -195,14 +196,15 @@ function buildSkillBars() {
 function buildCTA() {
   const wrap = document.getElementById("cta-btns");
   if (!wrap) return;
-  const isLoggedIn = !!localStorage.getItem("userEmail");
+  const isLoggedIn = !!localStorage.getItem("token");
   if (isLoggedIn) {
+    const goalParam = encodeURIComponent(topCareer.name || '');
     wrap.innerHTML = `
-      <a href="../app/dashboard.html">
-        <button class="btn-gold" style="padding:13px 28px;font-size:14px">View Dashboard →</button>
+      <a href="../app/roadmap.html?goal=${goalParam}">
+        <button class="btn-gold" style="padding:13px 28px;font-size:14px">Generate My Roadmap →</button>
       </a>
-      <a href="../app/quiz.html">
-        <button class="btn-outline" style="padding:12px 24px;font-size:14px">Retake Quiz</button>
+      <a href="../app/resume-analysis.html">
+        <button class="btn-outline" style="padding:12px 24px;font-size:14px">Analyse My Resume</button>
       </a>`;
   } else {
     wrap.innerHTML = `
@@ -225,7 +227,7 @@ function initParticles() {
   let W, H, pts = [];
 
   function resize() {
-    W = canvas.width  = window.innerWidth;
+    W = canvas.width = window.innerWidth;
     H = canvas.height = window.innerHeight;
   }
 
@@ -287,7 +289,7 @@ function initEcosystem() {
   // Match canvas resolution to CSS size
   function resize() {
     const rect = canvas.getBoundingClientRect();
-    canvas.width  = rect.width  * devicePixelRatio;
+    canvas.width = rect.width * devicePixelRatio;
     canvas.height = rect.height * devicePixelRatio;
     ctx.scale(devicePixelRatio, devicePixelRatio);
     CW = rect.width;
@@ -501,3 +503,4 @@ document.addEventListener("DOMContentLoaded", () => {
   // Ecosystem loads after a short delay to let layout settle
   setTimeout(initEcosystem, 300);
 });
+

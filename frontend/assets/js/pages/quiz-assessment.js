@@ -133,7 +133,9 @@ function showResult() {
   localStorage.setItem("quizAnswers",       JSON.stringify(answers));
 
   // Navigate to results page (same folder as quiz-assessment.html)
-  window.location.href = "quiz-results.html";
+  const topCareer = careerScores[0];
+localStorage.setItem('quizResult', JSON.stringify({ career: topCareer.name, score: topCareer.score }));
+window.location.href = "quiz-results.html";
 }
 
 // ─────────────────────────────────────────────
