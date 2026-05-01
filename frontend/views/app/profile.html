@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="../../assets/css/dashboard.css" />
     <link rel="stylesheet" href="../../assets/css/profile.css"/>
     <script>
-      if (!localStorage.getItem('authToken')) {
+      if (!localStorage.getItem('token')) {
         window.location.replace('../auth/login.html');
       }
     </script>
@@ -58,7 +58,7 @@
                 <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
                 Dashboard
             </a>
-            <a href="profile.html" class="nav-item active">
+            <a href="../app/profile.html" class="nav-item active">
                 <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 My Profile
             </a>
@@ -126,7 +126,7 @@
                             <div style="font-size:14px;font-weight:600;color:#F5F5F5" id="menu-name"></div>
                             <div style="font-size:12px;color:#A1A1AA;margin-top:2px" id="menu-email"></div>
                         </div>
-                        <a href="profile.html" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;color:#D4AF37;background:rgba(212,175,55,0.06);text-decoration:none;font-size:13px;">
+                        <a href="../app/profile.html" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;color:#D4AF37;background:rgba(212,175,55,0.06);text-decoration:none;font-size:13px;">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="1.8" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                             My Profile
                         </a>
