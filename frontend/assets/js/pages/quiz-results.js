@@ -1,84 +1,146 @@
-/* ═══════════════════════════════════════════════════
-   quiz-results.js  —  PathwayAI Career Results Page
-   ═══════════════════════════════════════════════════ */
-
-// ── CAREER DATA MAP ──
-const CAREER_DATA = {
-  "Frontend Engineer": {
-    icon: "💻", score: 91,
-    tags: ["React", "CSS", "JavaScript"],
-    salary: "$68k – $120k", growth: "22% Growth", demand: "Very High",
-    skills: [
-      { name: "JavaScript / TypeScript", pct: 85, level: "high" },
-      { name: "React / Vue", pct: 72, level: "high" },
-      { name: "UI/UX Design", pct: 55, level: "medium" },
-      { name: "System Design", pct: 38, level: "low" },
-      { name: "Testing & CI/CD", pct: 45, level: "medium" }
-    ],
-    nodes: ["React", "Node.js", "CSS", "TypeScript", "UI Design", "REST APIs", "Git"]
-  },
-  "Product Designer": {
-    icon: "🎨", score: 78,
-    tags: ["Figma", "UX", "Prototyping"],
-    salary: "$60k – $110k", growth: "18% Growth", demand: "High",
-    skills: [
-      { name: "Figma / Sketch", pct: 80, level: "high" },
-      { name: "User Research", pct: 65, level: "high" },
-      { name: "Prototyping", pct: 70, level: "high" },
-      { name: "Front-end basics", pct: 35, level: "low" },
-      { name: "Data Analysis", pct: 40, level: "low" }
-    ],
-    nodes: ["Figma", "UX Research", "Prototyping", "Typography", "Motion", "Wireframing", "Branding"]
-  },
-  "Data Analyst": {
-    icon: "📊", score: 63,
-    tags: ["Python", "SQL", "Tableau"],
-    salary: "$55k – $95k", growth: "25% Growth", demand: "High",
-    skills: [
-      { name: "Python / R", pct: 75, level: "high" },
-      { name: "SQL", pct: 82, level: "high" },
-      { name: "Data Visualisation", pct: 60, level: "medium" },
-      { name: "Statistics", pct: 55, level: "medium" },
-      { name: "Machine Learning", pct: 30, level: "low" }
-    ],
-    nodes: ["Python", "SQL", "Pandas", "Tableau", "Statistics", "Excel", "Power BI"]
-  },
-  "Backend Developer": {
-    icon: "⚙️", score: 54,
-    tags: ["Node.js", "Databases", "APIs"],
-    salary: "$72k – $130k", growth: "20% Growth", demand: "Very High",
-    skills: [
-      { name: "Node.js / Python", pct: 80, level: "high" },
-      { name: "Databases (SQL/NoSQL)", pct: 70, level: "high" },
-      { name: "API Design", pct: 65, level: "medium" },
-      { name: "DevOps / Cloud", pct: 40, level: "low" },
-      { name: "Security", pct: 35, level: "low" }
-    ],
-    nodes: ["Node.js", "PostgreSQL", "MongoDB", "Docker", "REST", "AWS", "Redis"]
-  }
+// ── CAREER META (salary/demand by category from market data) ──
+const CAREER_META = {
+  'Data & AI':           { salary: '₹8–35 LPA',  growth: '35% Growth', demand: 'Very High' },
+  'Software Development':{ salary: '₹6–30 LPA',  growth: '25% Growth', demand: 'Very High' },
+  'Cybersecurity':       { salary: '₹7–28 LPA',  growth: '28% Growth', demand: 'High'      },
+  'Design':              { salary: '₹4–20 LPA',  growth: '18% Growth', demand: 'High'      },
+  'Management':          { salary: '₹8–30 LPA',  growth: '14% Growth', demand: 'Medium'    },
+  'Marketing':           { salary: '₹4–18 LPA',  growth: '16% Growth', demand: 'High'      },
+  'IT Infrastructure':   { salary: '₹4–20 LPA',  growth: '12% Growth', demand: 'Medium'    },
+  'Finance':             { salary: '₹6–25 LPA',  growth: '10% Growth', demand: 'Medium'    },
+  'Engineering':         { salary: '₹5–22 LPA',  growth: '8% Growth',  demand: 'Medium'    },
+  'Human Resources':     { salary: '₹4–15 LPA',  growth: '7% Growth',  demand: 'Medium'    },
+  'Research':            { salary: '₹6–20 LPA',  growth: '12% Growth', demand: 'Medium'    },
+  'Other':               { salary: '₹4–15 LPA',  growth: '10% Growth', demand: 'Medium'    },
 };
 
-// Read career scores from localStorage (set by quiz-assessment.js) or use defaults
-function getCareerScores() {
-  try {
-    const stored = localStorage.getItem("quizCareerScores");
-    if (stored) return JSON.parse(stored);
-  } catch (e) { }
-  // Fallback to hardcoded defaults
-  return [
-    { name: "Frontend Engineer", score: 91 },
-    { name: "Product Designer", score: 78 },
-    { name: "Data Analyst", score: 63 },
-    { name: "Backend Developer", score: 54 }
-  ];
+const CATEGORY_ICONS = {
+  'Data & AI': '🤖', 'Software Development': '💻', 'Cybersecurity': '🔐',
+  'Design': '🎨', 'Management': '📋', 'Marketing': '📣',
+  'IT Infrastructure': '🖥️', 'Finance': '💰', 'Engineering': '⚙️',
+  'Human Resources': '👥', 'Research': '🔬', 'Other': '🌐'
+};
+
+// ── FLASK API URL — change to your tunnel URL when deployed ──
+const FLASK_URL = 'https://pathwayai-backend.up.railway.app';
+
+// ── FALLBACK DATA (used if API is offline) ──
+const FALLBACK_CAREERS = [
+  { name: 'Frontend Developer', score: 85, category: 'Software Development',
+    matched_skills: ['html','css','javascript','react'], required_skills: ['html','css','javascript','react','typescript','testing'] },
+  { name: 'UI/UX Designer',     score: 72, category: 'Design',
+    matched_skills: ['figma','css'], required_skills: ['figma','prototyping','user research','css','typography'] },
+  { name: 'Data Analyst',       score: 60, category: 'Data & AI',
+    matched_skills: ['python','sql'], required_skills: ['python','sql','pandas','tableau','statistics'] },
+  { name: 'Backend Developer',  score: 50, category: 'Software Development',
+    matched_skills: ['javascript'], required_skills: ['nodejs','sql','rest api','docker','databases'] },
+];
+
+// ── Convert API response to internal career format ──
+function apiToCareer(rec) {
+  const meta = CAREER_META[rec.category] || CAREER_META['Other'];
+  const icon = CATEGORY_ICONS[rec.category] || '💼';
+  return {
+    name:           rec.career,
+    score:          Math.round(rec.match_score),
+    category:       rec.category,
+    icon:           icon,
+    tags:           (rec.matched_skills || []).slice(0, 3),
+    salary:         meta.salary,
+    growth:         meta.growth,
+    demand:         meta.demand,
+    matched_skills: rec.matched_skills || [],
+    skills: (rec.required_skills || []).slice(0, 5).map(s => {
+      const userSkillSet = new Set((window._userSkills || '').toLowerCase().split(/\s+/));
+      const has = userSkillSet.has(s.toLowerCase());
+      return {
+        name:  s,
+        pct:   has ? Math.floor(Math.random() * 25) + 70 : Math.floor(Math.random() * 25) + 10,
+        level: has ? 'high' : 'low'
+      };
+    }),
+    nodes: (rec.required_skills || []).slice(0, 7),
+  };
 }
 
-const careers = getCareerScores().map(c => ({
-  ...c,
-  ...(CAREER_DATA[c.name] || { icon: "🔭", tags: [], salary: "Varies", growth: "Growing", demand: "Moderate", skills: [], nodes: [] })
-}));
+// ── MAIN: fetch real recommendations from Flask ──
+let careers = [];
+let topCareer = null;
 
-const topCareer = careers[0];
+async function fetchAndInit() {
+  // Get skills from localStorage (saved by quiz-assessment.js)
+  const stored = localStorage.getItem('quizCareerScores');
+  const quizData = localStorage.getItem('quizResults');
+
+  let userSkills = '';
+
+  // Try to extract skills string from quiz data
+  if (quizData) {
+    try {
+      const parsed = JSON.parse(quizData);
+      userSkills = parsed.skills || parsed.extractedSkills || '';
+    } catch(e) {}
+  }
+
+  // If no skills string, build one from stored career scores tags
+  if (!userSkills && stored) {
+    try {
+      const scores = JSON.parse(stored);
+      userSkills = scores.map(c => c.name.toLowerCase().replace(/ /g, ' ')).join(' ');
+    } catch(e) {}
+  }
+
+  window._userSkills = userSkills;
+
+  let apiSuccess = false;
+
+  if (userSkills) {
+    try {
+      const res = await fetch(`${FLASK_URL}/recommend`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ skills: userSkills }),
+        signal: AbortSignal.timeout(5000) // 5 second timeout
+      });
+      const data = await res.json();
+      if (data.recommendations && data.recommendations.length) {
+        careers = data.recommendations.slice(0, 8).map(apiToCareer);
+        apiSuccess = true;
+      }
+    } catch (err) {
+      console.warn('[PathwayAI] Flask API offline, using fallback data:', err.message);
+    }
+  }
+
+  // Fallback: use stored quiz scores or hardcoded fallback
+  if (!apiSuccess) {
+    if (stored) {
+      try {
+        const scores = JSON.parse(stored);
+        careers = scores.map(c => ({
+          name: c.name, score: c.score, icon: '💼',
+          category: 'Other', tags: [], salary: '₹6–25 LPA',
+          growth: '15% Growth', demand: 'High',
+          matched_skills: [], skills: [], nodes: []
+        }));
+      } catch(e) {
+        careers = FALLBACK_CAREERS.map(apiToCareer);
+      }
+    } else {
+      careers = FALLBACK_CAREERS.map(apiToCareer);
+    }
+  }
+
+  topCareer = careers[0];
+
+  // Now run all UI init functions
+  initHero();
+  buildCareerCards();
+  buildStats();
+  buildSkillBars();
+  buildCTA();
+  setTimeout(initEcosystem, 300);
+}
 
 // ── HELPERS ──
 function showToast(msg) {
@@ -495,12 +557,6 @@ function initEcosystem() {
 // ════════════════════════════════
 document.addEventListener("DOMContentLoaded", () => {
   initParticles();
-  initHero();
-  buildCareerCards();
-  buildStats();
-  buildSkillBars();
-  buildCTA();
-  // Ecosystem loads after a short delay to let layout settle
-  setTimeout(initEcosystem, 300);
+  fetchAndInit(); // loads real API data, then calls all init functions
 });
 
