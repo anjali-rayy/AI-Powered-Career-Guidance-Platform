@@ -128,14 +128,77 @@ function showResult() {
     .map(name => ({ name, score: calcCareerScore(name) }))
     .sort((a, b) => b.score - a.score);   // highest first
 
+  // ── Extract skills string from quiz answers for Flask API ──
+  const skillsMap = {
+    // Q2 checkbox: activities → skills
+    q2: {
+      0: 'figma design creativity wireframing prototyping',
+      1: 'python sql data analysis statistics pandas',
+      2: 'leadership management communication stakeholder agile',
+      3: 'javascript html css react nodejs coding',
+      4: 'teaching communication documentation mentoring',
+      5: 'research analysis problem solving algorithms'
+    },
+    // Q5 radio: subject area → skills
+    q5: {
+      0: 'javascript python nodejs react docker git algorithms system design',
+      1: 'excel financial modeling sql reporting business analysis stakeholder',
+      2: 'figma adobe illustrator design thinking prototyping branding',
+      3: 'python r statistics research data analysis machine learning'
+    },
+    // Q7 radio: 5-year goal → skills
+    q7: {
+      0: 'leadership management okr strategy communication team building',
+      1: 'system design algorithms deep technical specialization architecture',
+      2: 'design creativity visual storytelling brand direction',
+      3: 'research academia publishing statistics experimentation'
+    }
+  };
+
+  let skillParts = [];
+
+  // From Q2 (checkbox — can select multiple)
+  const q2ans = answers[2];
+  if (Array.isArray(q2ans)) {
+    q2ans.forEach(idx => {
+      if (skillsMap.q2[idx]) skillParts.push(skillsMap.q2[idx]);
+    });
+  }
+
+  // From Q5 (radio — subject area)
+  const q5ans = answers[5];
+  if (q5ans !== null && skillsMap.q5[q5ans]) {
+    skillParts.push(skillsMap.q5[q5ans]);
+  }
+
+  // From Q7 (radio — 5-year goal)
+  const q7ans = answers[7];
+  if (q7ans !== null && skillsMap.q7[q7ans]) {
+    skillParts.push(skillsMap.q7[q7ans]);
+  }
+
+  // Add problem-solving weight from Q1 slider
+  const q1val = answers[1] || 5;
+  if (q1val >= 7) skillParts.push('algorithms problem solving logic optimization');
+
+  // Add communication weight from Q3 slider
+  const q3val = answers[3] || 5;
+  if (q3val >= 7) skillParts.push('communication presentation stakeholder management');
+
+  const extractedSkills = skillParts.join(' ');
+
   // Persist for quiz-results.html to read
   localStorage.setItem("quizCareerScores", JSON.stringify(careerScores));
   localStorage.setItem("quizAnswers",       JSON.stringify(answers));
+  localStorage.setItem("quizResults", JSON.stringify({
+    skills: extractedSkills,
+    answers: answers
+  }));
 
-  // Navigate to results page (same folder as quiz-assessment.html)
+  // Navigate to results page
   const topCareer = careerScores[0];
-localStorage.setItem('quizResult', JSON.stringify({ career: topCareer.name, score: topCareer.score }));
-window.location.href = "quiz-results.html";
+  localStorage.setItem('quizResult', JSON.stringify({ career: topCareer.name, score: topCareer.score }));
+  window.location.href = "quiz-results.html";
 }
 
 // ─────────────────────────────────────────────
