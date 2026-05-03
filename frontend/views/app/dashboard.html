@@ -36,7 +36,7 @@
 
       <nav class="sidebar-nav">
         <div class="nav-section-label">Main</div>
-        <a href="/features.html" class="nav-item">
+        <a href="../public/features.html" class="nav-item">
           <svg viewBox="0 0 24 24">
             <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
           </svg>
@@ -58,12 +58,12 @@
           </svg>
           My Profile
         </a>
-        <a href="#" class="nav-item" onclick="showToast('Career Matches coming soon!')">
+        <a href="#" class="nav-item" onclick="window.location.href='../app/career-recommendation.html'">
           <svg viewBox="0 0 24 24">
             <circle cx="12" cy="12" r="3" />
             <path d="M12 2v3M12 19v3M2 12h3M19 12h3" />
           </svg>
-          Career Matches
+          Job Recommendation
           <span class="nav-badge">4</span>
         </a>
 
@@ -93,7 +93,7 @@
           </svg>
           Skill Analysis
         </a>
-        <a href="#" class="nav-item" onclick="showToast('Learning Path coming soon!')">
+        <a href="../app/learning-path.html" class="nav-item">
           <svg viewBox="0 0 24 24">
             <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
             <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
@@ -221,8 +221,8 @@
                   <path d="M18 20V10M12 20V4M6 20v-6" />
                 </svg></div><span class="stat-trend up">↑ +4</span>
             </div>
-            <div class="stat-num" id="stat-readiness">91</div>
-            <div class="stat-lbl">Career readiness score</div>
+            <div class="stat-num" id="stat-readiness">—</div>
+            <div class="stat-lbl">Job Recommendation</div>
           </div>
           <div class="stat-card">
             <div class="stat-card-header">
@@ -370,40 +370,42 @@
           <div class="d-card">
             <div class="d-card-head">
               <div>
-                <div class="d-card-title">Readiness Score</div>
-                <div class="d-card-sub">Your overall career preparation</div>
+                <div class="d-card-title">Job Recommendation</div>
+                <div class="d-card-sub">AI-powered Job Recommendation for you</div>
               </div>
             </div>
             <div class="readiness-ring-wrap">
-              <svg class="ring-svg" viewBox="0 0 130 130">
-                <circle cx="65" cy="65" r="54" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="10" />
-                <circle cx="65" cy="65" r="54" fill="none" stroke="url(#rg)" stroke-width="10" stroke-linecap="round"
-                  stroke-dasharray="339.3" stroke-dashoffset="91.6" transform="rotate(-90 65 65)"
-                  style="transition:stroke-dashoffset 1.5s ease" />
-                <defs>
-                  <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stop-color="#8B6914" />
-                    <stop offset="100%" stop-color="#D4AF37" />
-                  </linearGradient>
-                </defs>
-              </svg>
-              <div class="ring-center" style="margin-top:-76px;position:relative;z-index:2">
-                <div class="ring-num">91</div>
-                <div class="ring-lbl">out of 100</div>
+              <div style="position:relative;width:130px;height:130px;margin:0 auto">
+                <svg viewBox="0 0 130 130" style="width:130px;height:130px;display:block">
+                  <circle cx="65" cy="65" r="54" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="10" />
+                  <circle cx="65" cy="65" r="54" fill="none" stroke="url(#rg)" stroke-width="10" stroke-linecap="round"
+                    stroke-dasharray="339.3" stroke-dashoffset="91.6" transform="rotate(-90 65 65)"
+                    style="transition:stroke-dashoffset 1.5s ease" />
+                  <defs>
+                    <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#8B6914" />
+                      <stop offset="100%" stop-color="#D4AF37" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;width:100%">
+                  <div class="ring-num" id="ring-rec-count">—</div>
+                  <div class="ring-lbl">job matches</div>
+                </div>
               </div>
-              <div style="margin-top:60px;width:100%">
+              <div style="margin-top:16px;width:100%">
                 <div class="ring-stats">
                   <div class="ring-stat">
-                    <div class="ring-stat-num" style="color:#4CAF70">4</div>
-                    <div class="ring-stat-lbl">Skills have</div>
+                    <div class="ring-stat-num" style="color:#4CAF70" id="ring-skills-have">—</div>
+                    <div class="ring-stat-lbl">Skills added</div>
                   </div>
                   <div class="ring-stat">
-                    <div class="ring-stat-num" style="color:#C9A227">2</div>
-                    <div class="ring-stat-lbl">Skills gap</div>
+                    <div class="ring-stat-num" style="color:#C9A227" id="ring-skills-gap">—</div>
+                    <div class="ring-stat-lbl">Skills missing</div>
                   </div>
                   <div class="ring-stat">
-                    <div class="ring-stat-num">12</div>
-                    <div class="ring-stat-lbl">Jobs match</div>
+                    <div class="ring-stat-num" id="ring-jobs-match">—</div>
+                    <div class="ring-stat-lbl">Jobs matched</div>
                   </div>
                 </div>
               </div>
@@ -548,7 +550,7 @@
                     <div class="activity-line"></div>
                   </div>
                   <div>
-                    <div class="activity-text">Career analysis updated — readiness score improved to <strong
+                    <div class="activity-text">Job recommendation updated — match score improved to <strong
                         style="color:var(--gold)">91</strong></div>
                     <div class="activity-time">2 hours ago</div>
                   </div>
@@ -597,56 +599,7 @@
               </div>
             </div>
           </div>
-
-          <div class="d-card">
-            <div class="d-card-head">
-              <div>
-                <div class="d-card-title">Learn Next</div>
-                <div class="d-card-sub">Recommended to close your gaps</div>
-              </div>
-            </div>
-            <div class="d-card-body">
-              <div style="display:flex;flex-direction:column;gap:12px">
-                <div
-                  style="background:rgba(212,175,55,0.05);border:1px solid rgba(212,175,55,0.15);border-radius:10px;padding:14px">
-                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px"><span
-                      style="font-size:13.5px;font-weight:500;color:var(--text)">TypeScript Fundamentals</span><span
-                      style="font-size:11px;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.2);padding:2px 8px;border-radius:4px;color:#C9A227">Priority</span>
-                  </div>
-                  <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Closes your biggest skill gap · ~3
-                    weeks</div>
-                  <button onclick="showToast('Opening TypeScript course...')"
-                    style="background:var(--gold);border:none;color:#0A0A0A;font-size:12px;font-weight:600;padding:7px 14px;border-radius:6px;cursor:pointer;font-family:'Inter',sans-serif;">Start
-                    Learning →</button>
-                </div>
-                <div
-                  style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:14px">
-                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px"><span
-                      style="font-size:13.5px;font-weight:500;color:var(--text)">Node.js &amp; Express.js</span><span
-                      style="font-size:11px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);padding:2px 8px;border-radius:4px;color:var(--muted)">Recommended</span>
-                  </div>
-                  <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Needed for fullstack roles · ~5
-                    weeks</div>
-                  <button onclick="showToast('Opening Node.js course...')"
-                    style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:var(--text);font-size:12px;font-weight:500;padding:7px 14px;border-radius:6px;cursor:pointer;font-family:'Inter',sans-serif;">Start
-                    Learning →</button>
-                </div>
-                <div
-                  style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:14px">
-                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px"><span
-                      style="font-size:13.5px;font-weight:500;color:var(--text)">Jest / Unit Testing</span><span
-                      style="font-size:11px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);padding:2px 8px;border-radius:4px;color:var(--muted)">Optional</span>
-                  </div>
-                  <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Boosts hirability significantly · ~2
-                    weeks</div>
-                  <button onclick="showToast('Opening Jest course...')"
-                    style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:var(--text);font-size:12px;font-weight:500;padding:7px 14px;border-radius:6px;cursor:pointer;font-family:'Inter',sans-serif;">Start
-                    Learning →</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
+            
           <div style="display:flex;flex-direction:column;gap:16px">
             <div class="d-card">
               <div class="d-card-head">
