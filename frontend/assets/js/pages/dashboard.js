@@ -57,15 +57,23 @@ requireAuth().then(function() {
   /* ── SAVE & RESTORE STAT CARDS ── */
   (function syncStats() {
     const saved = JSON.parse(localStorage.getItem('dashStats') || '{}');
-    const defaults = { readiness: 91, matches: 4, jobs: 12, skills: 2 };
-    const stats = Object.assign(defaults, saved);
-    const el = (id) => document.getElementById(id);
-    if (el('stat-readiness')) el('stat-readiness').textContent = stats.readiness;
-    if (el('stat-matches'))   el('stat-matches').textContent   = stats.matches;
-    if (el('stat-jobs'))      el('stat-jobs').textContent      = stats.jobs;
-    if (el('stat-skills'))    el('stat-skills').textContent    = stats.skills;
-    // Save back so next refresh has latest values
-    localStorage.setItem('dashStats', JSON.stringify(stats));
+    const el    = (id) => document.getElementById(id);
+    const _p    = JSON.parse(localStorage.getItem('profileData') || '{}');
+
+    const skillsHave    = Array.isArray(_p.skills) ? _p.skills.length : 0;
+    const recCount      = saved.readiness  || 0;
+    const jobsMatch     = saved.jobs       || 0;
+    const careerMatches = saved.matches    || 0;
+    const skillsMissing = saved.skillsGap  || Math.max(0, 10 - skillsHave);
+
+    if (el('stat-readiness')) el('stat-readiness').textContent = recCount      || '—';
+    if (el('stat-matches'))   el('stat-matches').textContent   = careerMatches || '—';
+    if (el('stat-jobs'))      el('stat-jobs').textContent      = jobsMatch     || '—';
+    if (el('stat-skills'))    el('stat-skills').textContent    = skillsMissing;
+    if (el('ring-rec-count'))   el('ring-rec-count').textContent   = recCount      || '—';
+    if (el('ring-skills-have')) el('ring-skills-have').textContent = skillsHave    || '—';
+    if (el('ring-skills-gap'))  el('ring-skills-gap').textContent  = skillsMissing;
+    if (el('ring-jobs-match'))  el('ring-jobs-match').textContent  = jobsMatch     || '—';
   })();
 
   /* ── PROFILE COMPLETION ── */

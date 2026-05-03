@@ -303,7 +303,7 @@
 .cm-bar-fill { height: 100%; border-radius: 100px; background: linear-gradient(90deg, #8B6914, var(--gold)); }
 
 /* ── READINESS CARD ── */
-.readiness-ring-wrap { display: flex; flex-direction: column; align-items: center; padding: 20px 22px; }
+.readiness-ring-wrap { display: flex; flex-direction: column; align-items: center; padding: 20px 22px; position: relative; }
 .ring-svg { width: 130px; height: 130px; }
 .ring-center { text-align: center; margin-top: -4px; }
 .ring-num {
@@ -450,17 +450,17 @@
 
 /* ── BOTTOM ROW ── */
 .dash-bottom-row {
-  display: grid; grid-template-columns: 1fr 1fr 340px;
+  display: grid; grid-template-columns: 1fr 340px;
   gap: 20px;
 }
-@media (max-width: 1200px) { .dash-bottom-row { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 760px) { .dash-bottom-row { grid-template-columns: 1fr; } }
 @media (max-width: 760px)  { .dash-bottom-row { grid-template-columns: 1fr; } }
 
 /* ── RESPONSIVE SIDEBAR ── */
 @media (max-width: 900px) {
-  .sidebar { display: none; }
   .dash-main { margin-left: 0; }
 }
+
 
 .qa-badge {
   margin-top: 6px;
