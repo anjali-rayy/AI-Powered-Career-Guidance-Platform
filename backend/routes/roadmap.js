@@ -92,4 +92,66 @@ Rules:
   }
 });
 
+
+
+router.post('/blogs', async (req, res) => {
+  const { role } = req.body;
+  if (!role) return res.status(400).json({ error: 'Missing role' });
+
+  try {
+    const apiKey = process.env.GROQ_API_KEY;
+    if (!apiKey) return res.status(500).json({ error: 'Groq API key not configured' });
+
+    const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        messages: [{
+          role: 'user',
+          content: `Generate 6 learning resource recommendations for someone learning "${role}".
+ONLY use these REAL verified base URLs — do NOT invent URLs:
+- https://www.freecodecamp.org/news/
+- https://medium.com/
+- https://dev.to/
+- https://towardsdatascience.com/
+- https://roadmap.sh/
+- https://www.geeksforgeeks.org/
+- https://kaggle.com/learn
+- https://www.coursera.org/browse/
+- https://javascript.info/
+- https://css-tricks.com/
+
+Respond ONLY with a JSON array, no markdown, no backticks, no explanation:
+[{"title":"topic or concept name","site":"Site Name","url":"use one base URL above exactly","tags":["tag1","tag2"],"emoji":"one emoji","desc":"one sentence about what this covers"}]`
+        }],
+        temperature: 0.5,
+        max_tokens: 1000
+      })
+    });
+
+    if (!groqRes.ok) {
+      const err = await groqRes.json().catch(() => ({}));
+      return res.status(groqRes.status).json({ error: err?.error?.message || 'Groq error' });
+    }
+
+    const groqData = await groqRes.json();
+    const raw = groqData.choices?.[0]?.message?.content || '[]';
+    const clean = raw.replace(/```json|```/gi, '').trim();
+
+    try {
+      const parsed = JSON.parse(clean);
+      return res.json(parsed);
+    } catch {
+      return res.status(500).json({ error: 'AI returned invalid JSON' });
+    }
+  } catch (err) {
+    console.error('Blogs error:', err);
+    return res.status(500).json({ error: err.message || 'Internal server error' });
+  }
+});
+
 module.exports = router;

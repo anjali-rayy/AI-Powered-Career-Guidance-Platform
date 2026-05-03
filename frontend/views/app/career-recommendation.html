@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Career Recommendation | PathwayAI</title>
+  <link rel="stylesheet" href="../../assets/css/shared.css" />
+  <script>
+    if (!localStorage.getItem('token')) window.location.replace('../auth/login.html');
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0A0A0A; color: #F5F5F5; font-family: 'Inter', -apple-system, sans-serif; min-height: 100vh; }
+
+    .page-wrap { max-width: 960px; margin: 0 auto; padding: 36px 24px 80px; }
+
+    .back-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      color: #71717A; font-size: 13px; text-decoration: none; margin-bottom: 28px;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: #D4AF37; }
+
+    .page-header { margin-bottom: 32px; }
+    .page-header h1 { font-size: 26px; font-weight: 700; color: #F5F5F5; margin-bottom: 6px; }
+    .page-header h1 em { font-style: italic; color: #D4AF37; }
+    .page-header p { color: #71717A; font-size: 14px; }
+
+    .skills-panel {
+      background: #111111; border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px; padding: 24px; margin-bottom: 20px;
+    }
+    .skills-panel-label {
+      font-size: 11px; font-weight: 600; color: #71717A;
+      text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px;
+    }
+    .skills-tag-row {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; min-height: 32px;
+    }
+    .skill-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(212,175,55,0.1); border: 1px solid rgba(212,175,55,0.2);
+      color: #D4AF37; font-size: 12px; font-weight: 500;
+      padding: 5px 10px; border-radius: 20px;
+    }
+    .skill-tag .remove {
+      cursor: pointer; color: rgba(212,175,55,0.5); font-size: 15px; line-height: 1; transition: color 0.2s;
+    }
+    .skill-tag .remove:hover { color: #D4AF37; }
+    .no-skills-hint { color: #52525B; font-size: 13px; font-style: italic; align-self: center; }
+
+    .skills-input-row { display: flex; gap: 10px; }
+    .skills-input {
+      flex: 1; background: #0A0A0A; border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px; padding: 10px 14px; color: #F5F5F5; font-size: 13px;
+      font-family: inherit; outline: none; transition: border-color 0.2s;
+    }
+    .skills-input:focus { border-color: rgba(212,175,55,0.4); }
+    .skills-input::placeholder { color: #52525B; }
+    .btn-add {
+      background: rgba(212,175,55,0.1); border: 1px solid rgba(212,175,55,0.2);
+      color: #D4AF37; font-size: 13px; font-weight: 600; padding: 10px 16px;
+      border-radius: 10px; cursor: pointer; font-family: inherit; transition: background 0.2s;
+    }
+    .btn-add:hover { background: rgba(212,175,55,0.18); }
+    .skills-hint { font-size: 12px; color: #52525B; margin-top: 10px; }
+
+    .run-row { display: flex; gap: 12px; align-items: center; margin-bottom: 32px; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #D4AF37; color: #0A0A0A; font-weight: 700; font-size: 14px;
+      padding: 12px 24px; border-radius: 10px; border: none; cursor: pointer;
+      font-family: inherit; transition: opacity 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.88; }
+    .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: transparent; color: #A1A1AA; font-size: 13px;
+      padding: 12px 18px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);
+      cursor: pointer; font-family: inherit; transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-outline:hover { border-color: rgba(255,255,255,0.2); color: #F5F5F5; }
+
+    .status-bar {
+      display: none; align-items: center; gap: 10px;
+      background: #111111; border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px; padding: 12px 16px; margin-bottom: 24px; font-size: 13px; color: #A1A1AA;
+    }
+    .status-bar.visible { display: flex; }
+    .spinner {
+      width: 16px; height: 16px; border: 2px solid rgba(212,175,55,0.2);
+      border-top-color: #D4AF37; border-radius: 50%;
+      animation: spin 0.7s linear infinite; flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .error-box {
+      display: none; background: rgba(207,102,121,0.08); border: 1px solid rgba(207,102,121,0.2);
+      border-radius: 12px; padding: 16px 20px; color: #CF6679; font-size: 13px; margin-bottom: 24px;
+    }
+    .error-box.visible { display: block; }
+
+    .results-header {
+      display: none; justify-content: space-between; align-items: center; margin-bottom: 16px;
+    }
+    .results-header.visible { display: flex; }
+    .results-title { font-size: 15px; font-weight: 600; }
+    .results-count { font-size: 12px; color: #71717A; }
+
+    .results-grid { display: flex; flex-direction: column; gap: 12px; }
+
+    .result-card {
+      background: #111111; border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px; padding: 20px 22px;
+      transition: border-color 0.2s, transform 0.15s;
+      animation: fadeUp 0.35s ease both;
+    }
+    .result-card:hover { border-color: rgba(212,175,55,0.2); transform: translateY(-1px); }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-top { display: flex; align-items: flex-start; gap: 16px; }
+    .card-rank {
+      width: 34px; height: 34px; border-radius: 8px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: #A1A1AA;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+    }
+    .card-rank.top { color: #D4AF37; background: rgba(212,175,55,0.08); border-color: rgba(212,175,55,0.2); }
+
+    .card-info { flex: 1; min-width: 0; }
+    .card-title { font-size: 15px; font-weight: 600; color: #F5F5F5; margin-bottom: 4px; }
+    .card-category {
+      display: inline-block; font-size: 11px; color: #71717A;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
+      padding: 2px 8px; border-radius: 20px; margin-bottom: 12px;
+    }
+
+    .match-bar-bg {
+      height: 4px; background: rgba(255,255,255,0.06); border-radius: 99px;
+      margin-bottom: 12px; overflow: hidden;
+    }
+    .match-bar-fill {
+      height: 100%; border-radius: 99px;
+      background: linear-gradient(90deg, #8B6914, #D4AF37);
+      transition: width 1s ease;
+    }
+
+    .chip-row { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 5px; align-items: center; }
+    .chip-label { font-size: 11px; color: #52525B; }
+    .chip {
+      font-size: 11px; padding: 3px 9px; border-radius: 20px; font-weight: 500;
+    }
+    .chip.matched { background: rgba(76,175,112,0.1); border: 1px solid rgba(76,175,112,0.2); color: #4CAF70; }
+    .chip.missing { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); color: #71717A; }
+
+    .card-score-col { text-align: right; flex-shrink: 0; }
+    .card-pct { font-size: 22px; font-weight: 700; color: #D4AF37; line-height: 1; }
+    .card-pct-lbl { font-size: 11px; color: #71717A; margin-top: 2px; }
+
+    .empty-state { text-align: center; padding: 60px 20px; color: #52525B; }
+    .empty-state svg { margin-bottom: 16px; opacity: 0.25; }
+    .empty-state p { font-size: 14px; line-height: 1.7; }
+
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+      background: #1A1A1A; border: 1px solid rgba(255,255,255,0.1); color: #F5F5F5;
+      padding: 10px 20px; border-radius: 10px; font-size: 13px;
+      opacity: 0; transition: opacity 0.3s, transform 0.3s; pointer-events: none; z-index: 9999;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    @media (max-width: 600px) {
+      .card-score-col { order: -1; margin-left: auto; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+  <a href="dashboard.html" class="back-link">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <path d="M19 12H5M12 5l-7 7 7 7"/>
+    </svg>
+    Back to Dashboard
+  </a>
+
+  <div class="page-header">
+    <h1>Career <em>Recommendation</em></h1>
+    <p>AI-powered matches based on your skills — auto-loaded from your profile</p>
+  </div>
+
+  <div class="skills-panel">
+    <div class="skills-panel-label">Your Skills</div>
+    <div class="skills-tag-row" id="skills-tag-row">
+      <span class="no-skills-hint">No skills added yet</span>
+    </div>
+    <div class="skills-input-row">
+      <input
+        class="skills-input" id="skill-input" type="text"
+        placeholder="Type a skill and press Enter  (e.g. React, Python, SQL...)"
+        autocomplete="off"
+      />
+      <button class="btn-add" onclick="addSkillFromInput()">+ Add</button>
+    </div>
+    <div class="skills-hint">Press <strong>Enter</strong> to add &nbsp;·&nbsp; Click × to remove &nbsp;·&nbsp; Skills auto-loaded from your profile</div>
+  </div>
+
+  <div class="run-row">
+    <button class="btn-primary" id="run-btn" onclick="runRecommendation()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
+      </svg>
+      Get Recommendations
+    </button>
+    <button class="btn-outline" onclick="loadFromProfile()">↺ Reload from Profile</button>
+    <button class="btn-outline" onclick="clearAll()">Clear</button>
+  </div>
+
+  <div class="status-bar" id="status-bar">
+    <div class="spinner"></div>
+    <span id="status-text">Analysing your skills...</span>
+  </div>
+
+  <div class="error-box" id="error-box"></div>
+
+  <div class="results-header" id="results-header">
+    <div class="results-title">Recommended Careers</div>
+    <div class="results-count" id="results-count"></div>
+  </div>
+
+  <div class="results-grid" id="results-grid">
+    <div class="empty-state">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+        <line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+      <p>Add your skills above and click <strong>Get Recommendations</strong><br/>or your profile skills will be loaded automatically.</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="../../assets/js/shared/config.js"></script>
+<script src="../../assets/js/shared/api.js"></script>
+<script src="../../assets/js/shared/nav.js"></script>
+
+<script>
+  const PYTHON_API = 'https://intuitive-trust-production-654e.up.railway.app';
+  let skills = [];
+
+  window.addEventListener('DOMContentLoaded', () => {
+    loadFromProfile();
+    document.getElementById('skill-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') addSkillFromInput();
+    });
+  });
+
+  function loadFromProfile() {
+    const profile = JSON.parse(localStorage.getItem('profileData') || '{}');
+    const quizResult = JSON.parse(localStorage.getItem('quizResult') || 'null');
+    let loaded = [];
+
+    if (Array.isArray(profile.skills) && profile.skills.length > 0) {
+      loaded = profile.skills
+        .map(s => (typeof s === 'string' ? s : (s.name || '')).trim())
+        .filter(Boolean);
+    }
+
+    // Also include matched skills from quiz result
+    if (quizResult && Array.isArray(quizResult.matched_skills)) {
+      quizResult.matched_skills.forEach(s => {
+        if (s && !loaded.map(x => x.toLowerCase()).includes(s.toLowerCase())) {
+          loaded.push(s);
+        }
+      });
+    }
+
+    if (loaded.length > 0) {
+      skills = [...new Set(loaded)];
+      renderTags();
+      showToast('Loaded ' + skills.length + ' skills from your profile');
+    } else {
+      skills = [];
+      renderTags();
+    }
+  }
+
+  function addSkillFromInput() {
+    const input = document.getElementById('skill-input');
+    const raw = input.value.trim();
+    if (!raw) return;
+    raw.split(',').map(s => s.trim()).filter(Boolean).forEach(s => {
+      if (!skills.map(x => x.toLowerCase()).includes(s.toLowerCase())) {
+        skills.push(s);
+      }
+    });
+    input.value = '';
+    renderTags();
+  }
+
+  function removeSkill(idx) {
+    skills.splice(idx, 1);
+    renderTags();
+  }
+
+  function renderTags() {
+    const row = document.getElementById('skills-tag-row');
+    if (skills.length === 0) {
+      row.innerHTML = '<span class="no-skills-hint">No skills added yet</span>';
+      return;
+    }
+    row.innerHTML = skills.map((s, i) => `
+      <span class="skill-tag">
+        ${esc(s)}
+        <span class="remove" onclick="removeSkill(${i})">×</span>
+      </span>
+    `).join('');
+  }
+
+  function clearAll() {
+    skills = [];
+    renderTags();
+    document.getElementById('results-header').classList.remove('visible');
+    document.getElementById('results-grid').innerHTML = `
+      <div class="empty-state">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+          <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        <p>Add your skills above and click <strong>Get Recommendations</strong></p>
+      </div>`;
+    hideError();
+  }
+
+  async function runRecommendation() {
+    if (skills.length === 0) {
+      showToast('Please add at least one skill first');
+      return;
+    }
+    const btn = document.getElementById('run-btn');
+    btn.disabled = true;
+    showStatus('Analysing ' + skills.length + ' skills against 60 careers...');
+    hideError();
+    document.getElementById('results-header').classList.remove('visible');
+
+    try {
+      const res = await fetch(PYTHON_API + '/recommend', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ skills: skills.join(' ') })
+      });
+      if (!res.ok) throw new Error('Server returned ' + res.status);
+      const data = await res.json();
+      hideStatus();
+      renderResults(data.recommendations || []);
+
+      // Save count back to dashboard stat
+      const dashStats = JSON.parse(localStorage.getItem('dashStats') || '{}');
+      dashStats.readiness = (data.recommendations || []).length;
+      localStorage.setItem('dashStats', JSON.stringify(dashStats));
+
+    } catch (err) {
+      hideStatus();
+      showError(
+        'Could not reach the recommendation engine. ' +
+        'Make sure the Python service is deployed and running.<br>' +
+        '<small style="color:#71717A;margin-top:4px;display:block">' + err.message + '</small>'
+      );
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  function renderResults(recs) {
+    const grid = document.getElementById('results-grid');
+    const header = document.getElementById('results-header');
+
+    if (!recs || recs.length === 0) {
+      grid.innerHTML = '<div class="empty-state"><p>No matches found. Try adding more or different skills.</p></div>';
+      header.classList.remove('visible');
+      return;
+    }
+
+    document.getElementById('results-count').textContent = recs.length + ' matches found';
+    header.classList.add('visible');
+
+    grid.innerHTML = recs.map((r, i) => {
+      const pct = Math.min(Math.round(r.match_score), 100);
+      const isTop = i < 3;
+      const matched = Array.isArray(r.matched_skills) ? r.matched_skills : [];
+      const required = Array.isArray(r.required_skills) ? r.required_skills : [];
+      const missing = required
+        .filter(s => !matched.map(m => m.toLowerCase()).includes(s.toLowerCase()))
+        .slice(0, 5);
+
+      return `
+        <div class="result-card" style="animation-delay:${i * 0.04}s; cursor:pointer" onclick="goToLearningPath('${esc(r.career)}')">
+          <div class="card-top">
+            <div class="card-rank ${isTop ? 'top' : ''}">#${r.rank || i + 1}</div>
+            <div class="card-info">
+              <div class="card-title">${esc(r.career)}</div>
+              <span class="card-category">${esc(r.category)}</span>
+              <div class="match-bar-bg">
+                <div class="match-bar-fill" style="width:${pct}%"></div>
+              </div>
+              ${matched.length > 0 ? `
+              <div class="chip-row">
+                <span class="chip-label">You have:</span>
+                ${matched.map(s => `<span class="chip matched">${esc(s)}</span>`).join('')}
+              </div>` : ''}
+              ${missing.length > 0 ? `
+              <div class="chip-row" style="margin-top:5px">
+                <span class="chip-label">To learn:</span>
+                ${missing.map(s => `<span class="chip missing">${esc(s)}</span>`).join('')}
+              </div>` : ''}
+            </div>
+            <div class="card-score-col">
+              <div class="card-pct">${pct}%</div>
+              <div class="card-pct-lbl">match</div>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  function showStatus(msg) {
+    document.getElementById('status-text').textContent = msg;
+    document.getElementById('status-bar').classList.add('visible');
+  }
+  function hideStatus() { document.getElementById('status-bar').classList.remove('visible'); }
+  function showError(msg) {
+    const el = document.getElementById('error-box');
+    el.innerHTML = msg;
+    el.classList.add('visible');
+  }
+  function hideError() { document.getElementById('error-box').classList.remove('visible'); }
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+  function esc(s) {
+    const d = document.createElement('div');
+    d.appendChild(document.createTextNode(String(s)));
+    return d.innerHTML;
+  }
+  function goToLearningPath(role) {
+  localStorage.setItem('lpSelectedRole', role);
+  window.location.href = 'learning-path.html?role=' + encodeURIComponent(role);
+}
+</script>
+</body>
+</html>

@@ -11,6 +11,7 @@ require('dotenv').config();
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: '20mb' }));
+app.use('/api/roadmap', require('./routes/roadmap'));
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -285,63 +286,6 @@ app.get('/api/roles', async (req, res) => {
     res.json(data);
   } catch (err) {
     res.status(500).json({ error: 'Python service unavailable' });
-  }
-});
-
-app.post('/api/roadmap/generate', async (req, res) => {
-  try {
-    const { goal, level, months, skills } = req.body;
-
-    const prompt = `You are a career roadmap generator. Generate a detailed, structured learning roadmap.
-
-User wants to become: ${goal}
-Experience level: ${level}
-Timeline: ${months} months
-Current skills: ${skills && skills.length > 0 ? skills.join(', ') : 'none'}
-
-Respond ONLY with a valid JSON object in this exact format (no markdown, no extra text):
-{
-  "readinessScore": <number 0-100>,
-  "scoreLabel": "<short encouraging label>",
-  "skillGaps": [{ "name": "<skill>", "level": "high"|"med"|"low" }],
-  "phases": [{
-    "title": "<phase title>",
-    "weeks": <number>,
-    "desc": "<2-3 sentences>",
-    "topics": ["topic1","topic2","topic3","topic4"],
-    "resources": ["Resource 1","Resource 2","Resource 3"],
-    "milestone": "<what user can build/do>"
-  }]
-}
-
-Rules:
-- Total weeks = ${months * 4}
-- Create ${months <= 3 ? 3 : months <= 6 ? 4 : 5} phases
-- 4-6 skillGaps, 4-6 topics per phase`;
-
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.GROQ_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        max_tokens: 2000,
-        temperature: 0.4,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
-
-    const data = await response.json();
-    if (!response.ok) return res.status(response.status).json(data);
-
-    const raw = data.choices[0].message.content.trim();
-    const cleaned = raw.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```\s*$/i, '').trim();
-    res.json(JSON.parse(cleaned));
-
-  } catch (err) {
-    res.status(500).json({ error: err.message });
   }
 });
 
