@@ -301,6 +301,10 @@ def recommend():
     if not user_skills:
         return jsonify({'error': 'Skills cannot be empty'}), 400
     results = recommend_careers(user_skills, top_n=15)
+    user_set = set(user_skills.lower().split())
+    for r in results:
+        r['matched_skills'] = [s for s in r.get('required_skills', []) 
+                               if any(u in s or s in u for u in user_set)]
     return jsonify({
         'query': user_skills,
         'total_results': len(results),
