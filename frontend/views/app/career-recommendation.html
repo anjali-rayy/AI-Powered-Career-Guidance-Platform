@@ -381,6 +381,14 @@
   }
 
   function renderResults(recs) {
+    // save top result's missing skills for learning path
+    if (recs && recs.length > 0) {
+      const top = recs[0];
+      const matched = Array.isArray(top.matched_skills) ? top.matched_skills : [];
+      const required = Array.isArray(top.required_skills) ? top.required_skills : [];
+      const missing = required.filter(s => !matched.map(m => m.toLowerCase()).includes(s.toLowerCase()));
+      localStorage.setItem('lastRecommendation', JSON.stringify({ career: top.career, missing }));
+    }
     const grid = document.getElementById('results-grid');
     const header = document.getElementById('results-header');
 
