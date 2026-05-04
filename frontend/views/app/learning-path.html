@@ -1062,29 +1062,64 @@
     }
 
     function getOverallProgress(phases) {
+      const userId = localStorage.getItem('userId');
+      const progress = getPhaseProgress(userId);
       if (!phases.length) return 0;
-      const n = phases.length;
-      return Math.round((1 / n) * 100 + (n > 1 ? (1 / n) * 35 : 0));
+      const completed = phases.filter((_, i) => progress[i] === 'completed').length;
+      return Math.round((completed / phases.length) * 100);
+    }
+
+    // ── PHASE PROGRESS HELPERS ──
+    function getPhaseProgress(userId) {
+      try {
+        const raw = localStorage.getItem(`phaseProgress_${userId}`);
+        return raw ? JSON.parse(raw) : {};
+      } catch { return {}; }
+    }
+
+    function savePhaseProgress(userId, progress) {
+      localStorage.setItem(`phaseProgress_${userId}`, JSON.stringify(progress));
+    }
+
+    function markPhaseComplete(idx) {
+      const userId = localStorage.getItem('userId');
+      const progress = getPhaseProgress(userId);
+      progress[idx] = 'completed';
+      savePhaseProgress(userId, progress);
+      document.getElementById('phases-container').innerHTML = renderPhases(window.__phases);
+      showToast('Phase marked as complete! 🎉');
     }
 
     // ── RENDER PHASES ──
     function renderPhases(phases) {
+      const userId = localStorage.getItem('userId');
+      const progress = getPhaseProgress(userId);
+
+      const states = phases.map((_, i) => {
+        if (progress[i] === 'completed') return 'completed';
+        for (let j = 0; j < i; j++) {
+          if (progress[j] !== 'completed') return 'locked';
+        }
+        return 'active';
+      });
+
       return phases.map((phase, i) => {
-        const isFirst = i === 0;
-        const isActive = i === 1 || phases.length === 1;
-        const isLocked = !isFirst && !isActive;
-        const isOpen = isActive; // active phase opens by default
+        const state = states[i];
+        const isCompleted = state === 'completed';
+        const isActive = state === 'active';
+        const isLocked = state === 'locked';
 
-        const stateClass = isFirst ? 'is-completed' : isActive ? 'is-active' : '';
-        const openClass = isOpen ? 'open' : '';
+        const stateClass = isCompleted ? 'is-completed' : isActive ? 'is-active' : '';
+        const openClass = isActive ? 'open' : '';
+        const statusText = isCompleted ? 'Completed' : isActive ? 'In Progress' : 'Locked';
+        const statusClass = isCompleted ? 'done' : isActive ? 'active' : 'locked';
+        const dotContent = isCompleted ? '✓' : isLocked ? '🔒' : (i + 1);
+        const progressPct = isCompleted ? 100 : isActive ? 35 : 0;
 
-        const statusText = isFirst ? 'Completed' : isActive ? 'In Progress' : 'Locked';
-        const statusClass = isFirst ? 'done' : isActive ? 'active' : 'locked';
-        const dotContent = isFirst ? '✓' : isLocked ? '🔒' : (i + 1);
-        const progressPct = isFirst ? 100 : isActive ? 35 : 0;
-
-        const resourcesHtml = '';
-        const milestoneHtml = '';
+        const markBtn = isActive ? `
+          <button onclick="markPhaseComplete(${i})" style="margin-top:12px;padding:7px 16px;font-size:12px;font-weight:600;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.3);color:var(--gold);border-radius:8px;cursor:pointer;">
+            ✓ Mark as Complete
+          </button>` : '';
 
         return `
         <div class="lp-phase-card ${stateClass} ${openClass}" id="phase-card-${i}">
@@ -1108,8 +1143,7 @@
           <div class="lp-phase-body">
             <div class="lp-phase-inner">
               <p class="lp-phase-desc">${phase.desc || ''}</p>
-              ${resourcesHtml}
-              ${milestoneHtml}
+              ${markBtn}
             </div>
           </div>
         </div>`;
@@ -1155,6 +1189,7 @@
 
     // ── RENDER PAGE ──
     function renderPage(data, profile, fromCache, cacheDate) {
+      window.__phases = data.phases;
       const { phases, readinessScore, skillGaps } = data;
       const totalWeeks = phases.reduce((a, p) => a + (p.weeks || 0), 0);
       const totalSkills = phases.reduce((a, p) => a + (p.topics || []).length, 0);
@@ -1234,23 +1269,6 @@
             </div>
           </div>
 
-          <!-- BLOGS -->
-          <div class="lp-blogs-section">
-            <div class="lp-section-head">
-              <span class="lp-section-label">📚 Learning Blogs — <em>${careerGoal}</em></span>
-              <span class="lp-section-badge" id="blog-count-badge">Loading...</span>
-            </div>
-            <div class="lp-blogs-grid" id="lp-blogs-grid">
-              ${[1, 2, 3, 4].map(() => `
-                <div class="lp-skeleton">
-                  <div class="lp-sk-line" style="width:55%"></div>
-                  <div class="lp-sk-line" style="width:90%"></div>
-                  <div class="lp-sk-line" style="width:70%"></div>
-                </div>`).join('')}
-            </div>
-          </div>
-        </div>
-
         <!-- SIDEBAR -->
         <div class="lp-sidebar" id="sidebar-widgets">
           ${renderSidebar(data, phases)}
@@ -1258,7 +1276,7 @@
 
       </div>`;
 
-      fetchBlogs(careerGoal);
+      
 
       // get missing skills from career recommendation result if available
       const recData = JSON.parse(localStorage.getItem('lastRecommendation') || 'null');
@@ -1458,6 +1476,7 @@ Return ONLY a JSON array (no markdown, no explanation) with exactly 6 objects:
         const level = mapExperienceToLevel(profile.experience);
         const months = getMonths(profile.experience, level);
         const userId = user._id || user.id || user.email;
+        localStorage.setItem('userId', userId);
 
         if (!forceRefresh) {
           const cache = getCache(userId);
