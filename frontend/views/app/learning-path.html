@@ -13,789 +13,450 @@
   <style>
     /* ── HERO ── */
     .lp-hero {
-      background: linear-gradient(135deg, rgba(212, 175, 55, 0.06) 0%, transparent 60%);
-      border: 1px solid var(--border-g);
-      border-radius: 18px;
-      padding: 28px 28px 24px;
-      margin-bottom: 24px;
+      background: linear-gradient(135deg, rgba(212,175,55,0.08) 0%, rgba(212,175,55,0.02) 50%, transparent 100%);
+      border: 1px solid rgba(212,175,55,0.2);
+      border-radius: 20px;
+      padding: 32px;
+      margin-bottom: 28px;
       position: relative;
       overflow: hidden;
     }
-
     .lp-hero::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.5), transparent);
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(212,175,55,0.6), transparent);
     }
-
+    .lp-hero::after {
+      content: '';
+      position: absolute;
+      bottom: -60px; right: -60px;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(212,175,55,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
     .lp-hero-top {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
       gap: 16px;
       flex-wrap: wrap;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
     }
-
     .lp-hero-title {
       font-family: 'Playfair Display', serif;
-      font-size: 24px;
-      font-weight: 600;
+      font-size: 26px;
+      font-weight: 700;
       color: var(--text);
       letter-spacing: -0.02em;
-      margin-bottom: 5px;
+      margin-bottom: 6px;
     }
+    .lp-hero-title em { font-style: italic; color: var(--gold); }
+    .lp-hero-sub { font-size: 13.5px; color: var(--muted); line-height: 1.6; }
+    .lp-hero-sub strong { color: var(--text); font-weight: 600; }
 
-    .lp-hero-title em {
-      font-style: italic;
-      color: var(--gold);
-    }
-
-    .lp-hero-sub {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.55;
-    }
-
-    .lp-hero-sub strong {
-      color: var(--text);
-      font-weight: 600;
-    }
-
-    /* Stats row */
+    /* Stats */
     .lp-stats-row {
-      display: flex;
-      align-items: center;
-      gap: 0;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
     }
-
     .lp-stat-cell {
-      flex: 1;
-      padding: 12px 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      padding: 16px;
       text-align: center;
-      border-right: 1px solid var(--border);
-      min-width: 0;
+      transition: border-color 0.2s;
     }
-
-    .lp-stat-cell:last-child {
-      border-right: none;
-    }
-
+    .lp-stat-cell:hover { border-color: rgba(212,175,55,0.25); }
     .lp-stat-val {
       font-family: 'Playfair Display', serif;
-      font-size: 22px;
-      font-weight: 600;
+      font-size: 26px;
+      font-weight: 700;
       color: var(--gold);
       line-height: 1;
       display: block;
     }
-
-    .lp-stat-lbl {
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 3px;
-      display: block;
-      white-space: nowrap;
-    }
-
-    /* Progress bar */
-    .lp-progress-wrap {
-      margin-top: 16px;
-    }
-
+    .lp-stat-lbl { font-size: 11.5px; color: var(--muted); margin-top: 4px; display: block; }
+    .lp-progress-wrap { margin-top: 4px; }
     .lp-progress-row {
       display: flex;
       justify-content: space-between;
-      font-size: 11.5px;
+      font-size: 12px;
       color: var(--muted);
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
-
-    .lp-progress-row strong {
-      color: var(--gold);
-    }
-
-    .lp-bar {
-      height: 5px;
-      background: rgba(255, 255, 255, 0.07);
-      border-radius: 100px;
-      overflow: hidden;
-    }
-
+    .lp-progress-row strong { color: var(--gold); }
+    .lp-bar { height: 6px; background: rgba(255,255,255,0.07); border-radius: 100px; overflow: hidden; }
     .lp-bar-fill {
       height: 100%;
-      background: linear-gradient(90deg, #8B6914, var(--gold));
+      background: linear-gradient(90deg, #8B6914, var(--gold), #F0D060);
       border-radius: 100px;
-      transition: width 1.2s ease;
+      transition: width 1.4s cubic-bezier(0.4,0,0.2,1);
     }
 
     /* ── LAYOUT ── */
     .lp-layout {
       display: grid;
-      grid-template-columns: 1fr 300px;
-      gap: 20px;
+      grid-template-columns: 1fr 290px;
+      gap: 22px;
       align-items: start;
     }
+    @media (max-width: 1000px) { .lp-layout { grid-template-columns: 1fr; } }
 
-    @media (max-width: 1000px) {
-      .lp-layout {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    /* ── PHASES ── */
-    .lp-phases {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .lp-phase-card {
+    /* ── SKILL ROADMAP (replaces phases) ── */
+    .lp-roadmap-wrap {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 14px;
+      border-radius: 18px;
       overflow: hidden;
-      transition: border-color 0.2s;
     }
-
-    .lp-phase-card.is-active {
-      border-color: rgba(212, 175, 55, 0.3);
-    }
-
-    .lp-phase-card.is-completed {
-      border-color: rgba(76, 175, 112, 0.2);
-    }
-
-    /* Phase header — always visible, clickable */
-    .lp-phase-head {
+    .lp-roadmap-header {
       display: flex;
       align-items: center;
-      gap: 14px;
-      padding: 16px 18px;
-      cursor: pointer;
-      user-select: none;
+      justify-content: space-between;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(212,175,55,0.03);
     }
+    .lp-roadmap-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .lp-roadmap-title em { color: var(--gold); font-style: italic; }
+    .lp-roadmap-subtitle { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .lp-roadmap-body { padding: 28px 24px; }
 
-    .lp-phase-num {
-      width: 34px;
-      height: 34px;
+    /* Timeline */
+    .lp-timeline { position: relative; }
+    .lp-timeline::before {
+      content: '';
+      position: absolute;
+      left: 20px;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, var(--gold) 0%, rgba(212,175,55,0.1) 100%);
+    }
+    .lp-tl-item {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 0;
+      position: relative;
+    }
+    .lp-tl-item:last-child .lp-tl-content { border-bottom: none; margin-bottom: 0; }
+    .lp-tl-dot-col { position: relative; z-index: 1; flex-shrink: 0; width: 42px; display: flex; flex-direction: column; align-items: center; }
+    .lp-tl-dot {
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       display: grid;
       place-items: center;
-      font-size: 12px;
-      font-weight: 700;
-      flex-shrink: 0;
-      border: 2px solid rgba(255, 255, 255, 0.1);
-      color: var(--muted);
+      font-size: 18px;
+      border: 2px solid var(--border);
       background: var(--card2);
-      transition: all 0.2s;
+      transition: all 0.3s;
+      flex-shrink: 0;
     }
-
-    .is-completed .lp-phase-num {
-      background: rgba(76, 175, 112, 0.12);
-      border-color: rgba(76, 175, 112, 0.4);
-      color: #4CAF70;
+    .lp-tl-item.done .lp-tl-dot {
+      background: rgba(76,175,112,0.15);
+      border-color: rgba(76,175,112,0.5);
     }
-
-    .is-active .lp-phase-num {
-      background: var(--gold);
+    .lp-tl-item.active .lp-tl-dot {
+      background: rgba(212,175,55,0.15);
       border-color: var(--gold);
-      color: #0A0A0A;
-      box-shadow: 0 0 14px rgba(212, 175, 55, 0.35);
+      box-shadow: 0 0 0 4px rgba(212,175,55,0.1);
     }
-
-    .lp-phase-head-info {
+    .lp-tl-content {
       flex: 1;
-      min-width: 0;
+      padding-bottom: 28px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      margin-bottom: 0;
     }
-
-    .lp-phase-name {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 3px;
-    }
-
-    .lp-phase-meta {
+    .lp-tl-item:last-child .lp-tl-content { border-bottom: none; }
+    .lp-tl-top {
       display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+      margin-top: 8px;
     }
-
-    .lp-phase-dur {
-      font-size: 11.5px;
-      color: var(--muted);
+    .lp-tl-name {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--text);
     }
-
-    .lp-phase-status {
+    .lp-tl-badge {
       font-size: 10.5px;
-      font-weight: 600;
-      padding: 2px 8px;
+      font-weight: 700;
+      padding: 3px 10px;
       border-radius: 100px;
-    }
-
-    .lp-phase-status.done {
-      background: rgba(76, 175, 112, 0.1);
-      color: #4CAF70;
-      border: 1px solid rgba(76, 175, 112, 0.2);
-    }
-
-    .lp-phase-status.active {
-      background: rgba(212, 175, 55, 0.1);
-      color: var(--gold);
-      border: 1px solid rgba(212, 175, 55, 0.25);
-    }
-
-    .lp-phase-status.locked {
-      background: rgba(255, 255, 255, 0.04);
-      color: var(--subtle);
-      border: 1px solid rgba(255, 255, 255, 0.07);
-    }
-
-    /* Mini progress inside header */
-    .lp-phase-head-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      white-space: nowrap;
       flex-shrink: 0;
     }
-
-    .lp-mini-bar {
-      width: 64px;
-      height: 4px;
-      background: rgba(255, 255, 255, 0.07);
-      border-radius: 100px;
-      overflow: hidden;
-    }
-
-    .lp-mini-fill {
-      height: 100%;
-      border-radius: 100px;
-      transition: width 1s ease;
-    }
-
-    .is-completed .lp-mini-fill {
-      background: #4CAF70;
-    }
-
-    .is-active .lp-mini-fill {
-      background: var(--gold);
-    }
-
-    .lp-mini-pct {
+    .done .lp-tl-badge { background: rgba(76,175,112,0.12); color: #4CAF70; border: 1px solid rgba(76,175,112,0.25); }
+    .active .lp-tl-badge { background: rgba(212,175,55,0.12); color: var(--gold); border: 1px solid rgba(212,175,55,0.3); }
+    .locked .lp-tl-badge { background: rgba(255,255,255,0.04); color: var(--subtle); border: 1px solid rgba(255,255,255,0.08); }
+    .lp-tl-desc { font-size: 12.5px; color: var(--muted); line-height: 1.65; margin-bottom: 10px; }
+    .lp-tl-skills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+    .lp-tl-skill-chip {
       font-size: 11px;
-      color: var(--muted);
-      min-width: 28px;
-      text-align: right;
+      font-weight: 500;
+      padding: 3px 10px;
+      border-radius: 6px;
+      background: rgba(212,175,55,0.07);
+      border: 1px solid rgba(212,175,55,0.15);
+      color: rgba(212,175,55,0.85);
     }
-
-    .lp-chevron {
+    .lp-tl-item.done .lp-tl-skill-chip {
+      background: rgba(76,175,112,0.06);
+      border-color: rgba(76,175,112,0.15);
+      color: rgba(76,175,112,0.9);
+    }
+    .lp-tl-item.locked .lp-tl-skill-chip {
+      background: rgba(255,255,255,0.03);
+      border-color: rgba(255,255,255,0.07);
       color: var(--subtle);
-      font-size: 16px;
-      transition: transform 0.25s ease;
-      flex-shrink: 0;
     }
-
-    .lp-phase-card.open .lp-chevron {
-      transform: rotate(180deg);
-    }
-
-    /* Phase body — expandable */
-    .lp-phase-body {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.35s ease;
-    }
-
-    .lp-phase-card.open .lp-phase-body {
-      max-height: 600px;
-    }
-
-    .lp-phase-inner {
-      padding: 0 18px 18px;
-      border-top: 1px solid var(--border);
-    }
-
-    .lp-phase-desc {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.65;
-      padding: 14px 0 12px;
-    }
-
-    .lp-res-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 7px;
-      margin-top: 7px;
-    }
-
-    .lp-res-chip {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 11px;
-      border-radius: 7px;
-      background: var(--card2);
-      border: 1px solid var(--border);
-      font-size: 12px;
-      color: var(--text);
+    .lp-tl-meta { display: flex; align-items: center; gap: 14px; }
+    .lp-tl-weeks { font-size: 11.5px; color: var(--muted); display: flex; align-items: center; gap: 5px; }
+    .lp-tl-pbar { flex: 1; max-width: 120px; height: 4px; background: rgba(255,255,255,0.07); border-radius: 100px; overflow: hidden; }
+    .lp-tl-pfill { height: 100%; border-radius: 100px; transition: width 1s ease; }
+    .done .lp-tl-pfill { background: #4CAF70; width: 100%; }
+    .active .lp-tl-pfill { background: var(--gold); width: 35%; }
+    .locked .lp-tl-pfill { background: rgba(255,255,255,0.1); width: 0%; }
+    .lp-tl-complete-btn {
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 5px 14px;
+      border-radius: 8px;
+      background: rgba(212,175,55,0.1);
+      border: 1px solid rgba(212,175,55,0.3);
+      color: var(--gold);
       cursor: pointer;
       transition: all 0.15s;
-      text-decoration: none;
+      margin-left: auto;
     }
+    .lp-tl-complete-btn:hover { background: rgba(212,175,55,0.18); }
 
     /* ── SIDEBAR ── */
-    .lp-sidebar {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
+    .lp-sidebar { display: flex; flex-direction: column; gap: 16px; }
     .lp-widget {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 16px 18px;
+      border-radius: 16px;
+      padding: 18px 20px;
     }
-
     .lp-widget-head {
-      font-size: 12.5px;
-      font-weight: 600;
+      font-size: 13px;
+      font-weight: 700;
       color: var(--text);
-      margin-bottom: 14px;
-      padding-bottom: 10px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
       border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 7px;
     }
-
-    /* Readiness donut */
-    .lp-readiness {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .lp-donut-wrap {
-      position: relative;
-      flex-shrink: 0;
-    }
-
+    .lp-donut-wrap { position: relative; flex-shrink: 0; }
+    .lp-readiness { display: flex; align-items: center; gap: 16px; }
     .lp-donut {
-      width: 62px;
-      height: 62px;
+      width: 68px; height: 68px;
       border-radius: 50%;
-      background: conic-gradient(var(--gold) var(--deg), rgba(255, 255, 255, 0.07) 0);
+      background: conic-gradient(var(--gold) var(--deg), rgba(255,255,255,0.07) 0);
       display: grid;
       place-items: center;
     }
-
     .lp-donut::after {
       content: '';
       position: absolute;
-      width: 46px;
-      height: 46px;
+      width: 50px; height: 50px;
       border-radius: 50%;
       background: var(--card);
     }
-
-    .lp-donut-num {
-      position: absolute;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--gold);
-      z-index: 1;
-    }
-
-    .lp-readiness-info {
-      display: block;
-    }
-
-    .lp-readiness-title {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 3px;
-    }
-
-    .lp-readiness-sub {
-      font-size: 11.5px;
-      color: var(--muted);
-      line-height: 1.45;
-    }
-
-    .lp-gap-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 5px;
-    }
-
-    .lp-gap-name {
-      font-size: 12.5px;
-      color: var(--text);
-    }
-
-    .lp-gap-tag {
-      font-size: 10.5px;
-      font-weight: 600;
-      padding: 1px 7px;
-      border-radius: 4px;
-    }
-
-    .lp-gap-tag.high {
-      background: rgba(239, 68, 68, 0.1);
-      color: #EF4444;
-    }
-
-    .lp-gap-tag.med {
-      background: rgba(212, 175, 55, 0.1);
-      color: var(--gold);
-    }
-
-    .lp-gap-tag.low {
-      background: rgba(76, 175, 112, 0.1);
-      color: #4CAF70;
-    }
-
-    .lp-gap-bar {
-      height: 3px;
-      background: rgba(255, 255, 255, 0.06);
-      border-radius: 100px;
-      overflow: hidden;
-    }
-
-    .lp-gap-fill {
-      height: 100%;
-      border-radius: 100px;
-    }
-
-    .lp-gap-fill.high {
-      background: #EF4444;
-    }
-
-    .lp-gap-fill.med {
-      background: var(--gold);
-    }
-
-    .lp-streak-day span {
-      font-size: 9px;
-      color: var(--subtle);
-    }
-
-    .lp-streak-day.done {
-      background: rgba(212, 175, 55, 0.1);
-      border-color: rgba(212, 175, 55, 0.25);
-    }
-
-    .lp-streak-day.done span {
-      color: var(--gold);
-    }
-
-    .lp-streak-day.today {
-      background: var(--gold);
-      border-color: var(--gold);
-    }
-
-    .lp-streak-day.today span {
-      color: #0A0A0A;
-      font-weight: 700;
-    }
-
-    .lp-streak-note {
-      font-size: 11.5px;
-      color: var(--muted);
-    }
-
-    .lp-streak-note strong {
-      color: var(--gold);
-    }
-
-    /* Tip panel */
+    .lp-donut-num { position: absolute; font-size: 13px; font-weight: 800; color: var(--gold); z-index: 1; }
+    .lp-readiness-title { font-size: 13.5px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+    .lp-readiness-sub { font-size: 11.5px; color: var(--muted); line-height: 1.5; }
     .lp-tip {
       display: flex;
-      gap: 11px;
+      gap: 12px;
       align-items: flex-start;
-      background: rgba(212, 175, 55, 0.04);
-      border: 1px solid rgba(212, 175, 55, 0.15);
-      border-radius: 10px;
-      padding: 13px 14px;
+      background: rgba(212,175,55,0.05);
+      border: 1px solid rgba(212,175,55,0.18);
+      border-radius: 14px;
+      padding: 15px 16px;
     }
+    .lp-tip-ico { font-size: 20px; flex-shrink: 0; }
+    .lp-tip-title { font-size: 13px; font-weight: 700; color: var(--gold); margin-bottom: 4px; }
+    .lp-tip-body { font-size: 12px; color: var(--muted); line-height: 1.6; }
+    .lp-tip-body strong { color: var(--text); }
 
-    .lp-tip-ico {
-      font-size: 18px;
-      flex-shrink: 0;
-    }
-
-    .lp-tip-title {
-      font-size: 12.5px;
-      font-weight: 600;
-      color: var(--gold);
-      margin-bottom: 4px;
-    }
-
-    .lp-tip-body {
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    .lp-tip-body strong {
-      color: var(--text);
-    }
-
-    /* ── BLOGS SECTION ── */
-    .lp-blogs-section {
-      margin-top: 20px;
-    }
-
+    /* ── COURSES SECTION ── */
+    .lp-section-wrap { margin-top: 24px; }
     .lp-section-head {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 10px;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
     }
-
-    .lp-section-label {
-      font-size: 14.5px;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .lp-section-label em {
-      font-style: italic;
-      color: var(--gold);
-    }
-
+    .lp-section-left { display: flex; align-items: center; gap: 10px; }
+    .lp-section-label { font-size: 15px; font-weight: 700; color: var(--text); }
+    .lp-section-label em { font-style: italic; color: var(--gold); }
     .lp-section-badge {
-      font-size: 11px;
-      font-weight: 500;
+      font-size: 11px; font-weight: 500;
       color: var(--muted);
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255,255,255,0.05);
       border: 1px solid var(--border);
       border-radius: 100px;
-      padding: 2px 9px;
+      padding: 2px 10px;
     }
 
-    .lp-blogs-grid {
+    /* Course cards */
+    .lp-courses-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 14px;
     }
-
-    .lp-blog-card {
+    .lp-course-card {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px 18px;
+      border-radius: 14px;
+      padding: 18px;
       display: flex;
       flex-direction: column;
-      gap: 9px;
+      gap: 10px;
       text-decoration: none;
       transition: all 0.2s;
       cursor: pointer;
+      position: relative;
+      overflow: hidden;
     }
-
-    .lp-blog-card:hover {
-      border-color: rgba(212, 175, 55, 0.3);
-      transform: translateY(-2px);
+    .lp-course-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+      opacity: 0;
+      transition: opacity 0.2s;
     }
-
-    .lp-blog-top {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .lp-blog-ico {
-      width: 34px;
-      height: 34px;
-      border-radius: 8px;
-      background: rgba(212, 175, 55, 0.08);
-      border: 1px solid rgba(212, 175, 55, 0.15);
+    .lp-course-card:hover { border-color: rgba(212,175,55,0.3); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
+    .lp-course-card:hover::before { opacity: 1; }
+    .lp-course-top { display: flex; align-items: flex-start; gap: 12px; }
+    .lp-course-ico {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: rgba(212,175,55,0.1);
+      border: 1px solid rgba(212,175,55,0.2);
       display: grid;
       place-items: center;
-      font-size: 16px;
+      font-size: 18px;
       flex-shrink: 0;
     }
-
-    .lp-blog-title {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text);
-      line-height: 1.35;
+    .lp-course-info { flex: 1; min-width: 0; }
+    .lp-course-title { font-size: 13.5px; font-weight: 700; color: var(--text); line-height: 1.35; margin-bottom: 2px; }
+    .lp-course-platform { font-size: 11.5px; color: var(--gold); font-weight: 600; }
+    .lp-course-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+    .lp-course-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 2px; }
+    .lp-course-meta { display: flex; align-items: center; gap: 8px; font-size: 11.5px; color: var(--muted); }
+    .lp-course-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+    .lp-course-tag {
+      font-size: 10.5px;
+      padding: 2px 8px;
+      border-radius: 100px;
     }
-
-    .lp-blog-desc {
-      font-size: 12px;
-      color: var(--muted);
-      line-height: 1.55;
+    .lp-course-link-arrow {
+      font-size: 14px;
+      color: var(--gold);
+      opacity: 0;
+      transition: opacity 0.2s, transform 0.2s;
     }
+    .lp-course-card:hover .lp-course-link-arrow { opacity: 1; transform: translateX(3px); }
 
-    .lp-blog-tags {
+    /* Blog cards */
+    .lp-blogs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 14px;
+    }
+    .lp-blog-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
       display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
+      flex-direction: column;
+      gap: 10px;
+      text-decoration: none;
+      transition: all 0.2s;
     }
-
+    .lp-blog-card:hover { border-color: rgba(212,175,55,0.3); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
+    .lp-blog-top { display: flex; align-items: flex-start; gap: 12px; }
+    .lp-blog-ico {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      flex-shrink: 0;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .lp-blog-info { flex: 1; }
+    .lp-blog-title { font-size: 13.5px; font-weight: 700; color: var(--text); line-height: 1.35; margin-bottom: 2px; }
+    .lp-blog-site-name { font-size: 11.5px; color: var(--gold); font-weight: 600; }
+    .lp-blog-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+    .lp-blog-tags { display: flex; flex-wrap: wrap; gap: 5px; }
     .lp-blog-tag {
       font-size: 10.5px;
       padding: 2px 8px;
       border-radius: 100px;
     }
 
-    .lp-blog-site {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      color: var(--subtle);
-    }
-
-    /* Skeleton loader */
+    /* Skeleton */
     .lp-skeleton {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px 18px;
+      border-radius: 14px;
+      padding: 18px;
       animation: skpulse 1.4s ease infinite alternate;
     }
+    .lp-sk-line { height: 10px; background: rgba(255,255,255,0.06); border-radius: 5px; margin-bottom: 8px; }
 
-    .lp-sk-line {
-      height: 10px;
-      background: rgba(255, 255, 255, 0.06);
-      border-radius: 5px;
-      margin-bottom: 8px;
-    }
-
-    @keyframes skpulse {
-      from {
-        opacity: 1;
-      }
-
-      to {
-        opacity: 0.45;
-      }
-    }
-
-    @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(8px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
+    @keyframes skpulse { from { opacity: 1; } to { opacity: 0.4; } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
     /* Cache notice */
     .lp-cache-notice {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 4px 12px;
+      padding: 5px 14px;
       border-radius: 100px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
       font-size: 11px;
       color: var(--subtle);
-      margin-bottom: 14px;
-    }
-
-    /* Loading */
-    .lp-loading {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 80px 20px;
-      gap: 18px;
-    }
-
-    .lp-spinner {
-      width: 44px;
-      height: 44px;
-      border: 3px solid rgba(212, 175, 55, 0.15);
-      border-top-color: var(--gold);
-      border-radius: 50%;
-      animation: spin 0.9s linear infinite;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    .lp-loading-text {
-      font-size: 14px;
-      color: var(--muted);
-      text-align: center;
-      line-height: 1.6;
-    }
-
-    .lp-loading-text strong {
-      color: var(--gold);
-      display: block;
-      font-size: 15px;
-      margin-bottom: 4px;
-    }
-
-    /* Error */
-    .lp-error {
-      background: rgba(239, 68, 68, 0.05);
-      border: 1px solid rgba(239, 68, 68, 0.2);
-      border-radius: 14px;
-      padding: 32px;
-      text-align: center;
-    }
-
-    .lp-error h3 {
-      font-size: 15px;
-      color: #EF4444;
-      margin-bottom: 8px;
-    }
-
-    .lp-error p {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.6;
       margin-bottom: 16px;
     }
 
+    /* Loading */
+    .lp-loading { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 100px 20px; gap: 20px; }
+    .lp-spinner { width: 48px; height: 48px; border: 3px solid rgba(212,175,55,0.15); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.9s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .lp-loading-text { font-size: 14px; color: var(--muted); text-align: center; line-height: 1.7; }
+    .lp-loading-text strong { color: var(--gold); display: block; font-size: 16px; margin-bottom: 4px; }
+
+    /* Error */
+    .lp-error { background: rgba(239,68,68,0.05); border: 1px solid rgba(239,68,68,0.2); border-radius: 16px; padding: 40px; text-align: center; }
+    .lp-error h3 { font-size: 16px; color: #EF4444; margin-bottom: 8px; }
+    .lp-error p { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+
     @media (max-width: 640px) {
-      .lp-stats-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .lp-stat-cell:nth-child(2) {
-        border-right: none;
-      }
-
-      .lp-stat-cell:nth-child(3) {
-        border-right: 1px solid var(--border);
-        border-top: 1px solid var(--border);
-      }
-
-      .lp-stat-cell:nth-child(4) {
-        border-top: 1px solid var(--border);
-      }
-
-      .lp-blogs-grid {
-        grid-template-columns: 1fr;
-      }
+      .lp-stats-row { grid-template-columns: 1fr 1fr; }
+      .lp-courses-grid, .lp-blogs-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -991,549 +652,13 @@
   </div>
 
   <div id="toast" class="toast"></div>
-
-  <script>
-    // ── TOAST ──
-    function showToast(msg) {
-      const t = document.getElementById('toast');
-      t.textContent = msg; t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 2800);
-    }
-
-    // ── SIDEBAR TOGGLE ──
-    const sidebarToggle = document.getElementById('sidebar-toggle');
-    const sidebar = document.querySelector('.sidebar');
-    const sidebarOverlay = document.getElementById('sidebar-overlay');
-    function openSidebar() { sidebar.classList.add('open'); sidebarOverlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
-    function closeSidebar() { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('open'); document.body.style.overflow = ''; }
-    if (sidebarToggle) sidebarToggle.addEventListener('click', openSidebar);
-    if (sidebarOverlay) sidebarOverlay.addEventListener('click', closeSidebar);
-    document.querySelectorAll('.nav-item').forEach(item => {
-      item.addEventListener('click', () => { if (window.innerWidth <= 900) closeSidebar(); });
-    });
-
-    // ── AVATAR MENU ──
-    function toggleAvatarMenu() {
-      const m = document.getElementById('avatar-menu');
-      m.style.display = m.style.display === 'none' ? 'block' : 'none';
-    }
-    document.addEventListener('click', e => {
-      if (!e.target.closest('#topbar-av') && !e.target.closest('#avatar-menu')) {
-        const m = document.getElementById('avatar-menu');
-        if (m) m.style.display = 'none';
-      }
-    });
-
-    // ── CACHE ──
-    const CACHE_KEY = 'learningPathCache';
-    const CACHE_TTL = 24 * 60 * 60 * 1000;
-
-    function getCache(userId) {
-      try {
-        const raw = localStorage.getItem(CACHE_KEY);
-        if (!raw) return null;
-        const c = JSON.parse(raw);
-        if (c.userId !== userId) return null;
-        if (Date.now() - c.timestamp > CACHE_TTL) return null;
-        return c;
-      } catch { return null; }
-    }
-
-    function setCache(userId, data, profile) {
-      localStorage.setItem(CACHE_KEY, JSON.stringify({ userId, timestamp: Date.now(), data, profile }));
-    }
-
-    function clearCache() { localStorage.removeItem(CACHE_KEY); }
-
-    // ── MAPPERS ──
-    function mapExperienceToLevel(exp) {
-      if (!exp) return 'beginner';
-      const e = exp.toLowerCase();
-      if (e.includes('fresher') || e.includes('student') || e.includes('no experience') || e.includes('0')) return 'beginner';
-      if (e.includes('1') || e.includes('2') || e.includes('junior') || e.includes('intern')) return 'intermediate';
-      if (e.includes('3') || e.includes('4') || e.includes('5') || e.includes('senior') || e.includes('mid')) return 'advanced';
-      return 'beginner';
-    }
-
-    function getMonths(exp, level) {
-      if (level === 'beginner') return 6;
-      if (level === 'intermediate') return 4;
-      return 3;
-    }
-
-    function getOverallProgress(phases) {
-      const userId = localStorage.getItem('userId');
-      const progress = getPhaseProgress(userId);
-      if (!phases.length) return 0;
-      const completed = phases.filter((_, i) => progress[i] === 'completed').length;
-      return Math.round((completed / phases.length) * 100);
-    }
-
-    // ── PHASE PROGRESS HELPERS ──
-    function getPhaseProgress(userId) {
-      try {
-        const raw = localStorage.getItem(`phaseProgress_${userId}`);
-        return raw ? JSON.parse(raw) : {};
-      } catch { return {}; }
-    }
-
-    function savePhaseProgress(userId, progress) {
-      localStorage.setItem(`phaseProgress_${userId}`, JSON.stringify(progress));
-    }
-
-    function markPhaseComplete(idx) {
-      const userId = localStorage.getItem('userId');
-      const progress = getPhaseProgress(userId);
-      progress[idx] = 'completed';
-      savePhaseProgress(userId, progress);
-      document.getElementById('phases-container').innerHTML = renderPhases(window.__phases);
-      showToast('Phase marked as complete! 🎉');
-    }
-
-    // ── RENDER PHASES ──
-    function renderPhases(phases) {
-      const userId = localStorage.getItem('userId');
-      const progress = getPhaseProgress(userId);
-
-      const states = phases.map((_, i) => {
-        if (progress[i] === 'completed') return 'completed';
-        for (let j = 0; j < i; j++) {
-          if (progress[j] !== 'completed') return 'locked';
-        }
-        return 'active';
-      });
-
-      return phases.map((phase, i) => {
-        const state = states[i];
-        const isCompleted = state === 'completed';
-        const isActive = state === 'active';
-        const isLocked = state === 'locked';
-
-        const stateClass = isCompleted ? 'is-completed' : isActive ? 'is-active' : '';
-        const openClass = isActive ? 'open' : '';
-        const statusText = isCompleted ? 'Completed' : isActive ? 'In Progress' : 'Locked';
-        const statusClass = isCompleted ? 'done' : isActive ? 'active' : 'locked';
-        const dotContent = isCompleted ? '✓' : isLocked ? '🔒' : (i + 1);
-        const progressPct = isCompleted ? 100 : isActive ? 35 : 0;
-
-        const markBtn = isActive ? `
-          <button onclick="markPhaseComplete(${i})" style="margin-top:12px;padding:7px 16px;font-size:12px;font-weight:600;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.3);color:var(--gold);border-radius:8px;cursor:pointer;">
-            ✓ Mark as Complete
-          </button>` : '';
-
-        return `
-        <div class="lp-phase-card ${stateClass} ${openClass}" id="phase-card-${i}">
-          <div class="lp-phase-head" onclick="togglePhase(${i})">
-            <div class="lp-phase-num">${dotContent}</div>
-            <div class="lp-phase-head-info">
-              <div class="lp-phase-name">Phase ${i + 1} — ${phase.title}</div>
-              <div class="lp-phase-meta">
-                <span class="lp-phase-dur">${phase.weeks} weeks</span>
-                <span class="lp-phase-status ${statusClass}">${statusText}</span>
-              </div>
-            </div>
-            <div class="lp-phase-head-right">
-              <div class="lp-mini-bar">
-                <div class="lp-mini-fill" style="width:${progressPct}%"></div>
-              </div>
-              <span class="lp-mini-pct">${progressPct}%</span>
-              <span class="lp-chevron">⌄</span>
-            </div>
-          </div>
-          <div class="lp-phase-body">
-            <div class="lp-phase-inner">
-              <p class="lp-phase-desc">${phase.desc || ''}</p>
-              ${markBtn}
-            </div>
-          </div>
-        </div>`;
-      }).join('');
-    }
-
-    function togglePhase(i) {
-      const card = document.getElementById(`phase-card-${i}`);
-      if (card) card.classList.toggle('open');
-    }
-
-    // ── RENDER SIDEBAR ──
-    function renderSidebar(data, phases) {
-      const { readinessScore, scoreLabel } = data;
-      const deg = (readinessScore / 100) * 360;
-      const activePhaseWeeks = phases[1] ? phases[1].weeks : (phases[0] ? phases[0].weeks : 4);
-
-      return `
-      <div class="lp-widget">
-        <div class="lp-widget-head">📊 Readiness Score</div>
-        <div class="lp-readiness">
-          <div class="lp-donut-wrap">
-            <div class="lp-donut" style="--deg:${deg}deg">
-              <span class="lp-donut-num">${readinessScore}%</span>
-            </div>
-          </div>
-          <div class="lp-readiness-info">
-            <div class="lp-readiness-title">${scoreLabel || 'Getting Started'}</div>
-            <div class="lp-readiness-sub">Current readiness for your target role</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="lp-tip">
-        <span class="lp-tip-ico">💡</span>
-        <div>
-          <div class="lp-tip-title">PathwayAI Tip</div>
-          <div class="lp-tip-body">Stay consistent — even <strong>1 hour/day</strong> for ${activePhaseWeeks} weeks will complete your current phase.</div>
-        </div>
-      </div>`;
-    }
-
-
-    // ── RENDER PAGE ──
-    function renderPage(data, profile, fromCache, cacheDate) {
-      window.__phases = data.phases;
-      const { phases, readinessScore, skillGaps } = data;
-      const totalWeeks = phases.reduce((a, p) => a + (p.weeks || 0), 0);
-      const totalSkills = phases.reduce((a, p) => a + (p.topics || []).length, 0);
-      const overallPct = getOverallProgress(phases);
-      const careerGoal = profile.interest || 'Your Target Role';
-
-      const cacheInfo = fromCache && cacheDate
-        ? `<div class="lp-cache-notice">📋 Generated ${new Date(cacheDate).toLocaleDateString()} · <a href="#" onclick="refreshPath(event)" style="color:var(--gold);text-decoration:none">Refresh</a></div>`
-        : '';
-
-      document.getElementById('lp-root').innerHTML = `
-      ${cacheInfo}
-
-      <!-- HERO -->
-      <div class="lp-hero">
-        <div class="lp-hero-top">
-          <div>
-            <div class="lp-hero-title">Your <em>Learning Path</em></div>
-            <div class="lp-hero-sub">Roadmap to become a <strong>${careerGoal}</strong> — personalized to your skills and experience.</div>
-          </div>
-          <button class="btn-primary" style="padding:8px 18px;font-size:12.5px;white-space:nowrap;flex-shrink:0" onclick="refreshPath(event)">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-            Refresh
-          </button>
-        </div>
-        <div class="lp-stats-row">
-          <div class="lp-stat-cell">
-            <span class="lp-stat-val">${phases.length}</span>
-            <span class="lp-stat-lbl">Phases</span>
-          </div>
-          <div class="lp-stat-cell">
-            <span class="lp-stat-val">${totalSkills}</span>
-            <span class="lp-stat-lbl">Topics</span>
-          </div>
-          <div class="lp-stat-cell">
-            <span class="lp-stat-val">~${Math.ceil(totalWeeks / 4)}mo</span>
-            <span class="lp-stat-lbl">Timeline</span>
-          </div>
-          <div class="lp-stat-cell">
-            <span class="lp-stat-val">${readinessScore}%</span>
-            <span class="lp-stat-lbl">Ready</span>
-          </div>
-        </div>
-        <div class="lp-progress-wrap">
-          <div class="lp-progress-row">
-            <span>Overall Progress</span>
-            <strong>${overallPct}%</strong>
-          </div>
-          <div class="lp-bar">
-            <div class="lp-bar-fill" style="width:${overallPct}%"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- MAIN LAYOUT -->
-      <div class="lp-layout">
-
-        <!-- LEFT: Phases + Blogs -->
-        <div>
-          <div class="lp-phases" id="phases-container">
-            ${renderPhases(phases)}
-          </div>
-
-          <!-- FOUNDATION COURSES -->
-          <div class="lp-blogs-section" style="margin-top:20px">
-            <div class="lp-section-head">
-              <span class="lp-section-label">🎓 Foundation <em>Courses</em></span>
-              <span class="lp-section-badge" id="course-count-badge">Loading...</span>
-            </div>
-            <div class="lp-blogs-grid" id="lp-courses-grid">
-              ${[1, 2, 3, 4, 5, 6].map(() => `
-                <div class="lp-skeleton">
-                  <div class="lp-sk-line" style="width:55%"></div>
-                  <div class="lp-sk-line" style="width:90%"></div>
-                  <div class="lp-sk-line" style="width:70%"></div>
-                </div>`).join('')}
-            </div>
-          </div>
-
-        <!-- SIDEBAR -->
-        <div class="lp-sidebar" id="sidebar-widgets">
-          ${renderSidebar(data, phases)}
-        </div>
-
-      </div>`;
-
-      
-
-      // get missing skills from career recommendation result if available
-      const recData = JSON.parse(localStorage.getItem('lastRecommendation') || 'null');
-      const missingSkills = recData?.missing || [];
-      fetchFoundationCourses(careerGoal, missingSkills);
-    }
-
-
-
-    // ── FOUNDATION COURSES ──
-    async function fetchFoundationCourses(role, missingSkills) {
-      try {
-        const grid = document.getElementById('lp-courses-grid');
-        const badge = document.getElementById('course-count-badge');
-        if (!grid) return;
-
-        const prompt = `You are a learning advisor. Suggest exactly 6 foundation courses for someone targeting the role: "${role}".
-${missingSkills && missingSkills.length ? `They need to learn: ${missingSkills.slice(0, 5).join(', ')}.` : ''}
-Return ONLY a JSON array (no markdown, no explanation) with exactly 6 objects:
-[{"title":"Course Title","platform":"Platform Name","duration":"X hours","level":"Beginner|Intermediate|Advanced","emoji":"📘","why":"One sentence why this course matters for ${role}","tags":["tag1","tag2"]}]`;
-
-        const response = await apiFetch('/roadmap/courses', {
-          method: 'POST',
-          body: JSON.stringify({ role, missingSkills })
-        });
-
-        if (!response || (typeof response === 'string' && response.trim().startsWith('<'))) {
-          throw new Error('Server returned HTML instead of JSON — backend may not be deployed yet');
-        }
-        const raw = typeof response === 'string' ? response : JSON.stringify(response);
-        const clean = raw.replace(/```json|```/g, '').trim();
-        const courses = JSON.parse(clean);
-
-        if (!Array.isArray(courses) || !courses.length) {
-          grid.innerHTML = '<p style="color:var(--muted);font-size:13px">No courses found.</p>';
-          return;
-        }
-
-        if (badge) badge.textContent = `${courses.length} recommended`;
-
-        const levelColor = { Beginner: '#4CAF70', Intermediate: '#D4AF37', Advanced: '#EF4444' };
-        const levelBg = { Beginner: 'rgba(76,175,112,0.1)', Intermediate: 'rgba(212,175,55,0.1)', Advanced: 'rgba(239,68,68,0.1)' };
-        const levelBorder = { Beginner: 'rgba(76,175,112,0.22)', Intermediate: 'rgba(212,175,55,0.22)', Advanced: 'rgba(239,68,68,0.22)' };
-
-        grid.innerHTML = courses.map((c, i) => {
-          const lc = levelColor[c.level] || '#A1A1AA';
-          const lb = levelBg[c.level] || 'rgba(255,255,255,0.04)';
-          const lbr = levelBorder[c.level] || 'rgba(255,255,255,0.08)';
-          const tagHtml = (c.tags || []).slice(0, 2).map(t =>
-            `<span class="lp-blog-tag" style="background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.18);color:var(--gold)">${esc(t)}</span>`
-          ).join('');
-          return `
-          <div class="lp-blog-card" style="animation:fadeUp 0.3s ease both;animation-delay:${i * 0.07}s;cursor:default">
-            <div class="lp-blog-top">
-              <div class="lp-blog-ico">${c.emoji || '📘'}</div>
-              <div class="lp-blog-title">${esc(c.title)}</div>
-            </div>
-            <div class="lp-blog-desc">${esc(c.why)}</div>
-            <div style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);margin-top:2px">
-              <span>🕒 ${esc(c.duration)}</span>
-              <span style="opacity:0.3">·</span>
-              <span>${esc(c.platform)}</span>
-            </div>
-            <div class="lp-blog-tags" style="margin-top:4px">
-              <span class="lp-blog-tag" style="background:${lb};border:1px solid ${lbr};color:${lc}">${esc(c.level)}</span>
-              ${tagHtml}
-            </div>
-          </div>`;
-        }).join('');
-
-      } catch (err) {
-        console.error('Courses error:', err);
-        const grid = document.getElementById('lp-courses-grid');
-        if (grid) grid.innerHTML = '<p style="color:var(--muted);font-size:13px">Could not load courses.</p>';
-      }
-    }
-
-    // ── BLOGS ──
-    async function fetchBlogs(role) {
-      try {
-        const data = await apiFetch('/roadmap/blogs', {
-          method: 'POST',
-          body: JSON.stringify({ role })
-        });
-        const blogs = Array.isArray(data) ? data : [];
-        const grid = document.getElementById('lp-blogs-grid');
-        const badge = document.getElementById('blog-count-badge');
-        if (!grid) return;
-
-        if (!blogs.length) {
-          grid.innerHTML = '<p style="color:var(--muted);font-size:13px;padding:4px 0">No blogs found. Try refreshing.</p>';
-          return;
-        }
-
-        if (badge) badge.textContent = `${blogs.length} curated`;
-
-        const tagPalette = [
-          { bg: 'rgba(212,175,55,0.1)', border: 'rgba(212,175,55,0.22)', color: '#D4AF37' },
-          { bg: 'rgba(76,175,112,0.1)', border: 'rgba(76,175,112,0.22)', color: '#4CAF70' },
-          { bg: 'rgba(96,165,250,0.1)', border: 'rgba(96,165,250,0.22)', color: '#60A5FA' },
-          { bg: 'rgba(239,68,68,0.1)', border: 'rgba(239,68,68,0.22)', color: '#EF4444' },
-        ];
-
-        grid.innerHTML = blogs.map((b, i) => {
-          const tagHtml = (b.tags || []).slice(0, 2).map((t, ti) => {
-            const p = tagPalette[ti % tagPalette.length];
-            return `<span class="lp-blog-tag" style="background:${p.bg};border:1px solid ${p.border};color:${p.color}">${esc(t)}</span>`;
-          }).join('');
-
-          return `
-          <a href="${b.url}" target="_blank" rel="noopener" class="lp-blog-card"
-            style="animation:fadeUp 0.3s ease both;animation-delay:${i * 0.06}s">
-            <div class="lp-blog-top">
-              <div class="lp-blog-ico">${b.emoji || '📖'}</div>
-              <div class="lp-blog-title">${esc(b.title)}</div>
-            </div>
-            <div class="lp-blog-desc">${esc(b.desc)}</div>
-            <div class="lp-blog-tags">
-              <span class="lp-blog-tag lp-blog-site">${esc(b.site)}</span>
-              ${tagHtml}
-            </div>
-          </a>`;
-        }).join('');
-      } catch (err) {
-        console.error('Blog error:', err);
-        const grid = document.getElementById('lp-blogs-grid');
-        if (grid) grid.innerHTML = '<p style="color:var(--muted);font-size:13px">Could not load blogs. Check your connection.</p>';
-      }
-    }
-
-    function esc(s) {
-      const d = document.createElement('div');
-      d.appendChild(document.createTextNode(String(s || '')));
-      return d.innerHTML;
-    }
-
-    // ── ERROR ──
-    function showError(msg, canRetry) {
-      document.getElementById('lp-root').innerHTML = `
-      <div class="lp-error">
-        <div style="font-size:32px;margin-bottom:12px">⚠️</div>
-        <h3>Couldn't generate your path</h3>
-        <p>${msg}</p>
-        ${canRetry ? `<button class="btn-primary" style="padding:9px 20px;font-size:13px" onclick="init(true)">Try Again</button>` : ''}
-      </div>`;
-    }
-
-    // ── INIT ──
-    async function init(forceRefresh = false) {
-      const urlRole = new URLSearchParams(window.location.search).get('role');
-      if (urlRole) localStorage.setItem('lpSelectedRole', urlRole);
-
-      document.getElementById('lp-root').innerHTML = `
-      <div class="lp-loading">
-        <div class="lp-spinner"></div>
-        <div class="lp-loading-text">
-          <strong>${forceRefresh ? 'Refreshing your path...' : 'Building your personalized path...'}</strong>
-          Analyzing your profile and generating a roadmap
-        </div>
-      </div>`;
-
-      try {
-        let user;
-        try {
-          const verifyData = await apiFetch('/verify');
-          user = verifyData.user;
-          const fullName = user.lname ? `${user.fname} ${user.lname}` : user.fname;
-          localStorage.setItem('userName', fullName || '');
-          localStorage.setItem('userEmail', user.email || '');
-          localStorage.setItem('profileData', JSON.stringify(user));
-        } catch {
-          const cached = localStorage.getItem('profileData');
-          const token = localStorage.getItem('token');
-          if (!cached || !token) {
-            showError('Session expired. Please <a href="../auth/login.html" style="color:var(--gold)">log in again</a>.', false);
-            return;
-          }
-          user = JSON.parse(cached);
-        }
-
-        const name = user.lname ? `${user.fname} ${user.lname}` : (user.fname || 'Learner');
-        const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-        ['sidebar-av', 'topbar-av'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = initials; });
-        const sn = document.getElementById('sidebar-name'); if (sn) sn.textContent = name;
-        const mn = document.getElementById('menu-name'); if (mn) mn.textContent = name;
-        const me = document.getElementById('menu-email'); if (me) me.textContent = user.email || '';
-
-        const selectedRole = localStorage.getItem('lpSelectedRole');
-        const profile = {
-          interest: selectedRole || user.interest || user.eduField || 'Software Developer',
-          skills: user.skills || [],
-          experience: user.experience || '',
-          eduLevel: user.eduLevel || '',
-          eduField: user.eduField || ''
-        };
-
-        const level = mapExperienceToLevel(profile.experience);
-        const months = getMonths(profile.experience, level);
-        const userId = user._id || user.id || user.email;
-        localStorage.setItem('userId', userId);
-
-        if (!forceRefresh) {
-          const cache = getCache(userId);
-          if (cache) {
-            renderPage(cache.data, cache.profile || profile, true, cache.timestamp);
-            return;
-          }
-        }
-
-        if (!profile.interest) {
-          showError('Please complete your profile (add your career interest) to generate a learning path.', false);
-          return;
-        }
-
-        const roadmapData = await apiFetch('/roadmap/generate', {
-          method: 'POST',
-          body: JSON.stringify({ goal: profile.interest, level, months, skills: profile.skills })
-        });
-
-        setCache(userId, roadmapData, profile);
-        renderPage(roadmapData, profile, false, null);
-
-      } catch (err) {
-        console.error('Learning path error:', err);
-        showError(err.message || 'Something went wrong. Please try again.', true);
-      }
-    }
-
-    function refreshPath(e) {
-      if (e) e.preventDefault();
-      clearCache();
-      init(true);
-      showToast('Regenerating your personalized path...');
-    }
-
-    function viewResume() {
-      const cached = localStorage.getItem('userResume');
-      if (cached) {
-        const win = window.open();
-        win.document.write('<iframe src="' + cached + '" width="100%" height="100%" style="border:none"></iframe>');
-        return;
-      }
-      showToast('No resume uploaded yet.');
-    }
-
-    function signOut() {
-      localStorage.clear();
-      window.location.replace('../auth/login.html');
-    }
-
-    window.addEventListener('DOMContentLoaded', () => init());
-  </script>
+</script>
 
   <script src="../../assets/js/shared/config.js"></script>
   <script src="../../assets/js/shared/api.js"></script>
   <script src="../../assets/js/shared/nav.js"></script>
   <script src="../../assets/js/pages/settings-apply.js"></script>
+  <script src="../../assets/js/pages/learning-path.js"></script>
 </body>
 
 </html>
