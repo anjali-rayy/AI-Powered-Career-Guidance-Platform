@@ -154,4 +154,43 @@ Respond ONLY with a JSON array, no markdown, no backticks, no explanation:
   }
 });
 
+router.post('/courses', async (req, res) => {
+  const { role, missingSkills } = req.body;
+  if (!role) return res.status(400).json({ error: 'Missing role' });
+
+  try {
+    const apiKey = process.env.GROQ_API_KEY;
+    if (!apiKey) return res.status(500).json({ error: 'Groq API key not configured' });
+
+    const missingText = missingSkills && missingSkills.length ? `They need to learn: ${missingSkills.slice(0,5).join(', ')}.` : '';
+
+    const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        messages: [{
+          role: 'user',
+          content: `You are a learning advisor. Suggest exactly 6 foundation courses for someone targeting the role: "${role}". ${missingText}
+Return ONLY a JSON array (no markdown, no explanation) with exactly 6 objects:
+[{"title":"Course Title","platform":"Platform Name","duration":"X hours","level":"Beginner|Intermediate|Advanced","emoji":"📘","why":"One sentence why this course matters for ${role}","tags":["tag1","tag2"]}]`
+        }],
+        temperature: 0.5,
+        max_tokens: 1000
+      })
+    });
+
+    const groqData = await groqRes.json();
+    const raw = groqData.choices?.[0]?.message?.content || '[]';
+    const clean = raw.replace(/```json|```/gi, '').trim();
+    return res.json(JSON.parse(clean));
+  } catch (err) {
+    console.error('Courses error:', err);
+    return res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;
