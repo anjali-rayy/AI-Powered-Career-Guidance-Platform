@@ -199,7 +199,7 @@
 
 /* ── STAT CARDS ── */
 .stat-row {
-  display: grid; grid-template-columns: repeat(4, 1fr);
+  display: grid; grid-template-columns: 1fr 1.6fr 1fr;
   gap: 16px; margin-bottom: 28px;
 }
 @media (max-width: 1100px) { .stat-row { grid-template-columns: repeat(2, 1fr); } }
@@ -402,7 +402,7 @@
 
 /* ── QUICK ACTIONS ── */
 .quick-actions {
-  display: grid; grid-template-columns: repeat(4, 1fr);
+  display: grid; grid-template-columns: repeat(3, 1fr);
   gap: 12px; margin-bottom: 20px;
 }
 @media (max-width: 900px) { .quick-actions { grid-template-columns: repeat(2, 1fr); } }
@@ -521,4 +521,34 @@
   .welcome-strip h2 { font-size: 20px; }
   .welcome-actions { width: 100%; }
   .welcome-actions .btn-primary { flex: 1; justify-content: center; }
+}
+
+.stat-top-role-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-muted, #A1A1AA);
+}
+.stat-role-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.stat-role-name {
+  flex: 1;
+  color: #E5E5E5;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.stat-role-pct {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gold, #D4AF37);
+}
+.stat-card-wide {
+  grid-column: span 1;
 }

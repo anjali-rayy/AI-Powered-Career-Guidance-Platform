@@ -224,25 +224,20 @@
             <div class="stat-num" id="stat-readiness">—</div>
             <div class="stat-lbl">Job Recommendation</div>
           </div>
-          <div class="stat-card">
-            <div class="stat-card-header">
-              <div class="stat-icon"><svg viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="3" />
-                  <path d="M12 2v3M12 19v3M2 12h3M19 12h3" />
-                </svg></div><span class="stat-trend up">↑ 2 new</span>
-            </div>
-            <div class="stat-num" id="stat-matches">4</div>
-            <div class="stat-lbl">Career path matches</div>
-          </div>
-          <div class="stat-card">
+          <div class="stat-card stat-card-wide" id="stat-top-jobs-card" style="cursor:pointer" onclick="document.querySelector('.skills-section-grid').scrollIntoView({behavior:'smooth'})">
             <div class="stat-card-header">
               <div class="stat-icon"><svg viewBox="0 0 24 24">
                   <rect x="2" y="7" width="20" height="14" rx="2" />
                   <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
                 </svg></div><span class="stat-trend up">↑ 5 new</span>
             </div>
-            <div class="stat-num" id="stat-jobs">12</div>
-            <div class="stat-lbl">Matched job listings</div>
+            <div class="stat-num" id="stat-jobs">—</div>
+            <div class="stat-lbl" style="margin-bottom:14px">Top Job Matches</div>
+            <div id="stat-top-roles" style="display:flex;flex-direction:column;gap:8px;width:100%">
+              <div class="stat-top-role-row"><span class="stat-role-dot" style="background:#3B5BDB"></span><span class="stat-role-name">Frontend Developer</span><span class="stat-role-pct">89%</span></div>
+              <div class="stat-top-role-row"><span class="stat-role-dot" style="background:#D4AF37"></span><span class="stat-role-name">UI Engineer</span><span class="stat-role-pct">84%</span></div>
+              <div class="stat-top-role-row"><span class="stat-role-dot" style="background:#4CAF70"></span><span class="stat-role-name">React Developer</span><span class="stat-role-pct">77%</span></div>
+            </div>
           </div>
           <div class="stat-card">
             <div class="stat-card-header">
@@ -267,13 +262,7 @@
             <div class="qa-label">Career Quiz</div>
             <div class="qa-sub">Refine your matches</div>
           </button>
-          <button class="qa-btn" onclick="showToast('Opening skill tracker...')">
-            <div class="qa-icon"><svg viewBox="0 0 24 24">
-                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-              </svg></div>
-            <div class="qa-label">Track Skills</div>
-            <div class="qa-sub">Add new skills</div>
-          </button>
+          
           <button class="qa-btn" onclick="window.open('https://flowcv.com','_blank')">
             <div class="qa-icon"><svg viewBox="0 0 24 24">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
