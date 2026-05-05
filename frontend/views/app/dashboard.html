@@ -284,75 +284,8 @@
               </div>
               <button class="d-card-action" onclick="showToast('Viewing all matches...')">View all →</button>
             </div>
-            <div class="d-card-body">
-              <div class="career-match" onclick="showToast('Opening Frontend Engineer details...')">
-                <div class="cm-icon" style="background:rgba(59,91,219,0.12);border:1px solid rgba(59,91,219,0.2)">💻
-                </div>
-                <div class="cm-info">
-                  <div class="cm-title">Frontend Engineer</div>
-                  <div class="cm-meta">React · JavaScript · CSS · 4 missing skills</div>
-                  <div class="cm-bar-row">
-                    <div class="cm-bar-bg">
-                      <div class="cm-bar-fill" style="width:91%"></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="cm-score">
-                  <div class="cm-pct">91%</div>
-                  <div class="cm-pct-sub">match</div>
-                </div>
-              </div>
-              <div class="career-match" onclick="showToast('Opening Product Designer details...')">
-                <div class="cm-icon" style="background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.18)">🎨
-                </div>
-                <div class="cm-info">
-                  <div class="cm-title">Product Designer</div>
-                  <div class="cm-meta">Figma · UX Research · Prototyping · 6 missing</div>
-                  <div class="cm-bar-row">
-                    <div class="cm-bar-bg">
-                      <div class="cm-bar-fill" style="width:78%"></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="cm-score">
-                  <div class="cm-pct">78%</div>
-                  <div class="cm-pct-sub">match</div>
-                </div>
-              </div>
-              <div class="career-match" onclick="showToast('Opening Data Analyst details...')">
-                <div class="cm-icon" style="background:rgba(46,107,62,0.12);border:1px solid rgba(46,107,62,0.2)">📊
-                </div>
-                <div class="cm-info">
-                  <div class="cm-title">Data Analyst</div>
-                  <div class="cm-meta">Python · SQL · Excel · 8 missing skills</div>
-                  <div class="cm-bar-row">
-                    <div class="cm-bar-bg">
-                      <div class="cm-bar-fill" style="width:63%"></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="cm-score">
-                  <div class="cm-pct">63%</div>
-                  <div class="cm-pct-sub">match</div>
-                </div>
-              </div>
-              <div class="career-match" onclick="showToast('Opening Backend Developer details...')">
-                <div class="cm-icon" style="background:rgba(107,44,44,0.12);border:1px solid rgba(107,44,44,0.2)">⚙️
-                </div>
-                <div class="cm-info">
-                  <div class="cm-title">Backend Developer</div>
-                  <div class="cm-meta">Node.js · MongoDB · APIs · 10 missing</div>
-                  <div class="cm-bar-row">
-                    <div class="cm-bar-bg">
-                      <div class="cm-bar-fill" style="width:54%"></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="cm-score">
-                  <div class="cm-pct">54%</div>
-                  <div class="cm-pct-sub">match</div>
-                </div>
-              </div>
+            <div class="d-card-body" id="career-matches-body">
+              <div style="color:var(--muted);font-size:13px;padding:24px 0;text-align:center">Loading career matches...</div>
             </div>
           </div>
 
@@ -421,37 +354,8 @@
               </div><button class="d-card-action" onclick="showToast('Opening full skill report...')">Full report
                 →</button>
             </div>
-            <div class="d-card-body">
-              <div class="skill-gap-row"><span class="sg-name">HTML / CSS</span>
-                <div class="sg-bar-bg">
-                  <div class="sg-bar-fill have" style="width:95%"></div>
-                </div><span class="sg-pct have">95%</span><span class="sg-tag have">Have</span>
-              </div>
-              <div class="skill-gap-row"><span class="sg-name">JavaScript</span>
-                <div class="sg-bar-bg">
-                  <div class="sg-bar-fill have" style="width:88%"></div>
-                </div><span class="sg-pct have">88%</span><span class="sg-tag have">Have</span>
-              </div>
-              <div class="skill-gap-row"><span class="sg-name">React.js</span>
-                <div class="sg-bar-bg">
-                  <div class="sg-bar-fill have" style="width:80%"></div>
-                </div><span class="sg-pct have">80%</span><span class="sg-tag have">Have</span>
-              </div>
-              <div class="skill-gap-row"><span class="sg-name">TypeScript</span>
-                <div class="sg-bar-bg">
-                  <div class="sg-bar-fill gap" style="width:20%"></div>
-                </div><span class="sg-pct gap">20%</span><span class="sg-tag gap">Gap</span>
-              </div>
-              <div class="skill-gap-row"><span class="sg-name">Node.js</span>
-                <div class="sg-bar-bg">
-                  <div class="sg-bar-fill gap" style="width:15%"></div>
-                </div><span class="sg-pct gap">15%</span><span class="sg-tag gap">Gap</span>
-              </div>
-              <div class="skill-gap-row"><span class="sg-name">Testing</span>
-                <div class="sg-bar-bg">
-                  <div class="sg-bar-fill gap" style="width:10%"></div>
-                </div><span class="sg-pct gap">10%</span><span class="sg-tag gap">Gap</span>
-              </div>
+            <div class="d-card-body" id="skill-gap-body">
+              <div style="color:var(--muted);font-size:13px;padding:24px 0;text-align:center">Loading skill analysis...</div>
             </div>
           </div>
 
@@ -462,63 +366,8 @@
                 <div class="d-card-sub">12 total · sorted by fit score</div>
               </div><button class="d-card-action" onclick="showToast('Opening all job matches...')">View all →</button>
             </div>
-            <div class="d-card-body">
-              <div class="job-row" onclick="showToast('Opening Razorpay job...')">
-                <div class="job-logo">💳</div>
-                <div class="job-info">
-                  <div class="job-title">Frontend Developer</div>
-                  <div class="job-company">Razorpay · Bangalore · Remote</div>
-                  <div class="job-tags"><span class="job-tag">React</span><span class="job-tag">JavaScript</span><span
-                      class="job-tag">Full-time</span></div>
-                </div>
-                <div class="job-right">
-                  <div class="job-match">89%</div>
-                  <div class="job-match-sub">match</div><button class="job-save-btn"
-                    onclick="event.stopPropagation();this.style.color='var(--gold)';showToast('Job saved!')">♡</button>
-                </div>
-              </div>
-              <div class="job-row" onclick="showToast('Opening Zepto job...')">
-                <div class="job-logo">🛒</div>
-                <div class="job-info">
-                  <div class="job-title">UI Engineer</div>
-                  <div class="job-company">Zepto · Mumbai · Hybrid</div>
-                  <div class="job-tags"><span class="job-tag">React</span><span class="job-tag">CSS</span><span
-                      class="job-tag">₹8–14 LPA</span></div>
-                </div>
-                <div class="job-right">
-                  <div class="job-match">84%</div>
-                  <div class="job-match-sub">match</div><button class="job-save-btn"
-                    onclick="event.stopPropagation();this.style.color='var(--gold)';showToast('Job saved!')">♡</button>
-                </div>
-              </div>
-              <div class="job-row" onclick="showToast('Opening Swiggy job...')">
-                <div class="job-logo">🍔</div>
-                <div class="job-info">
-                  <div class="job-title">React Developer (Intern)</div>
-                  <div class="job-company">Swiggy · Bangalore · Onsite</div>
-                  <div class="job-tags"><span class="job-tag">React</span><span class="job-tag">Node.js</span><span
-                      class="job-tag">Internship</span></div>
-                </div>
-                <div class="job-right">
-                  <div class="job-match">77%</div>
-                  <div class="job-match-sub">match</div><button class="job-save-btn"
-                    onclick="event.stopPropagation();this.style.color='var(--gold)';showToast('Job saved!')">♡</button>
-                </div>
-              </div>
-              <div class="job-row" onclick="showToast('Opening Postman job...')">
-                <div class="job-logo">📮</div>
-                <div class="job-info">
-                  <div class="job-title">Junior Frontend Dev</div>
-                  <div class="job-company">Postman · Remote · Global</div>
-                  <div class="job-tags"><span class="job-tag">JavaScript</span><span
-                      class="job-tag">TypeScript</span><span class="job-tag">Full-time</span></div>
-                </div>
-                <div class="job-right">
-                  <div class="job-match">71%</div>
-                  <div class="job-match-sub">match</div><button class="job-save-btn"
-                    onclick="event.stopPropagation();this.style.color='var(--gold)';showToast('Job saved!')">♡</button>
-                </div>
-              </div>
+            <div class="d-card-body" id="top-job-matches-body">
+              <div style="color:var(--muted);font-size:13px;padding:24px 0;text-align:center">Loading job matches...</div>
             </div>
           </div>
         </div>
@@ -528,90 +377,27 @@
             <div class="d-card-head">
               <div>
                 <div class="d-card-title">Recent Activity</div>
-                <div class="d-card-sub">Your last 5 actions</div>
+                <div class="d-card-sub" id="activity-sub">Loading...</div>
               </div>
             </div>
             <div class="d-card-body">
-              <div class="activity-list">
-                <div class="activity-item">
-                  <div class="activity-dot-wrap">
-                    <div class="activity-dot gold"></div>
-                    <div class="activity-line"></div>
-                  </div>
-                  <div>
-                    <div class="activity-text">Job recommendation updated — match score improved to <strong
-                        style="color:var(--gold)">91</strong></div>
-                    <div class="activity-time">2 hours ago</div>
-                  </div>
-                </div>
-                <div class="activity-item">
-                  <div class="activity-dot-wrap">
-                    <div class="activity-dot green"></div>
-                    <div class="activity-line"></div>
-                  </div>
-                  <div>
-                    <div class="activity-text">Saved job — <strong style="color:var(--text)">Frontend Developer at
-                        Razorpay</strong></div>
-                    <div class="activity-time">Yesterday, 4:30 PM</div>
-                  </div>
-                </div>
-                <div class="activity-item">
-                  <div class="activity-dot-wrap">
-                    <div class="activity-dot gold"></div>
-                    <div class="activity-line"></div>
-                  </div>
-                  <div>
-                    <div class="activity-text">Added 3 new skills — React, CSS, JavaScript to your profile</div>
-                    <div class="activity-time">Yesterday, 11:20 AM</div>
-                  </div>
-                </div>
-                <div class="activity-item">
-                  <div class="activity-dot-wrap">
-                    <div class="activity-dot muted"></div>
-                    <div class="activity-line"></div>
-                  </div>
-                  <div>
-                    <div class="activity-text">Completed career quiz — 12 new job matches generated</div>
-                    <div class="activity-time">2 days ago</div>
-                  </div>
-                </div>
-                <div class="activity-item">
-                  <div class="activity-dot-wrap">
-                    <div class="activity-dot muted"></div>
-                    <div class="activity-line"></div>
-                  </div>
-                  <div>
-                    <div class="activity-text">Account created &amp; profile setup started</div>
-                    <div class="activity-time">3 days ago</div>
-                  </div>
-                </div>
+              <div class="activity-list" id="activity-list">
+                <div style="color:var(--muted);font-size:13px;padding:20px 0;text-align:center">Loading activity...</div>
               </div>
             </div>
           </div>
-            
+
           <div style="display:flex;flex-direction:column;gap:16px">
             <div class="d-card">
               <div class="d-card-head">
                 <div>
                   <div class="d-card-title">Saved Jobs</div>
-                  <div class="d-card-sub">1 saved · 0 applied</div>
-                </div><button class="d-card-action" onclick="showToast('Opening saved jobs...')">All →</button>
-              </div>
-              <div class="d-card-body">
-                <div class="job-row" onclick="showToast('Opening Razorpay job...')">
-                  <div class="job-logo">💳</div>
-                  <div class="job-info">
-                    <div class="job-title">Frontend Developer</div>
-                    <div class="job-company">Razorpay · Bangalore</div>
-                  </div>
-                  <div class="job-right">
-                    <div class="job-match">89%</div>
-                    <div class="job-match-sub">match</div>
-                  </div>
+                  <div class="d-card-sub" id="saved-jobs-sub">Loading...</div>
                 </div>
-                <div style="padding-top:12px"><button onclick="showToast('Opening application form...')"
-                    class="btn-primary" style="width:100%;padding:10px;font-size:13px;justify-content:center">Apply Now
-                    →</button></div>
+                <button class="d-card-action" onclick="showToast('Opening saved jobs...')">All →</button>
+              </div>
+              <div class="d-card-body" id="saved-jobs-body">
+                <div style="color:var(--muted);font-size:13px;padding:20px 0;text-align:center">Loading...</div>
               </div>
             </div>
           </div>

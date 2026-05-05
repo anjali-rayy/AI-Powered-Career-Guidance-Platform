@@ -72,11 +72,11 @@ requireAuth().then(function() {
 
     // Render cached skill gap immediately
     if (cached.skillGapRows && cached.skillGapRows.length > 0) {
-      const skillGapCard = document.querySelector('.skills-section-grid .d-card:first-child');
-      if (skillGapCard) {
-        const subEl = skillGapCard.querySelector('.d-card-sub');
+      const body = document.getElementById('skill-gap-body');
+      const skillGapCard = body ? body.closest('.d-card') : null;
+      if (body) {
+        const subEl = skillGapCard ? skillGapCard.querySelector('.d-card-sub') : null;
         if (subEl && cached.skillGapRole) subEl.textContent = cached.skillGapRole + ' · top match';
-        const body = skillGapCard.querySelector('.d-card-body');
         if (body) {
           body.innerHTML = cached.skillGapRows.map(row => `
             <div class="skill-gap-row">
@@ -94,9 +94,8 @@ requireAuth().then(function() {
 
     // Render cached job matches immediately
     if (cached.topJobMatches && cached.topJobMatches.length > 0) {
-      const jobMatchCard = document.querySelector('.skills-section-grid .d-card:last-child');
-      if (jobMatchCard) {
-        const body = jobMatchCard.querySelector('.d-card-body');
+      const body = document.getElementById('top-job-matches-body');
+      if (body) {
         if (body) {
           const jobEmojis = ['💻', '🎨', '📊', '⚙️', '🚀', '🔬', '📱', '☁️'];
           body.innerHTML = cached.topJobMatches.map((job, i) => `
@@ -112,7 +111,7 @@ requireAuth().then(function() {
               <div class="job-right">
                 <div class="job-match">${job.score}%</div>
                 <div class="job-match-sub">match</div>
-                <button class="job-save-btn" onclick="event.stopPropagation();this.style.color='var(--gold)';showToast('Job saved!')">♡</button>
+                <button class="job-save-btn" onclick="event.stopPropagation();saveJob(this,'${job.title}','${job.company}',${job.score},${JSON.stringify(job.tags)})">♡</button>
               </div>
             </div>
           `).join('');
@@ -167,7 +166,7 @@ requireAuth().then(function() {
       }
 
       // Update Career Path Matches section with real data
-      const careerBody = document.querySelector('.d-card .d-card-body');
+      const careerBody = document.getElementById('career-matches-body');
       if (careerBody && data.topRoles && data.topRoles.length > 0) {
         const roleEmojis = ['💻', '🎨', '📊', '⚙️', '🚀', '🔬', '📱', '☁️'];
         const roleColors = [
@@ -207,11 +206,12 @@ requireAuth().then(function() {
       }
 
       // ── Update Skill Gap Analysis section ──
-      const skillGapCard = document.querySelector('.skills-section-grid .d-card:first-child');
-      if (skillGapCard && data.skillGapRows && data.skillGapRows.length > 0) {
-        const subEl = skillGapCard.querySelector('.d-card-sub');
+      const skillGapBody = document.getElementById('skill-gap-body');
+      const skillGapCard = skillGapBody ? skillGapBody.closest('.d-card') : null;
+      if (skillGapBody && data.skillGapRows && data.skillGapRows.length > 0) {
+        const subEl = skillGapCard ? skillGapCard.querySelector('.d-card-sub') : null;
         if (subEl) subEl.textContent = (data.skillGapRole || 'Top match') + ' · top match';
-        const body = skillGapCard.querySelector('.d-card-body');
+        const body = skillGapBody;
         if (body) {
           body.innerHTML = data.skillGapRows.map(row => `
             <div class="skill-gap-row">
@@ -227,11 +227,12 @@ requireAuth().then(function() {
       }
 
       // ── Update Top Job Matches section ──
-      const jobMatchCard = document.querySelector('.skills-section-grid .d-card:last-child');
-      if (jobMatchCard && data.topJobMatches && data.topJobMatches.length > 0) {
-        const subEl = jobMatchCard.querySelector('.d-card-sub');
+      const jobMatchBody = document.getElementById('top-job-matches-body');
+      const jobMatchCard = jobMatchBody ? jobMatchBody.closest('.d-card') : null;
+      if (jobMatchBody && data.topJobMatches && data.topJobMatches.length > 0) {
+        const subEl = jobMatchCard ? jobMatchCard.querySelector('.d-card-sub') : null;
         if (subEl) subEl.textContent = data.topJobMatches.length + ' total · sorted by fit score';
-        const body = jobMatchCard.querySelector('.d-card-body');
+        const body = jobMatchBody;
         if (body) {
           const jobEmojis = ['💻', '🎨', '📊', '⚙️', '🚀', '🔬', '📱', '☁️'];
           body.innerHTML = data.topJobMatches.map((job, i) => `
@@ -247,7 +248,7 @@ requireAuth().then(function() {
               <div class="job-right">
                 <div class="job-match">${job.score}%</div>
                 <div class="job-match-sub">match</div>
-                <button class="job-save-btn" onclick="event.stopPropagation();this.style.color='var(--gold)';showToast('Job saved!')">♡</button>
+                <button class="job-save-btn" onclick="event.stopPropagation();saveJob(this,'${job.title}','${job.company}',${job.score},${JSON.stringify(job.tags)})">♡</button>
               </div>
             </div>
           `).join('');
@@ -270,6 +271,92 @@ requireAuth().then(function() {
 
     } catch (err) {
       console.warn('Dashboard stats fetch failed, using cached data:', err);
+    }
+  })();
+
+  /* ── RECENT ACTIVITY + SAVED JOBS ── */
+  (async function loadActivityAndJobs() {
+    const token = localStorage.getItem('token');
+    const BASE = window.ENV_BACKEND_URL || 'http://localhost:3000';
+
+    function timeAgo(dateStr) {
+      const diff = Date.now() - new Date(dateStr).getTime();
+      const mins = Math.floor(diff / 60000);
+      const hrs  = Math.floor(diff / 3600000);
+      const days = Math.floor(diff / 86400000);
+      if (mins < 2)  return 'Just now';
+      if (mins < 60) return mins + ' minutes ago';
+      if (hrs  < 24) return hrs + ' hours ago';
+      if (days === 1) return 'Yesterday';
+      return days + ' days ago';
+    }
+
+    // Load activity
+    try {
+      const res = await fetch(BASE + '/api/activity', { headers: { 'Authorization': 'Bearer ' + token } });
+      const data = await res.json();
+      const acts = data.activity || [];
+      const subEl = document.getElementById('activity-sub');
+      const listEl = document.getElementById('activity-list');
+      if (subEl) subEl.textContent = 'Your last ' + (acts.length || 0) + ' actions';
+      if (listEl) {
+        if (acts.length === 0) {
+          listEl.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:20px 0;text-align:center">No activity yet — start by running a recommendation!</div>';
+        } else {
+          listEl.innerHTML = acts.map((a, i) => `
+            <div class="activity-item">
+              <div class="activity-dot-wrap">
+                <div class="activity-dot ${a.dot || 'muted'}"></div>
+                ${i < acts.length - 1 ? '<div class="activity-line"></div>' : ''}
+              </div>
+              <div>
+                <div class="activity-text">${a.text}</div>
+                <div class="activity-time">${timeAgo(a.time)}</div>
+              </div>
+            </div>
+          `).join('');
+        }
+      }
+    } catch (e) {
+      const listEl = document.getElementById('activity-list');
+      if (listEl) listEl.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:16px 0">Could not load activity.</div>';
+    }
+
+    // Load saved jobs
+    try {
+      const res = await fetch(BASE + '/api/jobs/saved', { headers: { 'Authorization': 'Bearer ' + token } });
+      const data = await res.json();
+      const jobs = data.savedJobs || [];
+      const subEl = document.getElementById('saved-jobs-sub');
+      const bodyEl = document.getElementById('saved-jobs-body');
+      if (subEl) subEl.textContent = jobs.length + ' saved · 0 applied';
+      if (bodyEl) {
+        if (jobs.length === 0) {
+          bodyEl.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:20px 0;text-align:center">No saved jobs yet — save jobs from the Top Job Matches section!</div>';
+        } else {
+          const top = jobs[0];
+          bodyEl.innerHTML = `
+            <div class="job-row" onclick="showToast('Opening ${top.title}...')">
+              <div class="job-logo">${top.logo || '💼'}</div>
+              <div class="job-info">
+                <div class="job-title">${top.title}</div>
+                <div class="job-company">${top.company}</div>
+              </div>
+              <div class="job-right">
+                <div class="job-match">${top.score}%</div>
+                <div class="job-match-sub">match</div>
+              </div>
+            </div>
+            <div style="padding-top:12px">
+              <button onclick="showToast('Opening application form...')" class="btn-primary"
+                style="width:100%;padding:10px;font-size:13px;justify-content:center">Apply Now →</button>
+            </div>
+          `;
+        }
+      }
+    } catch (e) {
+      const bodyEl = document.getElementById('saved-jobs-body');
+      if (bodyEl) bodyEl.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:16px 0">Could not load saved jobs.</div>';
     }
   })();
 
@@ -348,3 +435,20 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2800);
 }
 window.showToast = showToast;
+
+window.saveJob = async function(btn, title, company, score, tags) {
+  btn.style.color = 'var(--gold)';
+  showToast('Saving job...');
+  try {
+    const token = localStorage.getItem('token');
+    await fetch((window.ENV_BACKEND_URL || 'http://localhost:3000') + '/api/jobs/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ title, company, score, tags })
+    });
+    showToast('Job saved! ✓');
+  } catch (e) {
+    showToast('Could not save job');
+    btn.style.color = '';
+  }
+};

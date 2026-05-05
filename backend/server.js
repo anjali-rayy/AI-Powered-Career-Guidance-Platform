@@ -46,6 +46,8 @@ const userSchema = new mongoose.Schema({
   skills:     { type: [String], default: [] },
   googleId:   { type: String, default: null },
   quizResult: { type: Object, default: null },
+  savedJobs:  { type: Array, default: [] },
+  activity:   { type: Array, default: [] },
   createdAt:  { type: Date, default: Date.now }
 });
 
@@ -336,6 +338,63 @@ app.post('/api/career-recommend', authMiddleware, async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: 'Python service unavailable: ' + err.message });
   }
+});
+
+// SAVE A JOB
+app.post('/api/jobs/save', authMiddleware, async (req, res) => {
+  try {
+    const { title, company, score, tags, logo } = req.body;
+    const job = { id: Date.now().toString(), title, company, score, tags: tags || [], logo: logo || '💼', savedAt: new Date() };
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { $push: { savedJobs: { $each: [job], $position: 0 } } },
+      { new: true }
+    );
+    // Log activity
+    await User.findByIdAndUpdate(req.user.id, {
+      $push: { activity: { $each: [{ text: `Saved job — ${title} at ${company}`, time: new Date(), dot: 'green' }], $position: 0, $slice: 20 } }
+    });
+    res.json({ savedJobs: user.savedJobs });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// UNSAVE A JOB
+app.delete('/api/jobs/save/:jobId', authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { $pull: { savedJobs: { id: req.params.jobId } } },
+      { new: true }
+    );
+    res.json({ savedJobs: user.savedJobs });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// GET SAVED JOBS
+app.get('/api/jobs/saved', authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    res.json({ savedJobs: user.savedJobs || [] });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// LOG ACTIVITY
+app.post('/api/activity', authMiddleware, async (req, res) => {
+  try {
+    const { text, dot } = req.body;
+    await User.findByIdAndUpdate(req.user.id, {
+      $push: { activity: { $each: [{ text, dot: dot || 'muted', time: new Date() }], $position: 0, $slice: 20 } }
+    });
+    res.json({ ok: true });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// GET ACTIVITY
+app.get('/api/activity', authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    res.json({ activity: (user.activity || []).slice(0, 5) });
+  } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
 // DASHBOARD STATS — returns career matches + top job roles for dashboard
