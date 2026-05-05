@@ -93,7 +93,11 @@ app.post('/api/register', async (req, res) => {
       return res.status(400).json({ error: 'Email already registered' });
 
     const hashed = await bcrypt.hash(password, 10);
-    const user = await User.create({ fname, lname, email, password: hashed, quizResult: quizResult || null });
+    const user = await User.create({
+      fname, lname, email, password: hashed,
+      quizResult: quizResult || null,
+      activity: [{ text: 'Account created & profile setup started', dot: 'muted', time: new Date() }]
+    });
 
     res.json({ token: generateToken(user), user: safeUser(user) });
 
@@ -340,20 +344,52 @@ app.post('/api/career-recommend', authMiddleware, async (req, res) => {
   }
 });
 
-// SAVE A JOB
+// SAVE A JOB (deduplication + applied status)
 app.post('/api/jobs/save', authMiddleware, async (req, res) => {
   try {
     const { title, company, score, tags, logo } = req.body;
-    const job = { id: Date.now().toString(), title, company, score, tags: tags || [], logo: logo || '💼', savedAt: new Date() };
-    const user = await User.findByIdAndUpdate(
+    const user = await User.findById(req.user.id);
+
+    // Deduplicate — skip if same title+company already saved
+    const alreadySaved = (user.savedJobs || []).some(
+      j => j.title.toLowerCase() === title.toLowerCase() && j.company.toLowerCase() === company.toLowerCase()
+    );
+    if (alreadySaved) return res.json({ savedJobs: user.savedJobs, duplicate: true });
+
+    const job = {
+      id: Date.now().toString(),
+      title, company, score,
+      tags: tags || [],
+      logo: logo || '💼',
+      savedAt: new Date(),
+      applied: false
+    };
+    const updated = await User.findByIdAndUpdate(
       req.user.id,
       { $push: { savedJobs: { $each: [job], $position: 0 } } },
       { new: true }
     );
-    // Log activity
     await User.findByIdAndUpdate(req.user.id, {
       $push: { activity: { $each: [{ text: `Saved job — ${title} at ${company}`, time: new Date(), dot: 'green' }], $position: 0, $slice: 20 } }
     });
+    res.json({ savedJobs: updated.savedJobs });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// TOGGLE APPLIED STATUS
+app.patch('/api/jobs/save/:jobId/applied', authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    const job = (user.savedJobs || []).find(j => j.id === req.params.jobId);
+    if (!job) return res.status(404).json({ error: 'Job not found' });
+    job.applied = !job.applied;
+    user.markModified('savedJobs');
+    await user.save();
+    if (job.applied) {
+      await User.findByIdAndUpdate(req.user.id, {
+        $push: { activity: { $each: [{ text: `Marked as applied — ${job.title} at ${job.company}`, time: new Date(), dot: 'gold' }], $position: 0, $slice: 20 } }
+      });
+    }
     res.json({ savedJobs: user.savedJobs });
   } catch (err) { res.status(500).json({ error: err.message }); }
 });

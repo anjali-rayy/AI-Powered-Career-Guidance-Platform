@@ -389,6 +389,21 @@
       }
       localStorage.setItem('dashStats', JSON.stringify(dashStats));
 
+      // ── Log activity for running recommendation ──
+      try {
+        const token = localStorage.getItem('token');
+        if (token && recs.length > 0) {
+          await fetch((window.ENV_BACKEND_URL || 'http://localhost:3000') + '/api/activity', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+            body: JSON.stringify({
+              text: `Career recommendation ran — ${recs.length} matches found, top match: <strong style="color:var(--gold)">${recs[0].career}</strong>`,
+              dot: 'gold'
+            })
+          });
+        }
+      } catch (e) { console.warn('Activity log failed:', e); }
+
       // ── CRITICAL FIX: Save skills back to profileData so dashboard backend call uses them ──
       const profileData = JSON.parse(localStorage.getItem('profileData') || '{}');
       profileData.skills = skills;
@@ -400,11 +415,17 @@
         if (token) {
           await fetch((window.ENV_BACKEND_URL || 'http://localhost:3000') + '/api/profile', {
             method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer ' + token
-            },
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
             body: JSON.stringify({ skills })
+          });
+          // Log skills update activity
+          await fetch((window.ENV_BACKEND_URL || 'http://localhost:3000') + '/api/activity', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+            body: JSON.stringify({
+              text: `Updated ${skills.length} skills in profile — ${skills.slice(0, 3).join(', ')}${skills.length > 3 ? ' and more' : ''}`,
+              dot: 'gold'
+            })
           });
         }
       } catch (e) {

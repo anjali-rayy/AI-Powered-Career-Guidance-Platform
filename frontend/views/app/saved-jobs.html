@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Saved Jobs | PathwayAI</title>
+  <link rel="stylesheet" href="../../assets/css/shared.css" />
+  <link rel="stylesheet" href="../../assets/css/dashboard.css" />
+  <script>
+    if (!localStorage.getItem('token')) window.location.replace('../auth/login.html');
+  </script>
+  <style>
+    .sj-header { margin-bottom: 28px; }
+    .sj-header h2 { font-family:'Playfair Display',serif; font-size:24px; font-weight:600; color:var(--text); letter-spacing:-0.015em; }
+    .sj-header h2 em { font-style:italic; color:var(--gold); }
+    .sj-header p { font-size:13.5px; color:var(--muted); margin-top:4px; }
+
+    .sj-filters {
+      display:flex; align-items:center; gap:10px; margin-bottom:24px; flex-wrap:wrap;
+    }
+    .sj-filter-btn {
+      padding:7px 16px; border-radius:20px; border:1px solid var(--border);
+      background:var(--card); color:var(--muted); font-size:12.5px; font-weight:500;
+      cursor:pointer; font-family:'Inter',sans-serif; transition:all 0.18s;
+    }
+    .sj-filter-btn:hover { border-color:var(--border-g); color:var(--text); }
+    .sj-filter-btn.active { background:rgba(212,175,55,0.1); border-color:rgba(212,175,55,0.3); color:var(--gold); }
+    .sj-count {
+      margin-left:auto; font-size:12.5px; color:var(--muted);
+    }
+
+    .sj-grid { display:flex; flex-direction:column; gap:12px; }
+
+    .sj-card {
+      background:var(--card); border:1px solid var(--border); border-radius:14px;
+      padding:20px 22px; position:relative; overflow:hidden;
+      transition:border-color 0.2s, transform 0.15s;
+      animation: fadeUp 0.3s ease both;
+    }
+    .sj-card::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:1px;
+      background:linear-gradient(90deg,transparent,rgba(212,175,55,0.15),transparent);
+    }
+    .sj-card:hover { border-color:rgba(212,175,55,0.2); transform:translateY(-1px); }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+    .sj-card-top { display:flex; align-items:flex-start; gap:14px; }
+    .sj-logo {
+      width:44px; height:44px; border-radius:11px; flex-shrink:0;
+      background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+      display:grid; place-items:center; font-size:20px;
+    }
+    .sj-info { flex:1; min-width:0; }
+    .sj-title { font-size:14.5px; font-weight:600; color:var(--text); margin-bottom:3px; }
+    .sj-company { font-size:12.5px; color:var(--muted); margin-bottom:8px; }
+    .sj-tags { display:flex; gap:6px; flex-wrap:wrap; }
+    .sj-tag {
+      font-size:11px; padding:3px 9px; border-radius:20px;
+      background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07);
+      color:var(--muted);
+    }
+
+    .sj-right { text-align:right; flex-shrink:0; min-width:80px; }
+    .sj-pct { font-family:'Playfair Display',serif; font-size:20px; font-weight:600; color:var(--gold); line-height:1; }
+    .sj-pct-lbl { font-size:11px; color:var(--muted); margin-top:1px; }
+
+    .sj-meta {
+      display:flex; align-items:center; justify-content:space-between;
+      margin-top:14px; padding-top:14px;
+      border-top:1px solid rgba(255,255,255,0.05);
+      flex-wrap:wrap; gap:10px;
+    }
+    .sj-date { font-size:11.5px; color:var(--subtle); }
+
+    /* Status toggle */
+    .sj-status-wrap { display:flex; align-items:center; gap:8px; }
+    .sj-status {
+      display:inline-flex; align-items:center; gap:6px;
+      padding:5px 12px; border-radius:20px; font-size:11.5px; font-weight:600;
+      cursor:pointer; border:none; font-family:'Inter',sans-serif;
+      transition:all 0.2s;
+    }
+    .sj-status.not-applied {
+      background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
+      color:var(--muted);
+    }
+    .sj-status.applied {
+      background:rgba(76,175,112,0.12); border:1px solid rgba(76,175,112,0.25);
+      color:#4CAF70;
+    }
+    .sj-status-dot {
+      width:6px; height:6px; border-radius:50%;
+    }
+    .not-applied .sj-status-dot { background:var(--subtle); }
+    .applied .sj-status-dot { background:#4CAF70; }
+
+    .sj-actions { display:flex; gap:8px; }
+    .sj-action-btn {
+      padding:6px 14px; border-radius:8px; font-size:12px; font-weight:500;
+      cursor:pointer; font-family:'Inter',sans-serif; transition:all 0.18s;
+    }
+    .sj-action-apply {
+      background:var(--gold); color:#0A0A0A; border:none;
+    }
+    .sj-action-apply:hover { opacity:0.88; }
+    .sj-action-remove {
+      background:rgba(207,102,121,0.08); border:1px solid rgba(207,102,121,0.2);
+      color:#CF6679;
+    }
+    .sj-action-remove:hover { background:rgba(207,102,121,0.15); }
+
+    .sj-empty {
+      text-align:center; padding:60px 20px; color:var(--muted);
+    }
+    .sj-empty-icon { font-size:48px; margin-bottom:16px; opacity:0.4; }
+    .sj-empty p { font-size:14px; line-height:1.7; }
+    .sj-empty a { color:var(--gold); text-decoration:none; }
+
+    .sj-stats-row {
+      display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:24px;
+    }
+    .sj-stat {
+      background:var(--card); border:1px solid var(--border); border-radius:12px;
+      padding:16px 18px; text-align:center;
+    }
+    .sj-stat-num { font-family:'Playfair Display',serif; font-size:26px; font-weight:600; color:var(--text); }
+    .sj-stat-lbl { font-size:12px; color:var(--muted); margin-top:3px; }
+
+    @media(max-width:600px) {
+      .sj-stats-row { grid-template-columns:1fr 1fr; }
+      .sj-card-top { flex-wrap:wrap; }
+      .sj-right { min-width:unset; }
+      .sj-meta { flex-direction:column; align-items:flex-start; }
+    }
+  </style>
+</head>
+<body>
+<div class="dash-root">
+
+  <!-- SIDEBAR (copied from profile.html structure) -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark"><img src="../../assets/images/logo.png" alt="PathwayAI Logo"></div>
+      PathwayAI
+    </div>
+    <div class="sidebar-user">
+      <div class="user-av" id="sidebar-av"></div>
+      <div>
+        <div class="user-name" id="sidebar-name"></div>
+        <div class="user-role" id="sidebar-role">PathwayAI Member</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a href="../public/features.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        Features
+      </a>
+      <a href="dashboard.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a href="../app/profile.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        My Profile
+      </a>
+      <a href="../app/career-recommendation.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+        Job Recommendation
+      </a>
+      <div class="nav-section-label">Opportunities</div>
+      <a href="../app/saved-jobs.html" class="nav-item active">
+        <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+        Saved Jobs
+      </a>
+      <a href="#" class="nav-item" onclick="viewResume()">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        My Resume
+      </a>
+      <div class="nav-section-label">Growth</div>
+      <a href="#" class="nav-item" onclick="showToast('Skill Analysis coming soon!')">
+        <svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+        Skill Analysis
+      </a>
+      <a href="../app/learning-path.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        Learning Path
+      </a>
+    </nav>
+    <div class="sidebar-bottom">
+      <a href="../auth/settings.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+        Settings
+      </a>
+      <a href="/" class="nav-item" onclick="signOut()">
+        <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sign out
+      </a>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <div class="dash-main">
+    <header class="dash-topbar">
+      <button class="dash-topbar-menu-btn" id="sidebar-toggle" aria-label="Toggle sidebar">
+        <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="topbar-left"><h1>Saved <em>Jobs</em></h1></div>
+      <div class="topbar-right">
+        <div class="topbar-search">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="sj-search" placeholder="Search saved jobs..." oninput="filterJobs()" />
+        </div>
+        <button class="icon-btn" onclick="showToast('No new notifications')">
+          <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="notif-dot"></span>
+        </button>
+        <div class="topbar-av" id="topbar-av" style="cursor:pointer"></div>
+      </div>
+    </header>
+
+    <div class="dash-body">
+
+      <div class="sj-header">
+        <h2>Your Saved <em>Jobs</em></h2>
+        <p id="sj-header-sub">Loading your saved jobs...</p>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="sj-stats-row">
+        <div class="sj-stat">
+          <div class="sj-stat-num" id="stat-total">—</div>
+          <div class="sj-stat-lbl">Total Saved</div>
+        </div>
+        <div class="sj-stat">
+          <div class="sj-stat-num" style="color:#4CAF70" id="stat-applied">—</div>
+          <div class="sj-stat-lbl">Applied</div>
+        </div>
+        <div class="sj-stat">
+          <div class="sj-stat-num" style="color:#C9A227" id="stat-pending">—</div>
+          <div class="sj-stat-lbl">Not Applied</div>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="sj-filters">
+        <button class="sj-filter-btn active" onclick="setFilter('all', this)">All Jobs</button>
+        <button class="sj-filter-btn" onclick="setFilter('not-applied', this)">Not Applied</button>
+        <button class="sj-filter-btn" onclick="setFilter('applied', this)">Applied</button>
+        <span class="sj-count" id="sj-count"></span>
+      </div>
+
+      <!-- Jobs List -->
+      <div class="sj-grid" id="sj-grid">
+        <div style="color:var(--muted);font-size:13px;padding:40px 0;text-align:center">Loading...</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+<script src="../../assets/js/shared/config.js"></script>
+<script src="../../assets/js/shared/api.js"></script>
+<script src="../../assets/js/shared/nav.js"></script>
+<script src="../../assets/js/pages/settings-apply.js"></script>
+
+<script>
+  const BASE = window.ENV_BACKEND_URL || 'http://localhost:3000';
+  let allJobs = [];
+  let currentFilter = 'all';
+  let searchQuery = '';
+
+  const jobEmojis = ['💻','🎨','📊','⚙️','🚀','🔬','📱','☁️','💡','🎯','📈','🏗️'];
+
+  // ── INIT ──
+  (function init() {
+    // Restore avatar
+    const ini = localStorage.getItem('displayIni') || '';
+    const full = localStorage.getItem('displayFull') || '';
+    const role = localStorage.getItem('userRole') || 'PathwayAI Member';
+    if (ini) {
+      document.getElementById('sidebar-av').textContent = ini;
+      document.getElementById('topbar-av').textContent = ini;
+    }
+    if (full) document.getElementById('sidebar-name').textContent = full;
+    document.getElementById('sidebar-role').textContent = role;
+  })();
+
+  // ── LOAD JOBS ──
+  async function loadJobs() {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(BASE + '/api/jobs/saved', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      const data = await res.json();
+
+      // Deduplicate by title+company
+      const seen = new Set();
+      allJobs = (data.savedJobs || []).filter(job => {
+        const key = (job.title + '|' + job.company).toLowerCase();
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+
+      updateStats();
+      renderJobs();
+    } catch (e) {
+      document.getElementById('sj-grid').innerHTML =
+        '<div style="color:var(--muted);font-size:13px;padding:40px 0;text-align:center">Could not load saved jobs.</div>';
+    }
+  }
+
+  function updateStats() {
+    const applied = allJobs.filter(j => j.applied).length;
+    const pending = allJobs.length - applied;
+    document.getElementById('stat-total').textContent = allJobs.length;
+    document.getElementById('stat-applied').textContent = applied;
+    document.getElementById('stat-pending').textContent = pending;
+    document.getElementById('sj-header-sub').textContent =
+      allJobs.length + ' saved · ' + applied + ' applied · ' + pending + ' pending';
+  }
+
+  function getFiltered() {
+    return allJobs.filter(job => {
+      const matchFilter = currentFilter === 'all' ||
+        (currentFilter === 'applied' && job.applied) ||
+        (currentFilter === 'not-applied' && !job.applied);
+      const matchSearch = !searchQuery ||
+        job.title.toLowerCase().includes(searchQuery) ||
+        job.company.toLowerCase().includes(searchQuery) ||
+        (job.tags || []).some(t => t.toLowerCase().includes(searchQuery));
+      return matchFilter && matchSearch;
+    });
+  }
+
+  function renderJobs() {
+    const filtered = getFiltered();
+    const grid = document.getElementById('sj-grid');
+    const countEl = document.getElementById('sj-count');
+    countEl.textContent = filtered.length + ' job' + (filtered.length !== 1 ? 's' : '');
+
+    if (filtered.length === 0) {
+      grid.innerHTML = `
+        <div class="sj-empty">
+          <div class="sj-empty-icon">🔖</div>
+          <p>${allJobs.length === 0
+            ? 'No saved jobs yet.<br>Go to <a href="dashboard.html">Dashboard</a> and click ♡ on any job to save it!'
+            : 'No jobs match your current filter.'
+          }</p>
+        </div>`;
+      return;
+    }
+
+    grid.innerHTML = filtered.map((job, i) => {
+      const emoji = jobEmojis[i % jobEmojis.length];
+      const tags = (job.tags || []).slice(0, 3);
+      const savedDate = job.savedAt ? formatDate(job.savedAt) : 'Recently saved';
+      const isApplied = !!job.applied;
+      return `
+        <div class="sj-card" id="job-card-${job.id}" style="animation-delay:${i * 0.05}s">
+          <div class="sj-card-top">
+            <div class="sj-logo">${job.logo || emoji}</div>
+            <div class="sj-info">
+              <div class="sj-title">${esc(job.title)}</div>
+              <div class="sj-company">${esc(job.company)}</div>
+              <div class="sj-tags">
+                ${tags.map(t => `<span class="sj-tag" style="text-transform:capitalize">${esc(t)}</span>`).join('')}
+              </div>
+            </div>
+            <div class="sj-right">
+              <div class="sj-pct">${job.score || '—'}%</div>
+              <div class="sj-pct-lbl">match</div>
+            </div>
+          </div>
+          <div class="sj-meta">
+            <span class="sj-date">🕐 Saved ${savedDate}</span>
+            <div class="sj-status-wrap">
+              <button class="sj-status ${isApplied ? 'applied' : 'not-applied'}"
+                id="status-btn-${job.id}"
+                onclick="toggleApplied('${job.id}')">
+                <span class="sj-status-dot"></span>
+                ${isApplied ? 'Applied ✓' : 'Not Applied'}
+              </button>
+            </div>
+            <div class="sj-actions">
+              <button class="sj-action-btn sj-action-apply" onclick="showToast('Opening application for ${esc(job.title)}...')">
+                Apply Now →
+              </button>
+              <button class="sj-action-btn sj-action-remove" onclick="removeJob('${job.id}')">
+                Remove
+              </button>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  // ── TOGGLE APPLIED STATUS ──
+  async function toggleApplied(jobId) {
+    const job = allJobs.find(j => j.id === jobId);
+    if (!job) return;
+    job.applied = !job.applied;
+
+    // Update button UI instantly
+    const btn = document.getElementById('status-btn-' + jobId);
+    if (btn) {
+      btn.className = 'sj-status ' + (job.applied ? 'applied' : 'not-applied');
+      btn.innerHTML = `<span class="sj-status-dot"></span>${job.applied ? 'Applied ✓' : 'Not Applied'}`;
+    }
+    updateStats();
+
+    // Persist to backend
+    try {
+      const token = localStorage.getItem('token');
+      await fetch(BASE + '/api/jobs/save/' + jobId + '/applied', {
+        method: 'PATCH',
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      showToast(job.applied ? 'Marked as Applied ✓' : 'Marked as Not Applied');
+      // Log activity
+      if (job.applied) {
+        await fetch(BASE + '/api/activity', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ text: `Applied to <strong style="color:var(--text)">${job.title} at ${job.company}</strong>`, dot: 'green' })
+        });
+      }
+    } catch (e) {
+      showToast('Could not update status');
+    }
+  }
+
+  // ── REMOVE JOB ──
+  async function removeJob(jobId) {
+    const card = document.getElementById('job-card-' + jobId);
+    if (card) { card.style.opacity = '0.4'; card.style.pointerEvents = 'none'; }
+    try {
+      const token = localStorage.getItem('token');
+      await fetch(BASE + '/api/jobs/save/' + jobId, {
+        method: 'DELETE',
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      allJobs = allJobs.filter(j => j.id !== jobId);
+      updateStats();
+      renderJobs();
+      showToast('Job removed');
+    } catch (e) {
+      if (card) { card.style.opacity = '1'; card.style.pointerEvents = 'auto'; }
+      showToast('Could not remove job');
+    }
+  }
+
+  // ── FILTER & SEARCH ──
+  function setFilter(filter, btn) {
+    currentFilter = filter;
+    document.querySelectorAll('.sj-filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderJobs();
+  }
+
+  function filterJobs() {
+    searchQuery = document.getElementById('sj-search').value.toLowerCase().trim();
+    renderJobs();
+  }
+
+  // ── HELPERS ──
+  function formatDate(dateStr) {
+    const diff = Date.now() - new Date(dateStr).getTime();
+    const days = Math.floor(diff / 86400000);
+    const hrs  = Math.floor(diff / 3600000);
+    if (hrs < 1)   return 'just now';
+    if (hrs < 24)  return hrs + 'h ago';
+    if (days === 1) return 'yesterday';
+    if (days < 7)  return days + ' days ago';
+    return new Date(dateStr).toLocaleDateString('en-IN', { day:'numeric', month:'short' });
+  }
+
+  function esc(s) {
+    const d = document.createElement('div');
+    d.appendChild(document.createTextNode(String(s || '')));
+    return d.innerHTML;
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    if (!t) return;
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+  window.showToast = showToast;
+
+  window.signOut = function() {
+    const keys = [];
+    Object.keys(localStorage).forEach(k => { if (k.startsWith('settings_')) keys.push({k, v:localStorage.getItem(k)}); });
+    localStorage.clear();
+    keys.forEach(({k,v}) => localStorage.setItem(k,v));
+    window.location.href = '../public/index.html';
+  };
+
+  // Sidebar toggle
+  const sidebarToggle = document.getElementById('sidebar-toggle');
+  const sidebar = document.querySelector('.sidebar');
+  const sidebarOverlay = document.getElementById('sidebar-overlay');
+  if (sidebarToggle) sidebarToggle.addEventListener('click', () => { sidebar.classList.add('open'); sidebarOverlay.classList.add('open'); });
+  if (sidebarOverlay) sidebarOverlay.addEventListener('click', () => { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('open'); });
+
+  // Load on start
+  loadJobs();
+</script>
+</body>
+</html>

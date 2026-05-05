@@ -441,12 +441,69 @@ window.saveJob = async function(btn, title, company, score, tags) {
   showToast('Saving job...');
   try {
     const token = localStorage.getItem('token');
-    await fetch((window.ENV_BACKEND_URL || 'http://localhost:3000') + '/api/jobs/save', {
+    const BASE = window.ENV_BACKEND_URL || 'http://localhost:3000';
+    const saveRes = await fetch(BASE + '/api/jobs/save', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
       body: JSON.stringify({ title, company, score, tags })
     });
+    const saveData = await saveRes.json();
+    if (saveData.duplicate) {
+      showToast('Already saved!');
+      btn.style.color = 'var(--gold)';
+      return;
+    }
     showToast('Job saved! ✓');
+    // Refresh saved jobs panel immediately
+    const bodyEl = document.getElementById('saved-jobs-body');
+    const subEl = document.getElementById('saved-jobs-sub');
+    if (bodyEl) {
+      const res2 = await fetch(BASE + '/api/jobs/saved', { headers: { 'Authorization': 'Bearer ' + token } });
+      const data2 = await res2.json();
+      const jobs = data2.savedJobs || [];
+      if (subEl) subEl.textContent = jobs.length + ' saved · 0 applied';
+      if (jobs.length > 0) {
+        const top = jobs[0];
+        bodyEl.innerHTML = `
+          <div class="job-row" onclick="showToast('Opening ${top.title}...')">
+            <div class="job-logo">${top.logo || '💼'}</div>
+            <div class="job-info">
+              <div class="job-title">${top.title}</div>
+              <div class="job-company">${top.company}</div>
+            </div>
+            <div class="job-right">
+              <div class="job-match">${top.score}%</div>
+              <div class="job-match-sub">match</div>
+            </div>
+          </div>
+          <div style="padding-top:12px">
+            <button onclick="showToast('Opening application form...')" class="btn-primary"
+              style="width:100%;padding:10px;font-size:13px;justify-content:center">Apply Now →</button>
+          </div>`;
+      }
+    }
+    // Refresh activity panel
+    const listEl = document.getElementById('activity-list');
+    const actSubEl = document.getElementById('activity-sub');
+    if (listEl) {
+      const res3 = await fetch(BASE + '/api/activity', { headers: { 'Authorization': 'Bearer ' + token } });
+      const data3 = await res3.json();
+      const acts = data3.activity || [];
+      if (actSubEl) actSubEl.textContent = 'Your last ' + acts.length + ' actions';
+      if (acts.length > 0) {
+        listEl.innerHTML = acts.map((a, i) => `
+          <div class="activity-item">
+            <div class="activity-dot-wrap">
+              <div class="activity-dot ${a.dot || 'muted'}"></div>
+              ${i < acts.length - 1 ? '<div class="activity-line"></div>' : ''}
+            </div>
+            <div>
+              <div class="activity-text">${a.text}</div>
+              <div class="activity-time">Just now</div>
+            </div>
+          </div>`).join('');
+      }
+    }
   } catch (e) {
     showToast('Could not save job');
     btn.style.color = '';
