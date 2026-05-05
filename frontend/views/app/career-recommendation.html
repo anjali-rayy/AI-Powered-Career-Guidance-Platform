@@ -376,8 +376,40 @@
           return sum + (r.required_skills || []).filter(s => !matched.includes(s.toLowerCase())).length;
         }, 0);
         dashStats.skillsGap = Math.round(totalMissing / top.length);
+
+        // Save top roles so dashboard stat card shows them immediately
+        dashStats.topRoles = recs.slice(0, 3).map(r => ({
+          name: r.career,
+          score: Math.min(Math.round(r.match_score), 99),
+          matched: r.matched_skills || [],
+          missing: (r.required_skills || []).filter(s =>
+            !(r.matched_skills || []).map(m => m.toLowerCase()).includes(s.toLowerCase())
+          )
+        }));
       }
       localStorage.setItem('dashStats', JSON.stringify(dashStats));
+
+      // ── CRITICAL FIX: Save skills back to profileData so dashboard backend call uses them ──
+      const profileData = JSON.parse(localStorage.getItem('profileData') || '{}');
+      profileData.skills = skills;
+      localStorage.setItem('profileData', JSON.stringify(profileData));
+
+      // Also push updated skills to MongoDB so they persist permanently
+      try {
+        const token = localStorage.getItem('token');
+        if (token) {
+          await fetch((window.ENV_BACKEND_URL || 'http://localhost:3000') + '/api/profile', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({ skills })
+          });
+        }
+      } catch (e) {
+        console.warn('Could not sync skills to MongoDB:', e);
+      }
 
     } catch (err) {
       hideStatus();

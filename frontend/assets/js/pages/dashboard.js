@@ -70,6 +70,21 @@ requireAuth().then(function() {
     if (el('ring-skills-gap'))  el('ring-skills-gap').textContent  = cached.skillsGap ?? '—';
     if (el('ring-jobs-match'))  el('ring-jobs-match').textContent  = cached.jobsMatch || '—';
 
+    // Render cached top roles immediately (before API fetch completes)
+    if (cached.topRoles && cached.topRoles.length > 0) {
+      const rolesEl = document.getElementById('stat-top-roles');
+      if (rolesEl) {
+        const colors = ['#3B5BDB', '#D4AF37', '#4CAF70'];
+        rolesEl.innerHTML = cached.topRoles.map((role, i) => `
+          <div class="stat-top-role-row">
+            <span class="stat-role-dot" style="background:${colors[i] || '#A1A1AA'}"></span>
+            <span class="stat-role-name">${role.name}</span>
+            <span class="stat-role-pct">${role.score}%</span>
+          </div>
+        `).join('');
+      }
+    }
+
     // Fetch fresh data
     try {
       const token = localStorage.getItem('token');
