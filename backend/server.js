@@ -264,7 +264,7 @@ app.post('/api/resume/analyze', async (req, res) => {
       },
       body: JSON.stringify({
         model: model || 'llama-3.3-70b-versatile',
-        max_tokens: max_tokens || 2000,
+        max_tokens: max_tokens || 4000,
         temperature: temperature || 0.3,
         messages: enhancedMessages
       })

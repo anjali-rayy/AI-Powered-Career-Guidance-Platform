@@ -850,6 +850,76 @@
             color: var(--muted);
         }
 
+        .jm-skillgap {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px;
+            margin-top: 6px;
+        }
+
+        .jm-skillgap-label {
+            font-size: 11px;
+            color: var(--muted);
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+
+        .jm-skillgap-chip {
+            padding: 2px 9px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 500;
+            background: rgba(239, 68, 68, 0.08);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .jm-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .jm-link {
+            padding: 4px 11px;
+            border-radius: 6px;
+            font-size: 11.5px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: opacity 0.2s, transform 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .jm-link:hover { opacity: 0.85; transform: translateY(-1px); }
+
+        .jm-link-li {
+            background: rgba(10, 102, 194, 0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(10, 102, 194, 0.3);
+        }
+
+        .jm-link-nk {
+            background: rgba(77, 175, 74, 0.12);
+            color: #4ade80;
+            border: 1px solid rgba(77, 175, 74, 0.25);
+        }
+
+        .jm-link-wf {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--gold);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+        }
+
+        .jm-link-is {
+            background: rgba(168, 85, 247, 0.1);
+            color: #c084fc;
+            border: 1px solid rgba(168, 85, 247, 0.2);
+        }
+
         .ats-items {
             display: flex;
             flex-direction: column;
@@ -1680,6 +1750,8 @@
         }
 
         function showAuthModal() {
+            // Save current page so login can redirect back here
+            localStorage.setItem('authRedirect', window.location.href);
             const existing = document.getElementById('auth-modal-overlay');
             if (existing) existing.remove();
             const overlay = document.createElement('div');
@@ -1998,11 +2070,56 @@ Return ONLY a valid JSON object (no markdown, no explanation, no code fences) wi
     "missing": [<max 5 skills important for "${targetRole}" but absent from resume>]
   },
   "jobs": [
-    {"name": "${targetRole}", "pct": <same integer as match score above>, "label": "Target role"},
-    {"name": "<2nd best role based on resume content>", "pct": <integer 0-100>, "label": "<e.g. Strong match>"},
-    {"name": "<3rd best role>", "pct": <integer 0-100>, "label": "<short label>"},
-    {"name": "<4th best role>", "pct": <integer 0-100>, "label": "<short label>"},
-    {"name": "<5th best role>", "pct": <integer 0-100>, "label": "<short label>"}
+    {
+      "name": "${targetRole}",
+      "pct": <same integer as match score above>,
+      "label": "Target role",
+      "linkedin": "<https://www.linkedin.com/jobs/search/?keywords=URLENCODE(${targetRole})&location=India>",
+      "naukri": "<https://www.naukri.com/ROLE-jobs?k=ROLE&l=india>",
+      "wellfound": "<https://wellfound.com/jobs?role=ROLE>",
+      "internshala": "<https://internshala.com/jobs/ROLE-jobs>",
+      "skillGap": ["<skill 1 missing for this role>", "<skill 2>", "<skill 3>", "<skill 4>", "<skill 5>"]
+    },
+    {
+      "name": "<2nd best role>",
+      "pct": <integer 0-100>,
+      "label": "<e.g. Strong match>",
+      "linkedin": "<https://www.linkedin.com/jobs/search/?keywords=ROLE&location=India>",
+      "naukri": "<https://www.naukri.com/ROLE-jobs>",
+      "wellfound": "<https://wellfound.com/jobs?role=ROLE>",
+      "internshala": "<https://internshala.com/jobs/ROLE-jobs>",
+      "skillGap": ["<skill 1>", "<skill 2>", "<skill 3>"]
+    },
+    {
+      "name": "<3rd best role>",
+      "pct": <integer 0-100>,
+      "label": "<short label>",
+      "linkedin": "<https://www.linkedin.com/jobs/search/?keywords=ROLE&location=India>",
+      "naukri": "<https://www.naukri.com/ROLE-jobs>",
+      "wellfound": "<https://wellfound.com/jobs?role=ROLE>",
+      "internshala": "<https://internshala.com/jobs/ROLE-jobs>",
+      "skillGap": ["<skill 1>", "<skill 2>", "<skill 3>"]
+    },
+    {
+      "name": "<4th best role>",
+      "pct": <integer 0-100>,
+      "label": "<short label>",
+      "linkedin": "<https://www.linkedin.com/jobs/search/?keywords=ROLE&location=India>",
+      "naukri": "<https://www.naukri.com/ROLE-jobs>",
+      "wellfound": "<https://wellfound.com/jobs?role=ROLE>",
+      "internshala": "<https://internshala.com/jobs/ROLE-jobs>",
+      "skillGap": ["<skill 1>", "<skill 2>"]
+    },
+    {
+      "name": "<5th best role>",
+      "pct": <integer 0-100>,
+      "label": "<short label>",
+      "linkedin": "<https://www.linkedin.com/jobs/search/?keywords=ROLE&location=India>",
+      "naukri": "<https://www.naukri.com/ROLE-jobs>",
+      "wellfound": "<https://wellfound.com/jobs?role=ROLE>",
+      "internshala": "<https://internshala.com/jobs/ROLE-jobs>",
+      "skillGap": ["<skill 1>", "<skill 2>"]
+    }
   ],
   "atsItems": [
     {"status": "pass", "title": "<short title>", "desc": "<1-2 sentence observation from resume>"},
@@ -2038,7 +2155,7 @@ Return raw JSON only — no backticks, no preamble, no explanation.`;
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     model: 'llama-3.3-70b-versatile',
-                    max_tokens: 3000,
+                    max_tokens: 4000,
                     temperature: 0.3,
                     messages: [
                         {
@@ -2096,6 +2213,8 @@ Return raw JSON only — no backticks, no preamble, no explanation.`;
                 parsed.jobs[0].name = targetRole;
                 parsed.jobs[0].pct = parsed.match;
                 parsed.jobs[0].label = 'Target role';
+                // preserve skillGap and links from AI response
+                parsed.jobs[0].skillGap = parsed.jobs[0].skillGap || parsed.skills?.missing || [];
             }
 
             return parsed;
@@ -2132,15 +2251,29 @@ Return raw JSON only — no backticks, no preamble, no explanation.`;
             (data.skills.learning || []).forEach(s => sc.innerHTML += `<span class="chip learning">${escHtml(s)} ↗</span>`);
             (data.skills.missing || []).forEach(s => sc.innerHTML += `<span class="chip missing">${escHtml(s)} ✕</span>`);
 
-            // Job matches
+            // Job matches with links + skill gap
             const jm = document.getElementById('jobMatches');
             jm.innerHTML = '';
             (data.jobs || []).forEach(j => {
+                const skillGapHtml = (j.skillGap && j.skillGap.length)
+                    ? `<div class="jm-skillgap">
+                        <span class="jm-skillgap-label">🧠 Skill Gap:</span>
+                        ${j.skillGap.map(s => `<span class="jm-skillgap-chip">${escHtml(s)}</span>`).join('')}
+                       </div>`
+                    : '';
+                const linksHtml = [
+                    j.linkedin    ? `<a href="${escHtml(j.linkedin)}" target="_blank" class="jm-link jm-link-li">LinkedIn</a>` : '',
+                    j.naukri      ? `<a href="${escHtml(j.naukri)}" target="_blank" class="jm-link jm-link-nk">Naukri</a>` : '',
+                    j.wellfound   ? `<a href="${escHtml(j.wellfound)}" target="_blank" class="jm-link jm-link-wf">Wellfound</a>` : '',
+                    j.internshala ? `<a href="${escHtml(j.internshala)}" target="_blank" class="jm-link jm-link-is">Internshala</a>` : ''
+                ].filter(Boolean).join('');
                 jm.innerHTML += `
                 <div class="jm-row">
                     <div class="jm-top"><span class="jm-name">${escHtml(j.name)}</span><span class="jm-pct">${escHtml(String(j.pct))}%</span></div>
                     <div class="jm-bar-bg"><div class="jm-bar-fill" style="width:0%" data-w="${escHtml(String(j.pct))}%"></div></div>
                     <div class="jm-label">${escHtml(j.label)}</div>
+                    ${skillGapHtml}
+                    ${linksHtml ? `<div class="jm-links">${linksHtml}</div>` : ''}
                 </div>`;
             });
             setTimeout(() => {
@@ -2330,6 +2463,50 @@ Return raw JSON only — no backticks, no preamble, no explanation.`;
             { threshold: 0.1 }
         );
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // ── AUTH GATE — block inputs if not signed in ──
+        (function enforceAuthGate() {
+            if (localStorage.getItem('token')) return;
+
+            const uploadCard = document.getElementById('uploadCard');
+            const banner = document.createElement('div');
+            banner.id = 'auth-gate-banner';
+            banner.style.cssText = `
+                background:rgba(212,175,55,0.06);
+                border:1px solid rgba(212,175,55,0.25);
+                border-radius:14px;
+                padding:28px 32px;
+                margin-bottom:20px;
+                display:flex;
+                align-items:center;
+                justify-content:space-between;
+                gap:20px;
+                flex-wrap:wrap;
+            `;
+            banner.innerHTML = `
+                <div style="display:flex;align-items:center;gap:16px;">
+                    <div style="width:44px;height:44px;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.25);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    </div>
+                    <div>
+                        <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px;">Sign in to analyze your resume</div>
+                        <div style="font-size:13px;color:var(--muted);">Create a free account or sign in to access AI-powered resume analysis, ATS scoring, and job matching.</div>
+                    </div>
+                </div>
+                <div style="display:flex;gap:10px;flex-shrink:0;">
+                    <a href="../auth/login.html" onclick="localStorage.setItem('authRedirect', window.location.href)" style="padding:10px 20px;border-radius:9px;background:var(--gold);color:#0A0A0A;font-weight:700;font-size:13.5px;text-decoration:none;font-family:'Inter',sans-serif;white-space:nowrap;">Sign In</a>
+                    <a href="../auth/register.html" onclick="localStorage.setItem('authRedirect', window.location.href)" style="padding:10px 20px;border-radius:9px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:var(--text);font-weight:600;font-size:13.5px;text-decoration:none;font-family:'Inter',sans-serif;white-space:nowrap;">Register Free</a>
+                </div>
+            `;
+            uploadCard.parentNode.insertBefore(banner, uploadCard);
+
+            uploadCard.style.cssText += `
+                opacity:0.35;
+                pointer-events:none;
+                user-select:none;
+                filter:blur(1.5px);
+            `;
+        })();
     </script>
 </body>
 

@@ -8,7 +8,11 @@
   <link rel="stylesheet" href="../../assets/css/shared.css" />
   <link rel="stylesheet" href="../../assets/css/auth.css" />
   <script>
-    if (localStorage.getItem('token')) window.location.replace('../app/dashboard.html');
+    if (localStorage.getItem('token')) {
+      const redirect = localStorage.getItem('authRedirect');
+      localStorage.removeItem('authRedirect');
+      window.location.replace(redirect || '../app/dashboard.html');
+    }
   </script>
 </head>
 

@@ -171,7 +171,8 @@ async function handleRegister() {
       quizResult: JSON.parse(localStorage.getItem('quizResult') || 'null')
     });
     showToast('✓ Account created successfully!');
-    const redirect = localStorage.getItem('redirectAfterLogin');
+    const redirect = localStorage.getItem('authRedirect') || localStorage.getItem('redirectAfterLogin');
+    localStorage.removeItem('authRedirect');
     localStorage.removeItem('redirectAfterLogin');
     setTimeout(() => window.location.href = redirect || '../app/dashboard.html', 900);
   } catch (err) {
@@ -218,7 +219,8 @@ async function handleLogin(e) {
   try {
     await apiLogin(email, pass);
     showToast('✓ Signed in successfully!');
-    const redirect = localStorage.getItem('redirectAfterLogin');
+    const redirect = localStorage.getItem('authRedirect') || localStorage.getItem('redirectAfterLogin');
+    localStorage.removeItem('authRedirect');
     localStorage.removeItem('redirectAfterLogin');
     setTimeout(() => window.location.href = redirect || '../app/dashboard.html', 900);
   } catch (err) {
@@ -257,7 +259,8 @@ async function signInWithGoogle() {
     setToken(data.token);
     syncUserToStorage(data.user);
     showToast('✓ Signed in with Google!');
-    const redirect = localStorage.getItem('redirectAfterLogin');
+    const redirect = localStorage.getItem('authRedirect') || localStorage.getItem('redirectAfterLogin');
+    localStorage.removeItem('authRedirect');
     localStorage.removeItem('redirectAfterLogin');
     setTimeout(() => window.location.href = redirect || '../app/dashboard.html', 900);
 
