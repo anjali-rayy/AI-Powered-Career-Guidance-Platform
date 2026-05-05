@@ -15,7 +15,10 @@
   try { quizResult = JSON.parse(localStorage.getItem('quizResult') || '{}'); } catch {}
 
   // Derive the values roadmap.js needs
-  const goal    = quizResult?.recommendedRole || profile.interest || profile.eduField || 'Software Developer';
+  const urlRole = new URLSearchParams(window.location.search).get('role');
+const lastRec = JSON.parse(localStorage.getItem('lastRecommendation') || '{}');
+const selectedRole = localStorage.getItem('lpSelectedRole');
+const goal = urlRole || selectedRole || lastRec?.career || profile.interest || profile.eduField || 'Software Developer';
   const level   = profile.experience === '0' || profile.experience === '' ? 'Beginner'
                 : profile.experience === '1-2' ? 'Intermediate' : 'Advanced';
   const months  = 6; // default timeline
@@ -56,7 +59,7 @@
     try {
       [roadmap, courses, blogs] = await Promise.all([
         post('/generate', { goal, level, months, skills }),
-        post('/courses',  { role: goal, missingSkills: (roadmap?.skillGaps || []).map(s => s.name) }),
+        post('/courses',  { role: goal, missingSkills: lastRec?.missing || [] }),
         post('/blogs',    { role: goal })
       ]);
       // courses needs skillGaps from roadmap — fetch sequentially if needed

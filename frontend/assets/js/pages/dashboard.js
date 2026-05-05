@@ -60,9 +60,9 @@ requireAuth().then(function() {
     const el    = (id) => document.getElementById(id);
     const _p    = JSON.parse(localStorage.getItem('profileData') || '{}');
 
-    const skillsHave    = Array.isArray(_p.skills) ? _p.skills.length : 0;
+    const skillsHave    = saved.skillsHave  || (Array.isArray(_p.skills) ? _p.skills.length : 0);
     const recCount      = saved.readiness  || 0;
-    const jobsMatch     = saved.jobs       || 0;
+    const jobsMatch     = saved.jobsMatch  || saved.jobs || 0;
     const careerMatches = saved.matches    || 0;
     const skillsMissing = saved.skillsGap  || Math.max(0, 10 - skillsHave);
 

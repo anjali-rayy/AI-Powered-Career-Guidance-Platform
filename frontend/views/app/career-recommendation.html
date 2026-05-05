@@ -364,8 +364,19 @@
       renderResults(data.recommendations || []);
 
       // Save count back to dashboard stat
+      const recs = data.recommendations || [];
       const dashStats = JSON.parse(localStorage.getItem('dashStats') || '{}');
-      dashStats.readiness = (data.recommendations || []).length;
+      dashStats.readiness = recs.length;
+      dashStats.skillsHave = skills.length;
+      dashStats.jobsMatch = recs.length;
+      if (recs.length > 0) {
+        const top = recs.slice(0, 3);
+        const totalMissing = top.reduce((sum, r) => {
+          const matched = (r.matched_skills || []).map(s => s.toLowerCase());
+          return sum + (r.required_skills || []).filter(s => !matched.includes(s.toLowerCase())).length;
+        }, 0);
+        dashStats.skillsGap = Math.round(totalMissing / top.length);
+      }
       localStorage.setItem('dashStats', JSON.stringify(dashStats));
 
     } catch (err) {
