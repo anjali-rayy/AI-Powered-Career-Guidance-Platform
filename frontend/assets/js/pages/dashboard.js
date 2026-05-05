@@ -70,6 +70,56 @@ requireAuth().then(function() {
     if (el('ring-skills-gap'))  el('ring-skills-gap').textContent  = cached.skillsGap ?? '—';
     if (el('ring-jobs-match'))  el('ring-jobs-match').textContent  = cached.jobsMatch || '—';
 
+    // Render cached skill gap immediately
+    if (cached.skillGapRows && cached.skillGapRows.length > 0) {
+      const skillGapCard = document.querySelector('.skills-section-grid .d-card:first-child');
+      if (skillGapCard) {
+        const subEl = skillGapCard.querySelector('.d-card-sub');
+        if (subEl && cached.skillGapRole) subEl.textContent = cached.skillGapRole + ' · top match';
+        const body = skillGapCard.querySelector('.d-card-body');
+        if (body) {
+          body.innerHTML = cached.skillGapRows.map(row => `
+            <div class="skill-gap-row">
+              <span class="sg-name" style="text-transform:capitalize">${row.name}</span>
+              <div class="sg-bar-bg">
+                <div class="sg-bar-fill ${row.have ? 'have' : 'gap'}" style="width:${row.pct}%"></div>
+              </div>
+              <span class="sg-pct ${row.have ? 'have' : 'gap'}">${row.pct}%</span>
+              <span class="sg-tag ${row.have ? 'have' : 'gap'}">${row.have ? 'Have' : 'Gap'}</span>
+            </div>
+          `).join('');
+        }
+      }
+    }
+
+    // Render cached job matches immediately
+    if (cached.topJobMatches && cached.topJobMatches.length > 0) {
+      const jobMatchCard = document.querySelector('.skills-section-grid .d-card:last-child');
+      if (jobMatchCard) {
+        const body = jobMatchCard.querySelector('.d-card-body');
+        if (body) {
+          const jobEmojis = ['💻', '🎨', '📊', '⚙️', '🚀', '🔬', '📱', '☁️'];
+          body.innerHTML = cached.topJobMatches.map((job, i) => `
+            <div class="job-row" onclick="showToast('Opening ${job.title}...')">
+              <div class="job-logo">${jobEmojis[i] || '💼'}</div>
+              <div class="job-info">
+                <div class="job-title">${job.title}</div>
+                <div class="job-company">${job.company}</div>
+                <div class="job-tags">
+                  ${job.tags.map(t => `<span class="job-tag" style="text-transform:capitalize">${t}</span>`).join('')}
+                </div>
+              </div>
+              <div class="job-right">
+                <div class="job-match">${job.score}%</div>
+                <div class="job-match-sub">match</div>
+                <button class="job-save-btn" onclick="event.stopPropagation();this.style.color='var(--gold)';showToast('Job saved!')">♡</button>
+              </div>
+            </div>
+          `).join('');
+        }
+      }
+    }
+
     // Render cached top roles immediately (before API fetch completes)
     if (cached.topRoles && cached.topRoles.length > 0) {
       const rolesEl = document.getElementById('stat-top-roles');
@@ -156,13 +206,66 @@ requireAuth().then(function() {
         }).join('');
       }
 
+      // ── Update Skill Gap Analysis section ──
+      const skillGapCard = document.querySelector('.skills-section-grid .d-card:first-child');
+      if (skillGapCard && data.skillGapRows && data.skillGapRows.length > 0) {
+        const subEl = skillGapCard.querySelector('.d-card-sub');
+        if (subEl) subEl.textContent = (data.skillGapRole || 'Top match') + ' · top match';
+        const body = skillGapCard.querySelector('.d-card-body');
+        if (body) {
+          body.innerHTML = data.skillGapRows.map(row => `
+            <div class="skill-gap-row">
+              <span class="sg-name" style="text-transform:capitalize">${row.name}</span>
+              <div class="sg-bar-bg">
+                <div class="sg-bar-fill ${row.have ? 'have' : 'gap'}" style="width:${row.pct}%"></div>
+              </div>
+              <span class="sg-pct ${row.have ? 'have' : 'gap'}">${row.pct}%</span>
+              <span class="sg-tag ${row.have ? 'have' : 'gap'}">${row.have ? 'Have' : 'Gap'}</span>
+            </div>
+          `).join('');
+        }
+      }
+
+      // ── Update Top Job Matches section ──
+      const jobMatchCard = document.querySelector('.skills-section-grid .d-card:last-child');
+      if (jobMatchCard && data.topJobMatches && data.topJobMatches.length > 0) {
+        const subEl = jobMatchCard.querySelector('.d-card-sub');
+        if (subEl) subEl.textContent = data.topJobMatches.length + ' total · sorted by fit score';
+        const body = jobMatchCard.querySelector('.d-card-body');
+        if (body) {
+          const jobEmojis = ['💻', '🎨', '📊', '⚙️', '🚀', '🔬', '📱', '☁️'];
+          body.innerHTML = data.topJobMatches.map((job, i) => `
+            <div class="job-row" onclick="showToast('Opening ${job.title}...')">
+              <div class="job-logo">${jobEmojis[i] || '💼'}</div>
+              <div class="job-info">
+                <div class="job-title">${job.title}</div>
+                <div class="job-company">${job.company}</div>
+                <div class="job-tags">
+                  ${job.tags.map(t => `<span class="job-tag" style="text-transform:capitalize">${t}</span>`).join('')}
+                </div>
+              </div>
+              <div class="job-right">
+                <div class="job-match">${job.score}%</div>
+                <div class="job-match-sub">match</div>
+                <button class="job-save-btn" onclick="event.stopPropagation();this.style.color='var(--gold)';showToast('Job saved!')">♡</button>
+              </div>
+            </div>
+          `).join('');
+        }
+      }
+
       // Cache for next load
       localStorage.setItem('dashStats', JSON.stringify({
-        readiness:  data.careerMatches,
-        jobsMatch:  data.jobsMatched,
-        skillsGap:  data.skillsMissing,
-        skillsHave: data.skillsHave,
-        matches:    data.careerMatches
+        readiness:       data.careerMatches,
+        jobsMatch:       data.jobsMatched,
+        skillsGap:       data.skillsMissing,
+        skillsHave:      data.skillsHave,
+        matches:         data.careerMatches,
+        topRoles:        data.topRoles,
+        skillGapRows:    data.skillGapRows,
+        skillGapRole:    data.skillGapRole,
+        topJobMatches:   data.topJobMatches,
+        careerMatchList: data.careerMatchList
       }));
 
     } catch (err) {
