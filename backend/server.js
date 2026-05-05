@@ -338,6 +338,62 @@ app.post('/api/career-recommend', authMiddleware, async (req, res) => {
   }
 });
 
+// DASHBOARD STATS — returns career matches + top job roles for dashboard
+app.get('/api/dashboard/stats', authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    const skillsArr = user.skills || [];
+    const skillsStr = skillsArr.join(' ');
+
+    // If no skills, return empty state
+    if (!skillsStr.trim()) {
+      return res.json({
+        careerMatches: 0,
+        topRoles: [],
+        skillsHave: 0,
+        skillsMissing: 0,
+        jobsMatched: 0
+      });
+    }
+
+    // Call Python recommender
+    const pyRes = await fetch(`${PYTHON_SERVICE}/recommend`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ skills: skillsStr })
+    });
+    const pyData = await pyRes.json();
+    const recs = pyData.recommendations || [];
+
+    // Top 3 roles for the stat card
+    const topRoles = recs.slice(0, 3).map(r => ({
+      name: r.career,
+      score: Math.min(Math.round(r.match_score), 99),
+      matched: r.matched_skills || [],
+      missing: (r.required_skills || []).filter(s => !(r.matched_skills || []).includes(s))
+    }));
+
+    // Skill gap based on top role
+    const topRole = recs[0] || null;
+    const skillsMissing = topRole
+      ? (topRole.required_skills || []).filter(s => !(topRole.matched_skills || []).includes(s)).length
+      : 0;
+
+    return res.json({
+      careerMatches: recs.length,
+      topRoles,
+      skillsHave: skillsArr.length,
+      skillsMissing,
+      jobsMatched: recs.length
+    });
+  } catch (err) {
+    console.error('Dashboard stats error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.listen(process.env.PORT || 3000, () => {
   console.log('✅ PathwayAI backend running on http://localhost:3000');
 });
