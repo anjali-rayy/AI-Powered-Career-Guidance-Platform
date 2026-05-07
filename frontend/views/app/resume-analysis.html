@@ -2267,9 +2267,19 @@ Return raw JSON only — no backticks, no preamble, no explanation.`;
                     j.wellfound   ? `<a href="${escHtml(j.wellfound)}" target="_blank" class="jm-link jm-link-wf">Wellfound</a>` : '',
                     j.internshala ? `<a href="${escHtml(j.internshala)}" target="_blank" class="jm-link jm-link-is">Internshala</a>` : ''
                 ].filter(Boolean).join('');
+                const jobId = 'ra_' + j.name.replace(/\s+/g,'_').toLowerCase();
                 jm.innerHTML += `
                 <div class="jm-row">
-                    <div class="jm-top"><span class="jm-name">${escHtml(j.name)}</span><span class="jm-pct">${escHtml(String(j.pct))}%</span></div>
+                    <div class="jm-top">
+                      <span class="jm-name">${escHtml(j.name)}</span>
+                      <div style="display:flex;align-items:center;gap:10px">
+                        <span class="jm-pct">${escHtml(String(j.pct))}%</span>
+                        <button id="save-btn-${jobId}"
+                          onclick="saveJobFromResume('${jobId}','${escHtml(j.name)}','Resume Match',${j.pct},${JSON.stringify((j.skillGap||[]).slice(0,3))})"
+                          style="background:none;border:1px solid rgba(255,255,255,0.1);border-radius:7px;padding:4px 10px;cursor:pointer;font-size:14px;color:var(--muted);transition:all 0.2s;font-family:'Inter',sans-serif"
+                          title="Save this job">♡</button>
+                      </div>
+                    </div>
                     <div class="jm-bar-bg"><div class="jm-bar-fill" style="width:0%" data-w="${escHtml(String(j.pct))}%"></div></div>
                     <div class="jm-label">${escHtml(j.label)}</div>
                     ${skillGapHtml}
@@ -2415,6 +2425,29 @@ Return raw JSON only — no backticks, no preamble, no explanation.`;
                 grid.innerHTML = '<div style="color:var(--muted);font-size:13px">Career recommendations unavailable right now.</div>';
             }
         }
+        async function saveJobFromResume(jobId, title, company, score, tags) {
+            const btn = document.getElementById('save-btn-' + jobId);
+            if (!localStorage.getItem('token')) { showAuthModal(); return; }
+            if (btn) { btn.style.color = 'var(--gold)'; btn.style.borderColor = 'rgba(212,175,55,0.4)'; btn.textContent = '♥'; }
+            try {
+                const res = await _fetch(`${API_BASE}/api/jobs/save`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem('token') },
+                    body: JSON.stringify({ title, company, score, tags, logo: '💼' })
+                });
+                const data = await res.json();
+                if (data.duplicate) {
+                    showToast('Already saved!');
+                } else {
+                    showToast('Job saved! View in Saved Jobs →');
+                    if (btn) btn.onclick = () => window.location.href = 'saved-jobs.html';
+                }
+            } catch (e) {
+                showToast('Could not save job');
+                if (btn) { btn.style.color = ''; btn.style.borderColor = ''; btn.textContent = '♡'; }
+            }
+        }
+
         function analyzeAnother() {
             selectedFile = null;
             extractedText = '';

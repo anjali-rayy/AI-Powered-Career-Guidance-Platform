@@ -111,7 +111,7 @@ requireAuth().then(function() {
               <div class="job-right">
                 <div class="job-match">${job.score}%</div>
                 <div class="job-match-sub">match</div>
-                <button class="job-save-btn" onclick="event.stopPropagation();saveJob(this,'${job.title}','${job.company}',${job.score},${JSON.stringify(job.tags)})">♡</button>
+                <button class="job-save-btn" id="save-cached-${i}" onclick="event.stopPropagation();saveJob(this,'${job.title.replace(/'/g,"\\'")}','${job.company.replace(/'/g,"\\'")}',${job.score},[${(job.tags||[]).map(t=>`'${t}'`).join(',')}])">♡</button>
               </div>
             </div>
           `).join('');
@@ -248,7 +248,7 @@ requireAuth().then(function() {
               <div class="job-right">
                 <div class="job-match">${job.score}%</div>
                 <div class="job-match-sub">match</div>
-                <button class="job-save-btn" onclick="event.stopPropagation();saveJob(this,'${job.title}','${job.company}',${job.score},${JSON.stringify(job.tags)})">♡</button>
+                <button class="job-save-btn" id="save-live-${i}" onclick="event.stopPropagation();saveJob(this,'${job.title.replace(/'/g,"\\'")}','${job.company.replace(/'/g,"\\'")}',${job.score},[${(job.tags||[]).map(t=>`'${t}'`).join(',')}])">♡</button>
               </div>
             </div>
           `).join('');
@@ -453,6 +453,8 @@ window.saveJob = async function(btn, title, company, score, tags) {
       btn.style.color = 'var(--gold)';
       return;
     }
+    btn.textContent = '♥';
+    btn.textContent = '♥';
     showToast('Job saved! ✓');
     // Refresh saved jobs panel immediately
     const bodyEl = document.getElementById('saved-jobs-body');
@@ -507,5 +509,6 @@ window.saveJob = async function(btn, title, company, score, tags) {
   } catch (e) {
     showToast('Could not save job');
     btn.style.color = '';
+    btn.textContent = '♡';
   }
 };

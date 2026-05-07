@@ -429,9 +429,11 @@
         });
       }
     } catch (e) {
-      showToast('Could not update status');
-    }
+    showToast('Could not save job');
+    btn.style.color = '';
+    btn.textContent = '♡';
   }
+};
 
   // ── REMOVE JOB ──
   async function removeJob(jobId) {
