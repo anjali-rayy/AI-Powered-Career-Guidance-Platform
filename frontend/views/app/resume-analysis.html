@@ -1745,8 +1745,11 @@
         // ── TOAST ──
         function showToast(msg) {
             const t = document.getElementById('toast');
-            t.textContent = msg; t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 3000);
+            t.textContent = msg;
+            t.style.pointerEvents = 'none';
+            t.classList.add('show');
+            clearTimeout(t._timer);
+            t._timer = setTimeout(() => t.classList.remove('show'), 3000);
         }
 
         function showAuthModal() {
@@ -2454,10 +2457,12 @@ Return raw JSON only — no backticks, no preamble, no explanation.`;
                     }
                     // Show clickable toast
                     const t = document.getElementById('toast');
-                    t.innerHTML = 'Job saved! <span style="text-decoration:underline;cursor:pointer;color:var(--gold);font-weight:600" onclick="window.location.href=\'saved-jobs.html\'">View in Saved Jobs →</span>';
+                    t.style.pointerEvents = 'auto';
+                    t.style.cursor = 'default';
+                    t.innerHTML = 'Job saved! <span style="text-decoration:underline;cursor:pointer;color:var(--gold);font-weight:600;margin-left:4px" onclick="window.location.href=\'saved-jobs.html\'">View in Saved Jobs →</span>';
                     t.classList.add('show');
                     clearTimeout(t._timer);
-                    t._timer = setTimeout(() => t.classList.remove('show'), 4000);
+                    t._timer = setTimeout(() => { t.classList.remove('show'); t.style.pointerEvents = 'none'; }, 4000);
                 }
             } catch (e) {
                 showToast('Could not save job');
