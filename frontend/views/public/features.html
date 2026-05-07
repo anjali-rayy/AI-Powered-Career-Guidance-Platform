@@ -1029,9 +1029,25 @@
 
         /* ── FEATURES GRID ── */
         .features-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
+    flex-wrap: wrap;
     gap: 16px;
+}
+
+.features-grid > a {
+    flex: 0 0 calc(33.333% - 11px);
+}
+
+.features-grid > div {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+}
+
+.features-grid > div > a {
+    flex: 0 0 calc(33.333% - 11px);
+    max-width: calc(33.333% - 11px);
 }
 
         @media (max-width: 900px) {
@@ -1860,8 +1876,8 @@
                     </svg></div>
             </a>
 
-            <div style="grid-column: 1 / -1; display: flex; justify-content: center; gap: 16px;">
-            <a href="../app/career-tree.html" class="feat-card featured reveal" style="--delay:0.30s; flex: 0 0 calc(33.333% - 8px);">
+            <div>
+            <a href="../app/career-tree.html" class="feat-card featured reveal" style="--delay:0.30s;">
                 <div class="feat-icon"><svg viewBox="0 0 24 24">
                         <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                         <circle cx="9" cy="7" r="4" />
