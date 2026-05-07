@@ -428,7 +428,7 @@
             <a href="../app/quiz.html" class="btn-secondary">Try Career Quiz</a>
         </div>
         <div class="hero-stats reveal" style="--delay:0.28s">
-            <div class="stat-item"><div class="stat-num">7</div><div class="stat-label">AI-powered features</div></div>
+            <div class="stat-item"><div class="stat-num">5</div><div class="stat-label">AI-powered features</div></div>
             <div class="stat-divider"></div>
             <div class="stat-item"><div class="stat-num">50K+</div><div class="stat-label">Career paths mapped</div></div>
             <div class="stat-divider"></div>
@@ -453,15 +453,11 @@
             <button class="fnav-tab" data-panel="resume" onclick="switchPanel('resume', this)">
                 <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Resume Analysis
             </button>
-            <button class="fnav-tab" data-panel="skillgap" onclick="switchPanel('skillgap', this)">
-                <svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>Skill Gap
-            </button>
+            
             <button class="fnav-tab" data-panel="career" onclick="switchPanel('career', this)">
                 <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>Career Match
             </button>
-            <button class="fnav-tab" data-panel="job" onclick="switchPanel('job', this)">
-                <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>Job Matching
-            </button>
+            
             <button class="fnav-tab" data-panel="tree" onclick="switchPanel('tree', this)">
                 <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>3D Career Tree
             </button>
@@ -528,30 +524,6 @@
             </div>
         </div>
 
-        <!-- SKILL GAP PANEL -->
-        <div class="feature-panel" id="panel-skillgap">
-            <div class="reveal-left">
-                <div class="panel-badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg> Skill Gap Detection</div>
-                <div class="panel-title">Know exactly <em>what's missing</em></div>
-                <p class="panel-desc">Stop guessing what to learn next. Our AI compares your current skills against the real requirements of your target role and tells you exactly which gaps to close — and in what order.</p>
-                <div class="panel-points">
-                    <div class="panel-point"><div class="point-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="point-text"><strong>Priority ranking</strong> — gaps sorted by how much they impact your hireability</div></div>
-                    <div class="panel-point"><div class="point-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="point-text"><strong>Role benchmarking</strong> — compared against 10,000+ real job postings</div></div>
-                    <div class="panel-point"><div class="point-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="point-text"><strong>Learning time estimates</strong> — realistic timelines to close each gap</div></div>
-                </div>
-                <button class="btn-primary" onclick="showToast('Skill Gap Detection — coming soon!')">Coming Soon</button>
-            </div>
-            <div class="mockup-wrap reveal" style="--delay:0.1s">
-                <div class="mockup-label">Gap Analysis · Frontend Engineer</div>
-                <div class="gap-visual">
-                    <div class="gap-row"><div class="gap-name-col">React</div><div class="gap-track"><div class="gap-current" style="width:80%"></div></div><span class="gap-badge gb-have">Have</span></div>
-                    <div class="gap-row"><div class="gap-name-col">TypeScript</div><div class="gap-track"><div class="gap-current" style="width:55%"></div></div><span class="gap-badge gb-part">Partial</span></div>
-                    <div class="gap-row"><div class="gap-name-col">Testing</div><div class="gap-track"><div class="gap-current" style="width:20%"></div></div><span class="gap-badge gb-miss">Missing</span></div>
-                    <div class="gap-row"><div class="gap-name-col">CI/CD</div><div class="gap-track"><div class="gap-current" style="width:10%"></div></div><span class="gap-badge gb-miss">Missing</span></div>
-                    <div class="gap-row"><div class="gap-name-col">CSS/Design</div><div class="gap-track"><div class="gap-current" style="width:70%"></div></div><span class="gap-badge gb-have">Have</span></div>
-                </div>
-            </div>
-        </div>
 
         <!-- CAREER REC PANEL -->
         <div class="feature-panel" id="panel-career">
@@ -576,34 +548,6 @@
                     </div>
                     <div class="rec-card"><div class="rec-icon">💻</div><div class="rec-info"><div class="rec-title">Frontend Engineer</div><div class="rec-sub">Technical · Growing · ₹6–22 LPA</div></div><span class="rec-match match-med">81%</span></div>
                     <div class="rec-card"><div class="rec-icon">📊</div><div class="rec-info"><div class="rec-title">Product Manager</div><div class="rec-sub">Strategy · Leadership · ₹12–30 LPA</div></div><span class="rec-match match-med">74%</span></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- JOB MATCHING PANEL -->
-        <div class="feature-panel" id="panel-job">
-            <div class="reveal-left">
-                <div class="panel-badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg> Job Matching Score</div>
-                <div class="panel-title">See your score <em>before you apply</em></div>
-                <p class="panel-desc">Paste a job description and instantly see how well your profile matches. Know your compatibility score across skills, experience, and culture fit — before you spend time applying.</p>
-                <div class="panel-points">
-                    <div class="panel-point"><div class="point-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="point-text"><strong>Instant JD scanning</strong> — paste any job posting and get a match in seconds</div></div>
-                    <div class="panel-point"><div class="point-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="point-text"><strong>Breakdown by category</strong> — technical skills, soft skills, experience level</div></div>
-                    <div class="panel-point"><div class="point-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="point-text"><strong>Improvement tips</strong> — what to add to your profile to boost your score</div></div>
-                </div>
-                <button class="btn-primary" onclick="showToast('Job Matching Score — coming soon!')">Coming Soon</button>
-            </div>
-            <div class="mockup-wrap reveal" style="--delay:0.1s">
-                <div class="mockup-label">Compatibility Report</div>
-                <div class="job-header">
-                    <div class="job-title-block"><div class="job-role">Senior Frontend Engineer</div><div class="job-co">Razorpay · Bengaluru, Remote</div></div>
-                    <div class="job-score-big"><div class="job-score-num">87%</div><div class="job-score-label">match score</div></div>
-                </div>
-                <div class="job-breakdown">
-                    <div class="jb-row"><div class="jb-label">Technical Skills</div><div class="jb-track"><div class="jb-fill" style="width:92%"></div></div><div class="jb-pct">92%</div></div>
-                    <div class="jb-row"><div class="jb-label">Experience Fit</div><div class="jb-track"><div class="jb-fill" style="width:78%"></div></div><div class="jb-pct">78%</div></div>
-                    <div class="jb-row"><div class="jb-label">Culture Signals</div><div class="jb-track"><div class="jb-fill" style="width:85%"></div></div><div class="jb-pct">85%</div></div>
-                    <div class="jb-row"><div class="jb-label">Keywords</div><div class="jb-track"><div class="jb-fill" style="width:70%"></div></div><div class="jb-pct">70%</div></div>
                 </div>
             </div>
         </div>
@@ -683,13 +627,7 @@
                 <div class="feat-card-desc">Upload your resume and get an instant AI breakdown — ATS score, keyword gaps, and rewrite suggestions.</div>
                 <div class="feat-link">Analyze now <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
             </a>
-            <div class="feat-card reveal" style="--delay:0.15s">
-                <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></div>
-                <div class="feat-badge soon">Coming Soon</div>
-                <div class="feat-card-title">Skill Gap Detection</div>
-                <div class="feat-card-desc">Know exactly which skills you're missing for your target role and in what priority order to learn them.</div>
-                <div class="feat-link-dim">Notify me when live</div>
-            </div>
+            
             <a href="../app/career-recommendation.html" class="feat-card featured reveal" style="--delay:0.20s">
                 <div class="feat-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></div>
                 <div class="feat-badge">Live</div>
@@ -697,13 +635,7 @@
                 <div class="feat-card-desc">Personalised career matches based on your skills, personality, and salary expectations with market demand data.</div>
                 <div class="feat-link">Try it now <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
             </a>
-            <div class="feat-card reveal" style="--delay:0.25s">
-                <div class="feat-icon"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
-                <div class="feat-badge soon">Coming Soon</div>
-                <div class="feat-card-title">Job Matching Score</div>
-                <div class="feat-card-desc">Paste any job description and instantly see your compatibility score across skills, experience, and culture fit.</div>
-                <div class="feat-link-dim">Notify me when live</div>
-            </div>
+            
             <a href="../app/career-tree.html" class="feat-card featured reveal" style="--delay:0.30s">
                 <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
                 <div class="feat-badge">Live</div>
