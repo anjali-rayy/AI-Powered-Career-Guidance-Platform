@@ -2454,7 +2454,7 @@ Return raw JSON only — no backticks, no preamble, no explanation.`;
                     }
                     // Show clickable toast
                     const t = document.getElementById('toast');
-                    t.innerHTML = 'Job saved! <span style="text-decoration:underline;cursor:pointer" onclick="window.location.href=\'saved-jobs.html\'">View in Saved Jobs →</span>';
+                    t.innerHTML = 'Job saved! <span style="text-decoration:underline;cursor:pointer;color:var(--gold);font-weight:600" onclick="window.location.href=\'saved-jobs.html\'">View in Saved Jobs →</span>';
                     t.classList.add('show');
                     clearTimeout(t._timer);
                     t._timer = setTimeout(() => t.classList.remove('show'), 4000);
