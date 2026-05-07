@@ -38,9 +38,9 @@ document.addEventListener('DOMContentLoaded', function () {
         <ul class="footer-col-list">
           <li><a href="${rootBase}/views/app/quiz.html">Career Quiz</a></li>
           <li><a href="${rootBase}/views/app/resume-analysis.html">Resume Analysis</a></li>
-          <li><a href="#" onclick="showToast('Coming soon!')">Skill Gap Detection</a></li>
-          <li><a href="#" onclick="showToast('Coming soon!')">Career Recommendation</a></li>
-          <li><a href="#" onclick="showToast('Coming soon!')">Job Matching Score</a></li>
+          
+          <li><a href="${rootBase}/views/app/career-recommendation.html">Career Recommendation</a></li>
+          
           <li><a href="${rootBase}/views/app/career-tree.html">3D Career Tree</a></li>
           <li><a href="${rootBase}/views/app/roadmap.html">AI Roadmap</a></li>
         </ul>

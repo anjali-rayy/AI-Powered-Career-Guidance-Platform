@@ -894,7 +894,10 @@
             gap: 4px;
         }
 
-        .jm-link:hover { opacity: 0.85; transform: translateY(-1px); }
+        .jm-link:hover {
+            opacity: 0.85;
+            transform: translateY(-1px);
+        }
 
         .jm-link-li {
             background: rgba(10, 102, 194, 0.15);
@@ -1228,8 +1231,8 @@
                             <div class="nav-drop-sub">AI-powered resume insights</div>
                         </div>
                     </a>
-                    
-                    <a href="../app/quiz-results.html" class="nav-drop-item">
+
+                    <a href="../app/career-recommendation.html" class="nav-drop-item">
                         <div class="nav-drop-icon"><svg viewBox="0 0 24 24">
                                 <circle cx="12" cy="12" r="3" />
                                 <path d="M12 2v3M12 19v3M2 12h3M19 12h3" />
@@ -1239,7 +1242,7 @@
                             <div class="nav-drop-sub">Personalized career matches</div>
                         </div>
                     </a>
-                    
+
                     <a href="../app/career-tree.html" class="nav-drop-item">
                         <div class="nav-drop-icon"><svg viewBox="0 0 24 24">
                                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -1280,7 +1283,7 @@
             <a href="../app/resume-analysis.html" class="active">Resume Analysis</a>
             <a href="../app/career-tree.html">3D Career Tree</a>
             <a href="../app/roadmap.html">AI Roadmap</a>
-  <a href="../app/career-recommendation.html">Career Recommendation</a>
+            <a href="../app/career-recommendation.html">Career Recommendation</a>
             <div style="border-top:1px solid rgba(255,255,255,0.07);margin:8px 0;padding-top:8px;display:flex;gap:10px">
                 <a href="../auth/login.html"
                     style="flex:1;text-align:center;padding:10px;border:1px solid rgba(255,255,255,0.1);border-radius:8px">Sign
@@ -2270,12 +2273,12 @@ Return raw JSON only — no backticks, no preamble, no explanation.`;
                        </div>`
                     : '';
                 const linksHtml = [
-                    j.linkedin    ? `<a href="${escHtml(j.linkedin)}" target="_blank" class="jm-link jm-link-li">LinkedIn</a>` : '',
-                    j.naukri      ? `<a href="${escHtml(j.naukri)}" target="_blank" class="jm-link jm-link-nk">Naukri</a>` : '',
-                    j.wellfound   ? `<a href="${escHtml(j.wellfound)}" target="_blank" class="jm-link jm-link-wf">Wellfound</a>` : '',
+                    j.linkedin ? `<a href="${escHtml(j.linkedin)}" target="_blank" class="jm-link jm-link-li">LinkedIn</a>` : '',
+                    j.naukri ? `<a href="${escHtml(j.naukri)}" target="_blank" class="jm-link jm-link-nk">Naukri</a>` : '',
+                    j.wellfound ? `<a href="${escHtml(j.wellfound)}" target="_blank" class="jm-link jm-link-wf">Wellfound</a>` : '',
                     j.internshala ? `<a href="${escHtml(j.internshala)}" target="_blank" class="jm-link jm-link-is">Internshala</a>` : ''
                 ].filter(Boolean).join('');
-                const jobId = 'ra_' + j.name.replace(/\s+/g,'_').toLowerCase();
+                const jobId = 'ra_' + j.name.replace(/\s+/g, '_').toLowerCase();
                 jm.innerHTML += `
                 <div class="jm-row">
                     <div class="jm-top">
