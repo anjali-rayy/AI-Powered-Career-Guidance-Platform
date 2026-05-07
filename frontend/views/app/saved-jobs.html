@@ -429,11 +429,10 @@
         });
       }
     } catch (e) {
-    showToast('Could not save job');
-    btn.style.color = '';
-    btn.textContent = '♡';
+      showToast('Could not save job');
+      if (btn) { btn.style.color = ''; btn.textContent = '♡'; }
+    }
   }
-};
 
   // ── REMOVE JOB ──
   async function removeJob(jobId) {
