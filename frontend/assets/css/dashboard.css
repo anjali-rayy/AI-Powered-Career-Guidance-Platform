@@ -7,16 +7,17 @@
 
 /* ── SIDEBAR ── */
 .sidebar {
-  width: 248px;
+  width: 252px;
   flex-shrink: 0;
-  background: #080808;
-  border-right: 1px solid rgba(255,255,255,0.05);
+  background: linear-gradient(180deg, #070707 0%, #050505 100%);
+  border-right: 1px solid rgba(212,175,55,0.07);
   display: flex;
   flex-direction: column;
   position: fixed;
   top: 0; left: 0; bottom: 0;
   z-index: 100;
   overflow-y: auto;
+  box-shadow: 4px 0 32px rgba(0,0,0,0.5);
 }
 
 .sidebar-logo {
@@ -114,7 +115,7 @@
 
 /* ── MAIN CONTENT ── */
 .dash-main {
-  margin-left: 248px;
+  margin-left: 252px;
   flex: 1;
   min-height: 100vh;
   display: flex; flex-direction: column;
@@ -122,13 +123,15 @@
 
 /* Top bar */
 .dash-topbar {
-  height: 64px;
-  background: rgba(10,10,10,0.85);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+  height: 68px;
+  background: rgba(6,6,6,0.92);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid rgba(212,175,55,0.08);
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 36px;
   position: sticky; top: 0; z-index: 50;
+  box-shadow: 0 1px 0 rgba(212,175,55,0.06), 0 4px 24px rgba(0,0,0,0.4);
 }
 .topbar-left h1 {
   font-family: 'Playfair Display', serif;
@@ -205,17 +208,18 @@
 @media (max-width: 1100px) { .stat-row { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 400px)  { .stat-row { grid-template-columns: 1fr; } }
 .stat-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px; padding: 22px;
+  background: linear-gradient(135deg, rgba(20,20,20,0.9) 0%, rgba(12,12,12,0.95) 100%);
+  border: 1px solid rgba(212,175,55,0.12);
+  border-radius: 18px; padding: 24px;
   position: relative; overflow: hidden;
-  transition: border-color 0.2s, transform 0.2s;
+  transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4);
 }
 .stat-card::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
   background: linear-gradient(90deg, transparent, rgba(212,175,55,0.2), transparent);
 }
-.stat-card:hover { border-color: var(--border-g); transform: translateY(-2px); }
+.stat-card:hover { border-color: rgba(212,175,55,0.35); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(212,175,55,0.08), 0 4px 24px rgba(0,0,0,0.5); }
 
 .stat-card-header {
   display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px;
@@ -235,8 +239,12 @@
 .stat-trend.neu  { background: rgba(255,255,255,0.05); color: var(--muted); }
 .stat-num {
   font-family: 'Playfair Display', serif;
-  font-size: 30px; font-weight: 600; color: var(--text);
-  letter-spacing: -0.02em; line-height: 1; margin-bottom: 5px;
+  font-size: 34px; font-weight: 700; color: var(--text);
+  letter-spacing: -0.03em; line-height: 1; margin-bottom: 5px;
+  background: linear-gradient(135deg, #fff 30%, #D4AF37 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 .stat-lbl { font-size: 12.5px; color: var(--muted); font-weight: 400; }
 
@@ -249,11 +257,14 @@
 
 /* ── CAREER MATCHES CARD ── */
 .d-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px; overflow: hidden;
+  background: linear-gradient(160deg, rgba(18,18,18,0.95) 0%, rgba(10,10,10,0.98) 100%);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 18px; overflow: hidden;
   position: relative;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.35);
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
+.d-card:hover { border-color: rgba(212,175,55,0.15); box-shadow: 0 8px 48px rgba(0,0,0,0.5); }
 .d-card::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
   background: linear-gradient(90deg, transparent, rgba(212,175,55,0.18), transparent);
@@ -410,12 +421,15 @@
 @media (max-width: 900px)  { .quick-actions .qa-sub { display: none; } }
 
 .qa-btn {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 12px; padding: 16px; cursor: pointer;
-  transition: border-color 0.2s, background 0.2s, transform 0.18s;
+  background: linear-gradient(135deg, rgba(20,20,20,0.9), rgba(14,14,14,0.95));
+  border: 1px solid rgba(212,175,55,0.1);
+  border-radius: 14px; padding: 18px; cursor: pointer;
+  transition: border-color 0.3s, background 0.3s, transform 0.2s, box-shadow 0.3s;
   text-align: left;
   position: relative; overflow: hidden;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.3);
 }
+.qa-btn:hover { border-color: rgba(212,175,55,0.3); background: linear-gradient(135deg, rgba(30,25,10,0.6), rgba(20,18,8,0.8)); transform: translateY(-3px); box-shadow: 0 10px 36px rgba(212,175,55,0.07), 0 4px 20px rgba(0,0,0,0.4); }
 .qa-btn::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
   background: linear-gradient(90deg, transparent, rgba(212,175,55,0.15), transparent);
