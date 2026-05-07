@@ -436,6 +436,105 @@ function showToast(msg) {
 }
 window.showToast = showToast;
 
+/* ── RUN ANALYSIS MODAL ── */
+window.openAnalysisModal = function() {
+  const overlay = document.getElementById('analysis-modal-overlay');
+  overlay.style.display = 'flex';
+  document.getElementById('analysis-options').style.display = 'block';
+  document.getElementById('analysis-loading').style.display = 'none';
+};
+
+window.closeAnalysisModal = function() {
+  document.getElementById('analysis-modal-overlay').style.display = 'none';
+};
+
+// Close on backdrop click
+document.addEventListener('DOMContentLoaded', function() {
+  const overlay = document.getElementById('analysis-modal-overlay');
+  if (overlay) {
+    overlay.addEventListener('click', function(e) {
+      if (e.target === overlay) closeAnalysisModal();
+    });
+  }
+});
+
+window.runAnalysisOption = async function(type) {
+  const options  = document.getElementById('analysis-options');
+  const loading  = document.getElementById('analysis-loading');
+  const loadText = document.getElementById('analysis-loading-text');
+
+  if (type === 'career') {
+    closeAnalysisModal();
+    window.location.href = '../app/career-recommendation.html';
+    return;
+  }
+  if (type === 'resume') {
+    closeAnalysisModal();
+    window.location.href = '../app/resume-analysis.html';
+    return;
+  }
+  if (type === 'quiz') {
+    closeAnalysisModal();
+    window.location.href = '../app/quiz-assessment.html';
+    return;
+  }
+  if (type === 'roadmap') {
+    closeAnalysisModal();
+    window.location.href = '../app/roadmap.html';
+    return;
+  }
+
+  // type === 'dashboard' — refresh stats live
+  options.style.display = 'none';
+  loading.style.display = 'block';
+  loadText.textContent  = 'Refreshing your dashboard...';
+
+  try {
+    const token = localStorage.getItem('token');
+    const BASE  = window.ENV_BACKEND_URL || 'http://localhost:3000';
+
+    const res = await fetch(BASE + '/api/dashboard/stats', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    if (!res.ok) throw new Error('fetch failed');
+    const data = await res.json();
+
+    loadText.textContent = 'Updating stats...';
+    await new Promise(r => setTimeout(r, 600)); // small pause so user sees it working
+
+    const el = id => document.getElementById(id);
+    if (el('stat-readiness'))   el('stat-readiness').textContent   = data.careerMatches || '—';
+    if (el('stat-jobs'))        el('stat-jobs').textContent        = data.jobsMatched   || '—';
+    if (el('stat-skills'))      el('stat-skills').textContent      = data.skillsMissing ?? 0;
+    if (el('ring-rec-count'))   el('ring-rec-count').textContent   = data.careerMatches || '—';
+    if (el('ring-skills-have')) el('ring-skills-have').textContent = data.skillsHave    || '—';
+    if (el('ring-skills-gap'))  el('ring-skills-gap').textContent  = data.skillsMissing ?? 0;
+    if (el('ring-jobs-match'))  el('ring-jobs-match').textContent  = data.jobsMatched   || '—';
+
+    // Refresh top roles
+    const rolesEl = document.getElementById('stat-top-roles');
+    if (rolesEl && data.topRoles && data.topRoles.length > 0) {
+      const colors = ['#3B5BDB', '#D4AF37', '#4CAF70'];
+      rolesEl.innerHTML = data.topRoles.map((role, i) => `
+        <div class="stat-top-role-row">
+          <span class="stat-role-dot" style="background:${colors[i] || '#A1A1AA'}"></span>
+          <span class="stat-role-name">${role.name}</span>
+          <span class="stat-role-pct">${role.score}%</span>
+        </div>`).join('');
+    }
+
+    // Bust cache so next page load gets fresh data too
+    localStorage.removeItem('dashStats');
+
+    closeAnalysisModal();
+    showToast('✓ Dashboard refreshed successfully!');
+
+  } catch (err) {
+    closeAnalysisModal();
+    showToast('Could not refresh — please try again.');
+  }
+};
+
 window.saveJob = async function(btn, title, company, score, tags) {
   btn.style.color = 'var(--gold)';
   showToast('Saving job...');
