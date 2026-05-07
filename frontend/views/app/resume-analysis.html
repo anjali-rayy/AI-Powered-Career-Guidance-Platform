@@ -2198,12 +2198,28 @@ Return raw JSON only — no backticks, no preamble, no explanation.`;
 
             let parsed;
             try {
-                parsed = JSON.parse(cleaned);
+                // Fix common AI JSON mistakes: ] closing an object instead of }
+                const fixedJson = cleaned
+                    .replace(/("(?:[^"\\]|\\.)*")\s*\]/g, (match, lastProp) => {
+                        // If a ] appears right after a string value inside an object, it should be }]
+                        return lastProp + '}]';
+                    })
+                    .replace(/\]\s*,\s*"/g, '},\n  "')   // fix ], "nextKey" → }, "nextKey"
+                    .replace(/\]\s*\n\s*\}/g, '}\n}');   // fix closing ] of object before }
+                parsed = JSON.parse(fixedJson);
             } catch (e) {
-                console.error('Raw AI response:', rawText);
-                console.error('Parse error:', e.message);
-                console.error('Cleaned text:', cleaned);
-                throw new Error('AI returned unexpected format. Please try again.');
+                // Last resort: try a more aggressive fix
+                try {
+                    const aggressiveFix = cleaned
+                        .replace(/"desc"\s*:\s*"([^"]*?)"\s*\]/g, '"desc": "$1"}')
+                        .replace(/"title"\s*:\s*"([^"]*?)"\s*\]/g, '"title": "$1"}');
+                    parsed = JSON.parse(aggressiveFix);
+                } catch (e2) {
+                    console.error('Raw AI response:', rawText);
+                    console.error('Parse error:', e.message);
+                    console.error('Cleaned text:', cleaned);
+                    throw new Error('AI returned unexpected format. Please try again.');
+                }
             }
 
             // Validate required fields
