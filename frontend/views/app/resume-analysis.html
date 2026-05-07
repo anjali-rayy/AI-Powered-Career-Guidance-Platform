@@ -2275,7 +2275,7 @@ Return raw JSON only — no backticks, no preamble, no explanation.`;
                       <div style="display:flex;align-items:center;gap:10px">
                         <span class="jm-pct">${escHtml(String(j.pct))}%</span>
                         <button id="save-btn-${jobId}"
-                          onclick="saveJobFromResume('${jobId}','${escHtml(j.name)}','Resume Match',${j.pct},${JSON.stringify((j.skillGap||[]).slice(0,3))})"
+                          onclick="saveJobFromResume('${jobId}','${escHtml(j.name)}','Resume Match',${j.pct})"
                           style="background:none;border:1px solid rgba(255,255,255,0.1);border-radius:7px;padding:4px 10px;cursor:pointer;font-size:14px;color:var(--muted);transition:all 0.2s;font-family:'Inter',sans-serif"
                           title="Save this job">♡</button>
                       </div>
@@ -2425,7 +2425,8 @@ Return raw JSON only — no backticks, no preamble, no explanation.`;
                 grid.innerHTML = '<div style="color:var(--muted);font-size:13px">Career recommendations unavailable right now.</div>';
             }
         }
-        async function saveJobFromResume(jobId, title, company, score, tags) {
+        async function saveJobFromResume(jobId, title, company, score) {
+            const tags = [];
             const btn = document.getElementById('save-btn-' + jobId);
             if (!localStorage.getItem('token')) { showAuthModal(); return; }
             if (btn) { btn.style.color = 'var(--gold)'; btn.style.borderColor = 'rgba(212,175,55,0.4)'; btn.textContent = '♥'; }
