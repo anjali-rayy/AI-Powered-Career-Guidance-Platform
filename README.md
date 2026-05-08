@@ -12,7 +12,6 @@
 - [Project Structure](#project-structure)
 - [Getting Started](#getting-started)
 - [Usage](#usage)
-- [Contributing](#contributing)
 - [License](#license)
 
 ---
@@ -119,18 +118,6 @@ Make sure you have the following installed:
 3. Get AI-powered career path suggestions
 4. Browse matched job listings tailored to your profile
 5. Explore resources and guidance to upskill
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Here's how you can help:
-
-1. Fork the repository
-2. Create a new branch (`git checkout -b feature/your-feature-name`)
-3. Commit your changes (`git commit -m 'Add some feature'`)
-4. Push to the branch (`git push origin feature/your-feature-name`)
-5. Open a Pull Request
 
 ---
 
