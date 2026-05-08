@@ -12,7 +12,6 @@
 - [Project Structure](#project-structure)
 - [Getting Started](#getting-started)
 - [Usage](#usage)
-- [License](#license)
 
 ---
 
@@ -126,13 +125,5 @@ Make sure you have the following installed:
 **Anjali Ray** — [@anjali-rayy](https://github.com/anjali-rayy)
 
 Project Link: [https://github.com/anjali-rayy/AI-Powered-Career-Guidance-And-Job-Matching-Platform](https://github.com/anjali-rayy/AI-Powered-Career-Guidance-And-Job-Matching-Platform)
-
----
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
----
 
 <p align="center">Made with ❤️ by Anjali Ray</p>
