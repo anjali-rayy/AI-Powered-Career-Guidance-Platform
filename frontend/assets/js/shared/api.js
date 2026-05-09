@@ -1,4 +1,4 @@
-const API_URL = (window.ENV_BACKEND_URL || 'http://localhost:3000') + '/api';
+const API_URL = window.API_BASE || (window.ENV_BACKEND_URL || 'https://pathwayai-backend.up.railway.app') + '/api';
 
 // ── TOKEN HELPERS ──
 function getToken()         { return localStorage.getItem('token'); }
