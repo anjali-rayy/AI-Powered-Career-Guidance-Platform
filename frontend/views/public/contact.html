@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Us — PathwayAI</title>
+    <link rel="stylesheet" href="../../assets/css/shared.css" />
+
+    <style>
+        :root {
+            --bg: #0A0A0A;
+            --bg2: #0D0D0D;
+            --bg3: #111111;
+            --border: rgba(255, 255, 255, 0.06);
+            --gold: #D4AF37;
+            --gold-lt: #E6C200;
+            --gold-dim: rgba(212, 175, 55, 0.10);
+            --text: #F5F5F5;
+            --muted: #A1A1AA;
+            --radius: 14px;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        
+
+        .contact-hero {
+            text-align: center;
+        }
+
+        /* ── MAIN LAYOUT ── */
+        .contact-wrap {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 0 48px 100px;
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        /* ── LEFT PANEL ── */
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .info-card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            transition: border-color .25s, transform .25s;
+        }
+
+        .info-card:hover {
+            border-color: rgba(212, 168, 67, 0.3);
+            transform: translateX(4px);
+        }
+
+        .info-icon {
+            width: 42px;
+            height: 42px;
+            background: var(--gold-dim);
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            color: var(--gold);
+        }
+
+        .info-icon svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .info-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 4px;
+        }
+
+        .info-val {
+            font-size: 0.95rem;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .info-sub {
+            font-size: 0.82rem;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        .socials-card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+        }
+
+        .socials-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 16px;
+        }
+
+        .socials-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .social-btn {
+            width: 42px;
+            height: 42px;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            color: var(--muted);
+            text-decoration: none;
+            transition: background .2s, color .2s, border-color .2s;
+        }
+
+        .social-btn svg {
+            width: 17px;
+            height: 17px;
+        }
+
+        .social-btn:hover {
+            background: var(--gold-dim);
+            color: var(--gold);
+            border-color: rgba(212, 168, 67, 0.3);
+        }
+
+        /* ── RIGHT PANEL (FORM) ── */
+        .contact-form-wrap {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 36px;
+        }
+
+        .form-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .form-sub {
+            color: var(--muted);
+            font-size: 0.88rem;
+            margin-bottom: 28px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            margin-bottom: 18px;
+        }
+
+        .field.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text);
+            letter-spacing: .02em;
+        }
+
+        .field-inner {
+            position: relative;
+        }
+
+        .field-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted);
+            pointer-events: none;
+        }
+
+        .field-icon svg {
+            width: 15px;
+            height: 15px;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            padding: 11px 14px 11px 40px;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+            appearance: none;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+            padding: 12px 14px 12px 40px;
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: #555;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(212, 168, 67, 0.1);
+        }
+
+        select option {
+            background: var(--bg3);
+        }
+
+        /* topic select — no left icon padding */
+        .no-icon input,
+        .no-icon select,
+        .no-icon textarea {
+            padding-left: 14px;
+        }
+
+        .char-count {
+            font-size: 0.75rem;
+            color: var(--muted);
+            text-align: right;
+            margin-top: -12px;
+            margin-bottom: 18px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: var(--gold);
+            color: #0A0A0A;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            padding: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background .2s, transform .15s;
+            margin-top: 4px;
+        }
+
+        .submit-btn:hover {
+            background: var(--gold-lt);
+            transform: translateY(-2px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn svg {
+            width: 17px;
+            height: 17px;
+        }
+
+        .submit-btn.loading {
+            opacity: .7;
+            pointer-events: none;
+        }
+
+        /* success state */
+        .success-state {
+            text-align: center;
+            padding: 48px 24px;
+            display: none;
+        }
+
+        .success-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--gold-dim);
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            margin: 0 auto 20px;
+            color: var(--gold);
+        }
+
+        .success-icon svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .success-state h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .success-state p {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        /* ── FAQ STRIP ── */
+        .faq-strip {
+            max-width: 1080px;
+            margin: 0 auto 80px;
+            padding: 0 48px;
+        }
+
+        .faq-strip-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .06em;
+        }
+
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        .faq-card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            transition: border-color .2s;
+            cursor: default;
+        }
+
+        .faq-card:hover {
+            border-color: rgba(212, 168, 67, 0.25);
+        }
+
+        .faq-q {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .faq-a {
+            font-size: 0.82rem;
+            color: var(--muted);
+            line-height: 1.55;
+        }
+
+        
+
+        /* ── TOAST ── */
+        .toast {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 20px;
+            font-size: 0.88rem;
+            color: var(--text);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            transform: translateY(20px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .3s, transform .3s;
+            z-index: 999;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 60px 20px 40px;
+            }
+
+            .contact-wrap {
+                grid-template-columns: 1fr;
+                padding: 0 20px 60px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .faq-strip {
+                padding: 0 20px;
+            }
+
+            .faq-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAV -->
+    <nav class="navbar">
+        <a href="index.html" class="nav-logo">
+            <div class="logo-mark">
+                <img src="../../assets/images/logo.png" alt="PathwayAI Logo">
+            </div>
+            PathwayAI
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li class="nav-dropdown">
+                <a href="features.html" class="nav-drop-trigger">Features ▾</a>
+                <div class="nav-drop-menu">
+                    <a href="../app/quiz.html" class="nav-drop-item">
+                        <div class="nav-drop-icon">
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        </div>
+                        <div>
+                            <div class="nav-drop-title">Career Quiz</div>
+                            <div class="nav-drop-sub">AI-powered career assessment</div>
+                        </div>
+                    </a>
+                    <a href="../app/resume-analysis.html" class="nav-drop-item">
+                        <div class="nav-drop-icon">
+                            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        </div>
+                        <div>
+                            <div class="nav-drop-title">Resume Analysis</div>
+                            <div class="nav-drop-sub">AI-powered resume insights</div>
+                        </div>
+                    </a>
+                    <a href="../app/career-recommendation.html" class="nav-drop-item">
+                        <div class="nav-drop-icon">
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+                        </div>
+                        <div>
+                            <div class="nav-drop-title">Career Recommendation</div>
+                            <div class="nav-drop-sub">Personalized career matches</div>
+                        </div>
+                    </a>
+                    <a href="../app/career-tree.html" class="nav-drop-item">
+                        <div class="nav-drop-icon">
+                            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        </div>
+                        <div>
+                            <div class="nav-drop-title">3D Career Tree</div>
+                            <div class="nav-drop-sub">Interactive career exploration</div>
+                        </div>
+                    </a>
+                    <a href="../app/roadmap.html" class="nav-drop-item">
+                        <div class="nav-drop-icon">
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+                        </div>
+                        <div>
+                            <div class="nav-drop-title">AI Roadmap</div>
+                            <div class="nav-drop-sub">Personalized career roadmaps</div>
+                        </div>
+                    </a>
+                </div>
+            </li>
+        </ul>
+        <button class="nav-hamburger" aria-label="Menu">
+            <svg viewBox="0 0 24 24">
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+        </button>
+        <div class="mobile-menu" id="mobile-menu">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="features.html">Features</a>
+            <a href="../app/quiz.html">Career Quiz</a>
+            <a href="../app/resume-analysis.html">Resume Analysis</a>
+            <a href="../app/career-tree.html">3D Career Tree</a>
+            <a href="../app/roadmap.html">AI Roadmap</a>
+            <a href="../app/career-recommendation.html">Career Recommendation</a>
+            <div style="border-top:1px solid rgba(255,255,255,0.07);margin:8px 0;padding-top:8px;display:flex;gap:10px">
+                <a href="../auth/login.html" style="flex:1;text-align:center;padding:10px;border:1px solid rgba(255,255,255,0.1);border-radius:8px">Sign in</a>
+                <a href="../auth/register.html" style="flex:1;text-align:center;padding:10px;background:var(--gold);color:#0A0A0A;border-radius:8px;font-weight:600">Get started</a>
+            </div>
+        </div>
+        <div class="nav-actions">
+            <a href="../auth/login.html"><button class="btn-ghost">Sign in</button></a>
+            <a href="../auth/register.html"><button class="btn-gold">Get started</button></a>
+        </div>
+    </nav>
+
+    <div class="about-hero contact-hero">
+        <div class="max-w">
+            <div class="eyebrow reveal"><div class="eyebrow-dot"></div> Get in touch</div>
+            <h1 class="reveal" style="--delay:0.08s">We'd love to <em>hear from you</em></h1>
+            <p class="reveal" style="--delay:0.14s;max-width:560px;margin:0 auto;">Have a question, suggestion, or just want to say hi? Our team is here to help every student find their path.</p>
+        </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="contact-wrap">
+
+        <!-- LEFT: info cards -->
+        <div class="contact-info">
+
+            <div class="info-card">
+                <div class="info-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                        <polyline points="22,6 12,13 2,6" />
+                    </svg>
+                </div>
+                <div>
+                    <div class="info-title">Email</div>
+                    <div class="info-val">support@pathwayai.app</div>
+                    <div class="info-sub">We reply within 24 hours</div>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div class="info-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                </div>
+                <div>
+                    <div class="info-title">Response Time</div>
+                    <div class="info-val">Within 24 hours</div>
+                    <div class="info-sub">Mon – Sat, 9 AM – 6 PM IST</div>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div class="info-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                        <circle cx="12" cy="10" r="3" />
+                    </svg>
+                </div>
+                <div>
+                    <div class="info-title">Based in</div>
+                    <div class="info-val">India 🇮🇳</div>
+                    <div class="info-sub">Built for students everywhere</div>
+                </div>
+            </div>
+
+            <div class="socials-card">
+                <div class="socials-title">Find us on</div>
+                <div class="socials-row">
+                    <a href="#" class="social-btn" aria-label="Twitter">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.7 5.4 4.4 8.8 4.5-.4-1.8.3-3.7 1.7-4.8 2.2-1.7 5.2-1.4 7 .7.7-.2 1.4-.5 2-.9z" />
+                        </svg>
+                    </a>
+                    <a href="#" class="social-btn" aria-label="LinkedIn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                            <rect x="2" y="9" width="4" height="12" />
+                            <circle cx="4" cy="4" r="2" />
+                        </svg>
+                    </a>
+                    <a href="#" class="social-btn" aria-label="GitHub">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+                        </svg>
+                    </a>
+                    <a href="#" class="social-btn" aria-label="Instagram">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="2" width="20" height="20" rx="5" />
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+        </div><!-- /contact-info -->
+
+        <!-- RIGHT: form -->
+        <div class="contact-form-wrap">
+            <div id="form-view">
+                <div class="form-heading">Send us a message</div>
+                <div class="form-sub">Fill in the details and we'll get back to you shortly.</div>
+
+                <div class="form-row">
+                    <div class="field">
+                        <label for="fname">First name</label>
+                        <div class="field-inner">
+                            <span class="field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                    <circle cx="12" cy="7" r="4" />
+                                </svg></span>
+                            <input type="text" id="fname" placeholder="Anjali" autocomplete="given-name" />
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="lname">Last name</label>
+                        <div class="field-inner">
+                            <span class="field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                    <circle cx="12" cy="7" r="4" />
+                                </svg></span>
+                            <input type="text" id="lname" placeholder="Ray" autocomplete="family-name" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field full">
+                    <label for="email">Email address</label>
+                    <div class="field-inner">
+                        <span class="field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                <polyline points="22,6 12,13 2,6" />
+                            </svg></span>
+                        <input type="email" id="email" placeholder="you@example.com" autocomplete="email" />
+                    </div>
+                </div>
+
+                <div class="field full no-icon">
+                    <label for="topic">What's this about?</label>
+                    <div class="field-inner">
+                        <select id="topic">
+                            <option value="" disabled selected>Select a topic…</option>
+                            <option>General Question</option>
+                            <option>Bug Report</option>
+                            <option>Feature Request</option>
+                            <option>Career Guidance</option>
+                            <option>Partnership / Collaboration</option>
+                            <option>Press / Media</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="field full">
+                    <label for="msg">Message</label>
+                    <div class="field-inner">
+                        <span class="field-icon" style="top:18px;transform:none;"><svg viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                            </svg></span>
+                        <textarea id="msg" placeholder="Tell us what's on your mind…" maxlength="1000"
+                            oninput="updateChar()"></textarea>
+                    </div>
+                </div>
+                <div class="char-count"><span id="char-num">0</span> / 1000</div>
+
+                <button class="submit-btn" onclick="handleSubmit()" id="submit-btn">
+                    Send message
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                        stroke-linecap="round">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- SUCCESS -->
+            <div class="success-state" id="success-view">
+                <div class="success-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                        <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                </div>
+                <h3>Message sent!</h3>
+                <p>Thanks for reaching out. We'll get back to you within 24 hours.</p>
+            </div>
+        </div><!-- /form wrap -->
+
+    </div><!-- /contact-wrap -->
+
+    <!-- FAQ STRIP -->
+    <div class="faq-strip">
+        <div class="faq-strip-title">Common questions</div>
+        <div class="faq-grid">
+            <div class="faq-card">
+                <div class="faq-q">Is PathwayAI free to use?</div>
+                <div class="faq-a">Yes — core features like the career quiz and recommendations are completely free.
+                    Premium features are available on our Pro plan.</div>
+            </div>
+            <div class="faq-card">
+                <div class="faq-q">How do I report a bug?</div>
+                <div class="faq-a">Use the contact form above and select "Bug Report". Please include as much detail as
+                    possible so we can reproduce and fix it quickly.</div>
+            </div>
+            <div class="faq-card">
+                <div class="faq-q">Can schools or teachers use PathwayAI?</div>
+                <div class="faq-a">Absolutely! We'd love to partner with educational institutions. Select "Partnership /
+                    Collaboration" in the form and tell us more.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer"></footer>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+    <script src="../../assets/js/shared/nav.js"></script>
+    <script src="../../assets/js/shared/footer.js"></script>
+    <script>
+        const hamburger = document.querySelector('.nav-hamburger');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (hamburger && mobileMenu) {
+            hamburger.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+            document.addEventListener('click', e => {
+                if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target))
+                    mobileMenu.classList.remove('open');
+            });
+        }
+    </script>
+    <script>
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        function updateChar() {
+            const msg = document.getElementById('msg');
+            document.getElementById('char-num').textContent = msg.value.length;
+        }
+
+        function handleSubmit() {
+            const fname = document.getElementById('fname').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const topic = document.getElementById('topic').value;
+            const msg = document.getElementById('msg').value.trim();
+            const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!fname) { showToast('Please enter your first name.'); return; }
+            if (!emailRe.test(email)) { showToast('Please enter a valid email address.'); return; }
+            if (!topic) { showToast('Please select a topic.'); return; }
+            if (msg.length < 10) { showToast('Message is too short — tell us more!'); return; }
+
+            const btn = document.getElementById('submit-btn');
+            btn.classList.add('loading');
+            btn.textContent = 'Sending…';
+
+            setTimeout(() => {
+                document.getElementById('form-view').style.display = 'none';
+                const sv = document.getElementById('success-view');
+                sv.style.display = 'block';
+            }, 1400);
+        }
+    </script>
+</body>
+
+</html>
