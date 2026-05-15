@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
         <div class="footer-col-title">Company</div>
         <ul class="footer-col-list">
           <li><a href="${rootBase}/views/public/about.html">About</a></li>
-          <li><a href="#" onclick="showToast('Coming soon!')">Careers</a></li>
+          
           <li><a href="#" onclick="showToast('Coming soon!')">Blog</a></li>
           <li><a href="#" onclick="showToast('Coming soon!')">Contact</a></li>
         </ul>
