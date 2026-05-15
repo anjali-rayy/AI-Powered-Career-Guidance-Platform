@@ -12,6 +12,7 @@ const firebaseConfig = {
 };
 
 if (!firebase.apps?.length) firebase.initializeApp(firebaseConfig);
+if (typeof firebase.analytics !== 'undefined') window.fbAnalytics = firebase.analytics();
 
 // ─────────────────────────────────────────────
 // TOAST
@@ -218,7 +219,8 @@ async function handleLogin(e) {
   setLoading(true);
   try {
     await apiLogin(email, pass);
-    showToast('✓ Signed in successfully!');
+    if (window.fbAnalytics) window.fbAnalytics.logEvent('login', { method: 'password' });
+showToast('✓ Signed in successfully!');
     const redirect = localStorage.getItem('authRedirect') || localStorage.getItem('redirectAfterLogin');
     localStorage.removeItem('authRedirect');
     localStorage.removeItem('redirectAfterLogin');
@@ -258,7 +260,8 @@ async function signInWithGoogle() {
 
     setToken(data.token);
     syncUserToStorage(data.user);
-    showToast('✓ Signed in with Google!');
+    if (window.fbAnalytics) window.fbAnalytics.logEvent('login', { method: 'google' });
+showToast('✓ Signed in with Google!');
     const redirect = localStorage.getItem('authRedirect') || localStorage.getItem('redirectAfterLogin');
     localStorage.removeItem('authRedirect');
     localStorage.removeItem('redirectAfterLogin');
