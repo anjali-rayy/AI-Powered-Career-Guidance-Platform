@@ -1183,7 +1183,7 @@
         <button class="pop-chip">Career Quiz</button>
         <button class="pop-chip">Reset Password</button>
         <button class="pop-chip">AI Roadmap</button>
-        <button class="pop-chip">Billing</button>
+        <button class="pop-chip">Resume Analysis</button>
         <button class="pop-chip">College Finder</button>
       </div>
     </section>
@@ -1212,13 +1212,15 @@
             <h3>Career Features</h3>
             <p>Learn how to use quizzes, roadmaps, and the 3D Career Tree.</p>
           </div>
-          <div class="quick-card">
+          <div class="quick-card" onclick="window.location.href='../app/resume-analysis.html'" style="cursor:pointer">
             <div class="quick-icon"><svg viewBox="0 0 24 24">
-                <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
-                <line x1="1" y1="10" x2="23" y2="10" />
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
               </svg></div>
-            <h3>Billing &amp; Plans</h3>
-            <p>Manage your subscription, upgrade plans, or request refunds.</p>
+            <h3>Resume &amp; Skills</h3>
+            <p>Upload your resume for AI analysis, ATS scoring, and skill gap insights.</p>
           </div>
           <div class="quick-card">
             <div class="quick-icon"><svg viewBox="0 0 24 24">
@@ -1563,10 +1565,32 @@
 
     document.querySelectorAll('.pop-chip').forEach(chip => {
       chip.addEventListener('click', function () {
-        document.querySelector('.search-wrap input').value = this.textContent;
-        document.querySelector('.search-wrap input').focus();
+        const input = document.querySelector('.search-wrap input');
+        input.value = this.textContent;
+        input.focus();
+        triggerSearch(this.textContent);
       });
     });
+
+    const searchInput = document.querySelector('.search-wrap input');
+    searchInput.addEventListener('input', function () {
+      triggerSearch(this.value);
+    });
+
+    function triggerSearch(query) {
+      const q = query.toLowerCase().trim();
+      document.querySelectorAll('.faq-item').forEach(item => {
+        const text = item.innerText.toLowerCase();
+        item.style.display = (!q || text.includes(q)) ? 'block' : 'none';
+      });
+      document.querySelectorAll('.faq-group').forEach(group => {
+        const visible = [...group.querySelectorAll('.faq-item')].some(i => i.style.display !== 'none');
+        group.style.display = visible ? 'block' : 'none';
+      });
+      if (!q) {
+        document.querySelectorAll('.faq-item, .faq-group').forEach(el => el.style.display = '');
+      }
+    }
   </script>
   <script src="../../assets/js/shared/nav.js"></script>
   <script src="../../assets/js/shared/footer.js"></script>
