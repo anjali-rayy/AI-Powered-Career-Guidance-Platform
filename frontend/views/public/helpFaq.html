@@ -1581,18 +1581,31 @@
 
     function triggerSearch(query) {
       const q = query.toLowerCase().trim();
+      let anyVisible = false;
+
       document.querySelectorAll('.faq-item').forEach(item => {
         const text = item.innerText.toLowerCase();
-        item.style.display = (!q || text.includes(q)) ? 'block' : 'none';
+        const show = (!q || text.includes(q));
+        item.style.display = show ? 'block' : 'none';
+        if (show) anyVisible = true;
       });
+
       document.querySelectorAll('.faq-group').forEach(group => {
         const visible = [...group.querySelectorAll('.faq-item')].some(i => i.style.display !== 'none');
         group.style.display = visible ? 'block' : 'none';
       });
-      if (!q) {
-        document.querySelectorAll('.faq-item, .faq-group').forEach(el => el.style.display = '');
+
+      let noResults = document.getElementById('no-results-msg');
+      if (!noResults) {
+        noResults = document.createElement('p');
+        noResults.id = 'no-results-msg';
+        noResults.style.cssText = 'color:#A1A1AA;font-size:14px;padding:24px 0;';
+        noResults.textContent = 'No results found. Try a different keyword or contact support.';
+        document.getElementById('faq-content').appendChild(noResults);
       }
+      noResults.style.display = (q && !anyVisible) ? 'block' : 'none';
     }
+    
   </script>
   <script src="../../assets/js/shared/nav.js"></script>
   <script src="../../assets/js/shared/footer.js"></script>
