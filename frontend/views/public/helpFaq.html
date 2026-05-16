@@ -1579,6 +1579,9 @@
         input.value = this.textContent;
         input.focus();
         triggerSearch(this.textContent);
+        setTimeout(() => {
+          document.querySelector('.faq-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 150);
       });
     });
 
@@ -1586,7 +1589,9 @@
     searchInput.addEventListener('input', function () {
       triggerSearch(this.value);
       if (this.value.trim()) {
-        document.querySelector('.faq-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setTimeout(() => {
+          document.querySelector('.faq-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 150);
       }
     });
 
