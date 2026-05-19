@@ -142,15 +142,15 @@ async function handleRegister() {
   const apiErr = document.getElementById('reg-api-error');
   if (apiErr) apiErr.style.display = 'none';
 
-  const fname = document.getElementById('fname')?.value.trim();
-  const email = document.getElementById('reg-email')?.value.trim();
-  const pass  = document.getElementById('reg-pass')?.value;
-  const pass2 = document.getElementById('reg-pass2')?.value;
+  const _fname = document.getElementById('fname')?.value.trim();
+  const _email = document.getElementById('reg-email')?.value.trim();
+  const _pass  = document.getElementById('reg-pass')?.value;
+  const _pass2 = document.getElementById('reg-pass2')?.value;
   let ok = true;
-  if (!fname) { setErr('fname-err', 'First name is required'); ok = false; }
-  if (!email) { setErr('regemail-err', 'Email is required'); ok = false; }
-  if (!pass || pass.length < 8) { setErr('regpass-err', 'Min. 8 characters'); ok = false; }
-  if (pass !== pass2) { setErr('regpass2-err', 'Passwords do not match'); ok = false; }
+  if (!_fname) { setErr('fname-err', 'First name is required'); ok = false; }
+  if (!_email) { setErr('regemail-err', 'Email is required'); ok = false; }
+  if (!_pass || _pass.length < 8) { setErr('regpass-err', 'Min. 8 characters'); ok = false; }
+  if (_pass !== _pass2) { setErr('regpass2-err', 'Passwords do not match'); ok = false; }
   if (!ok) return;
 
   const fname    = document.getElementById('fname')?.value.trim();
