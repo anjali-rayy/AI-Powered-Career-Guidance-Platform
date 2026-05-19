@@ -255,7 +255,7 @@ async function signInWithGoogle() {
     const fbUser   = result.user;
 
     // Send to our backend to create/link account
-    const res = await fetch((window.API_BASE || 'https://pathwayai-backend.up.railway.app') + '/api/auth/google', {
+    const res = await fetch((window.API_BASE || 'https://pathwayai-backend-2qor.onrender.com') + '/api/auth/google', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
