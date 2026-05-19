@@ -10,9 +10,12 @@ require('dotenv').config();
 
 const app = express();
 app.use(cors({
-  origin: ['https://pathwayai.vercel.app', 'http://localhost:3000'],
+  origin: function(origin, callback) {
+    callback(null, true);
+  },
   credentials: true
 }));
+app.options('*', cors());
 app.use(express.json({ limit: '20mb' }));
 app.use('/api/roadmap', require('./routes/roadmap'));
 
