@@ -353,9 +353,9 @@
     document.getElementById('results-header').classList.remove('visible');
 
     try {
-      const res = await fetch(PYTHON_API + '/recommend', {
+      const res = await fetch((window.ENV_BACKEND_URL || 'https://pathwayai-backend-2qor.onrender.com') + '/api/career-recommend', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (localStorage.getItem('token') || '') },
         body: JSON.stringify({ skills: skills.join(' ') })
       });
       if (!res.ok) throw new Error('Server returned ' + res.status);
@@ -393,7 +393,7 @@
       try {
         const token = localStorage.getItem('token');
         if (token && recs.length > 0) {
-          await fetch((window.ENV_BACKEND_URL || 'http://localhost:3000') + '/api/activity', {
+          await fetch((window.ENV_BACKEND_URL || 'https://pathwayai-backend-2qor.onrender.com') + '/api/activity', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
             body: JSON.stringify({
@@ -413,13 +413,13 @@
       try {
         const token = localStorage.getItem('token');
         if (token) {
-          await fetch((window.ENV_BACKEND_URL || 'http://localhost:3000') + '/api/profile', {
+          await fetch((window.ENV_BACKEND_URL || 'https://pathwayai-backend-2qor.onrender.com') + '/api/profile', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
             body: JSON.stringify({ skills })
           });
           // Log skills update activity
-          await fetch((window.ENV_BACKEND_URL || 'http://localhost:3000') + '/api/activity', {
+          await fetch((window.ENV_BACKEND_URL || 'https://pathwayai-backend-2qor.onrender.com') + '/api/activity', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
             body: JSON.stringify({
