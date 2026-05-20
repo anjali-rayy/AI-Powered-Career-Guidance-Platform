@@ -12,7 +12,13 @@ const firebaseConfig = {
 };
 
 if (!firebase.apps?.length) firebase.initializeApp(firebaseConfig);
-if (typeof firebase.analytics !== 'undefined') window.fbAnalytics = firebase.analytics();
+try {
+  if (typeof firebase.analytics === 'function') {
+    window.fbAnalytics = firebase.analytics();
+  }
+} catch (e) {
+  window.fbAnalytics = null;
+}
 
 // ─────────────────────────────────────────────
 // TOAST
