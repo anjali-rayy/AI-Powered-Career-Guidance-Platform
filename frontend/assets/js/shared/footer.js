@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
       </div>
     </div>
     <div class="footer-rule"></div>
-    <div class="footer-links-grid">
+    <div class="footer-links-grid" style="padding-bottom: 0;">
       <div class="footer-col">
         <div class="footer-col-title">Features</div>
         <ul class="footer-col-list">

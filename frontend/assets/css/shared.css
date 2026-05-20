@@ -324,7 +324,7 @@ ul { list-style: none; }
   position: relative;
   background: #0A0A0A;
   border-top: 1px solid rgba(212,175,55,0.12);
-  padding: 72px 48px 40px;
+  padding: 56px 48px 36px;
   overflow: hidden;
 }
 
@@ -367,9 +367,9 @@ ul { list-style: none; }
     rgba(255,255,255,0.06) 80%,
     transparent
   );
-  margin: 56px 0;
+  margin: 40px 0;
 }
-@media (max-width: 768px) { .footer-rule { margin: 40px 0; } }
+@media (max-width: 768px) { .footer-rule { margin: 28px 0; } }
 
 /* TOP BAND */
 .footer-top {
@@ -532,6 +532,8 @@ ul { list-style: none; }
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 32px;
+  padding-bottom: 0;
+  margin-bottom: 0;
 }
 @media (max-width: 900px) {
   .footer-links-grid { grid-template-columns: repeat(2, 1fr); gap: 36px 24px; }
