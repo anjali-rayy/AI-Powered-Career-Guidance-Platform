@@ -31,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function () {
         <p class="newsletter-fine">No spam, ever. Unsubscribe any time.</p>
       </div>
     </div>
-    <div class="footer-rule"></div>
     <div class="footer-links-grid" style="padding-bottom: 0;">
       <div class="footer-col">
         <div class="footer-col-title">Features</div>
