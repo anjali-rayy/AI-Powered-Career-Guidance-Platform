@@ -1719,7 +1719,7 @@
     <script>
         const _fetch = window.fetch.bind(window);
         function escHtml(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-        const API_BASE = window.ENV_BACKEND_URL || 'http://localhost:3000';
+        const API_BASE = window.ENV_BACKEND_URL || 'https://pathwayai-backend-2qor.onrender.com';
 
         // ── PDF.js worker setup ──
         if (typeof pdfjsLib !== 'undefined') {
