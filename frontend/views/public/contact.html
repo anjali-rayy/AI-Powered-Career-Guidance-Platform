@@ -797,8 +797,9 @@
             document.getElementById('char-num').textContent = msg.value.length;
         }
 
-        function handleSubmit() {
+        async function handleSubmit() {
             const fname = document.getElementById('fname').value.trim();
+            const lname = document.getElementById('lname').value.trim();
             const email = document.getElementById('email').value.trim();
             const topic = document.getElementById('topic').value;
             const msg = document.getElementById('msg').value.trim();
@@ -813,11 +814,26 @@
             btn.classList.add('loading');
             btn.textContent = 'Sending…';
 
-            setTimeout(() => {
-                document.getElementById('form-view').style.display = 'none';
-                const sv = document.getElementById('success-view');
-                sv.style.display = 'block';
-            }, 1400);
+            try {
+                const res = await fetch('https://formspree.io/f/xkoerbvr', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: fname + ' ' + lname, email, topic, message: msg })
+                });
+
+                if (res.ok) {
+                    document.getElementById('form-view').style.display = 'none';
+                    document.getElementById('success-view').style.display = 'block';
+                } else {
+                    showToast('Something went wrong. Please try again.');
+                    btn.classList.remove('loading');
+                    btn.textContent = 'Send message';
+                }
+            } catch (err) {
+                showToast('Network error. Please try again.');
+                btn.classList.remove('loading');
+                btn.textContent = 'Send message';
+            }
         }
     </script>
 </body>
