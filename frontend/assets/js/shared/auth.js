@@ -180,8 +180,11 @@ async function handleRegister() {
   if (ldr) ldr.style.display = 'flex';
 
   try {
+    const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
+    const firebaseUid = userCredential.user.uid;
     await apiRegister({
       fname, lname, email, password,
+      firebaseUid,
       eduLevel, eduField, gradYear,
       experience, location,
       interest, bio,
@@ -194,8 +197,12 @@ async function handleRegister() {
     localStorage.removeItem('redirectAfterLogin');
     setTimeout(() => window.location.href = redirect || '../app/dashboard.html', 900);
   } catch (err) {
+    let message = err.message;
+    if (err.code === 'auth/email-already-in-use') message = 'This email is already registered.';
+    if (err.code === 'auth/invalid-email')         message = 'Invalid email address.';
+    if (err.code === 'auth/weak-password')         message = 'Password is too weak.';
     if (apiErr) {
-      apiErr.textContent = err.message;
+      apiErr.textContent = message;
       apiErr.style.display = 'block';
     }
     if (btn) btn.disabled = false;
