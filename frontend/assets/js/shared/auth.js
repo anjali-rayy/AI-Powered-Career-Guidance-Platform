@@ -3,7 +3,7 @@
 // ─────────────────────────────────────────────
 const firebaseConfig = {
   apiKey: "AIzaSyDdThWS-WLwguBNzRqUp4GGmW4I9moG8pE",
-  authDomain: "pathwayai-f5a92.firebaseapp.com",
+  authDomain: "pathwayai.vercel.app",
   projectId: "pathwayai-f5a92",
   storageBucket: "pathwayai-f5a92.firebasestorage.app",
   messagingSenderId: "645042947767",
