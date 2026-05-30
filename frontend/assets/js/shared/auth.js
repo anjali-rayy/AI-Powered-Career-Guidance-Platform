@@ -265,8 +265,10 @@ async function signInWithGoogle() {
   try {
     const provider = new firebase.auth.GoogleAuthProvider();
     provider.setCustomParameters({ prompt: 'select_account' });
+    sessionStorage.setItem('googleRedirectPending', '1');
     await firebase.auth().signInWithRedirect(provider);
   } catch (err) {
+    sessionStorage.removeItem('googleRedirectPending');
     showToast('Google sign-in failed: ' + err.message);
   }
 }
@@ -293,6 +295,7 @@ async function handleGoogleRedirectResult() {
 
     setToken(data.token);
     syncUserToStorage(data.user);
+    sessionStorage.removeItem('googleRedirectPending');
     if (window.fbAnalytics) window.fbAnalytics.logEvent('login', { method: 'google' });
     showToast('✓ Signed in with Google!');
     const redirect = localStorage.getItem('authRedirect') || localStorage.getItem('redirectAfterLogin');
@@ -300,6 +303,7 @@ async function handleGoogleRedirectResult() {
     localStorage.removeItem('redirectAfterLogin');
     setTimeout(() => window.location.href = redirect || '../app/dashboard.html', 900);
   } catch (err) {
+    sessionStorage.removeItem('googleRedirectPending');
     if (err.code !== 'auth/no-auth-event') {
       showToast('Google sign-in failed: ' + err.message);
     }

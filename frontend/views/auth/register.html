@@ -8,7 +8,11 @@
   <link rel="stylesheet" href="../../assets/css/shared.css" />
   <link rel="stylesheet" href="../../assets/css/auth.css" />
   <script>
-    if (localStorage.getItem('token')) {
+    // Don't redirect if we're returning from a Google OAuth redirect
+    const isOAuthReturn = window.location.href.includes('/__/auth/handler') ||
+      document.referrer.includes('accounts.google.com') ||
+      sessionStorage.getItem('googleRedirectPending');
+    if (localStorage.getItem('token') && !isOAuthReturn) {
       const redirect = localStorage.getItem('authRedirect');
       localStorage.removeItem('authRedirect');
       window.location.replace(redirect || '../app/dashboard.html');
