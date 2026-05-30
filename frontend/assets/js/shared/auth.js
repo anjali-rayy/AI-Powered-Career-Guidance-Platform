@@ -15,6 +15,8 @@ if (!firebase.apps?.length) firebase.initializeApp(firebaseConfig);
 try {
   if (typeof firebase.analytics === 'function') {
     window.fbAnalytics = firebase.analytics();
+  } else {
+    window.fbAnalytics = null;
   }
 } catch (e) {
   window.fbAnalytics = null;
