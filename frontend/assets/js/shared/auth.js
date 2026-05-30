@@ -276,9 +276,35 @@ async function signInWithGoogle() {
     if (!firebase.apps?.length) throw new Error('Firebase not initialized');
     const provider = new firebase.auth.GoogleAuthProvider();
     provider.setCustomParameters({ prompt: 'select_account' });
-    await firebase.auth().signInWithRedirect(provider);
+    const result = await firebase.auth().signInWithPopup(provider);
+    const fbUser = result.user;
+    const res = await fetch((window.ENV_BACKEND_URL || 'https://pathwayai-backend-2qor.onrender.com') + '/api/auth/google', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email:    fbUser.email,
+        fname:    fbUser.displayName?.split(' ')[0] || '',
+        lname:    fbUser.displayName?.split(' ').slice(1).join(' ') || '',
+        googleId: fbUser.uid
+      })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Google sign-in failed');
+    setToken(data.token);
+    syncUserToStorage(data.user);
+    showToast('✓ Signed in with Google!');
+    const redirect = localStorage.getItem('authRedirect') || localStorage.getItem('redirectAfterLogin');
+    localStorage.removeItem('authRedirect');
+    localStorage.removeItem('redirectAfterLogin');
+    setTimeout(() => window.location.href = redirect || '../app/dashboard.html', 900);
   } catch (err) {
-    showToast('Google sign-in failed: ' + err.message);
+    if (err.code === 'auth/popup-blocked') {
+      showToast('Popup blocked — please allow popups for this site', 5000);
+    } else if (err.code === 'auth/cancelled-popup-request') {
+      // user closed popup, do nothing
+    } else {
+      showToast('Google sign-in failed: ' + err.message, 5000);
+    }
   }
 }
 
