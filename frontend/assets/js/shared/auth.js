@@ -12,13 +12,7 @@ const firebaseConfig = {
 };
 
 if (!firebase.apps?.length) firebase.initializeApp(firebaseConfig);
-try {
-  if (typeof firebase.analytics === 'function') {
-    window.fbAnalytics = firebase.analytics();
-  }
-} catch (e) {
-  window.fbAnalytics = null;
-}
+window.fbAnalytics = null; // Analytics disabled - causes 403 PERMISSION_DENIED on Vercel
 
 // ─────────────────────────────────────────────
 // TOAST
