@@ -190,3 +190,36 @@ function signOut() {
   settingsKeys.forEach(({ k, v }) => localStorage.setItem(k, v));
   window.location.href = '../public/index.html';
 }
+
+// Handle Google redirect result on page load
+firebase.auth().getRedirectResult().then(async (result) => {
+  if (!result || !result.user) return;
+  const fbUser = result.user;
+  try {
+    const res = await fetch((window.ENV_BACKEND_URL || 'https://pathwayai-backend-2qor.onrender.com') + '/api/auth/google', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email:    fbUser.email,
+        fname:    fbUser.displayName?.split(' ')[0] || '',
+        lname:    fbUser.displayName?.split(' ').slice(1).join(' ') || '',
+        googleId: fbUser.uid
+      })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Google sign-in failed');
+    setToken(data.token);
+    syncUserToStorage(data.user);
+    showToast('✓ Signed in with Google!');
+    const redirect = localStorage.getItem('authRedirect') || localStorage.getItem('redirectAfterLogin');
+    localStorage.removeItem('authRedirect');
+    localStorage.removeItem('redirectAfterLogin');
+    setTimeout(() => window.location.href = redirect || '../app/dashboard.html', 900);
+  } catch (err) {
+    showToast('Google sign-in failed: ' + err.message);
+  }
+}).catch((err) => {
+  if (err.code !== 'auth/no-auth-event') {
+    console.error('Redirect result error:', err);
+  }
+});

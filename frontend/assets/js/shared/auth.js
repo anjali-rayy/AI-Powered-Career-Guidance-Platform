@@ -270,7 +270,7 @@ async function signInWithGoogle() {
     const provider = new firebase.auth.GoogleAuthProvider();
     provider.setCustomParameters({ prompt: 'select_account' });
     firebase.auth().settings.appVerificationDisabledForTesting = false;
-    const result   = await firebase.auth().signInWithPopup(provider);
+    const result   = await firebase.auth().signInWithRedirect(provider);
     const fbUser   = result.user;
 
     // Send to our backend to create/link account
