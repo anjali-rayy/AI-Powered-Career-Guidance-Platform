@@ -183,8 +183,15 @@ async function handleRegister() {
   if (ldr) ldr.style.display = 'flex';
 
   try {
-    const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
-    const firebaseUid = userCredential.user.uid;
+    let firebaseUid = null;
+    try {
+      if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length) {
+        const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
+        firebaseUid = userCredential.user.uid;
+      }
+    } catch (fbErr) {
+      console.warn('Firebase auth skipped:', fbErr.message);
+    }
     await apiRegister({
       fname, lname, email, password,
       firebaseUid,
