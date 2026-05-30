@@ -8,10 +8,7 @@
   <link rel="stylesheet" href="../../assets/css/shared.css" />
   <link rel="stylesheet" href="../../assets/css/auth.css" />
   <script>
-    const isOAuthReturn = window.location.href.includes('/__/auth/handler') ||
-      document.referrer.includes('accounts.google.com') ||
-      sessionStorage.getItem('googleRedirectPending');
-    if (localStorage.getItem('token') && !isOAuthReturn) {
+    if (localStorage.getItem('token')) {
       const redirect = localStorage.getItem('authRedirect');
       localStorage.removeItem('authRedirect');
       window.location.replace(redirect || '../app/dashboard.html');
@@ -241,7 +238,7 @@
   <div id="toast" class="toast"></div>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-<!-- analytics removed - causes 403 on Vercel -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics-compat.js"></script>
   <script src="../../assets/js/shared/config.js"></script>
 <script src="../../assets/js/shared/api.js"></script>
   <script src="../../assets/js/shared/nav.js"></script>
