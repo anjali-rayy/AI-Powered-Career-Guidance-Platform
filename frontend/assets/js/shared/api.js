@@ -11,11 +11,17 @@ async function apiFetch(endpoint, options = {}) {
   const headers = { 'Content-Type': 'application/json', ...options.headers };
   if (token) headers['Authorization'] = `Bearer ${token}`;
 
-  const res = await fetch(`${API_URL}${endpoint}`, { ...options, headers });
-  const data = await res.json();
-
-  if (!res.ok) throw new Error(data.error || 'Something went wrong');
-  return data;
+  try {
+    const res = await fetch(`${API_URL}${endpoint}`, { ...options, headers });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Something went wrong');
+    return data;
+  } catch (err) {
+    if (err.message === 'Failed to fetch') {
+      throw new Error('Server is waking up — please wait 30 seconds and try again.');
+    }
+    throw err;
+  }
 }
 
 // ── AUTH GUARD: call on every protected page ──

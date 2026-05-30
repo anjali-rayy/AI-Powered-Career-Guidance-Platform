@@ -144,6 +144,7 @@ function removeSkill(val, btn) {
 }
 
 async function handleRegister() {
+  console.log('[PathwayAI] handleRegister triggered');
   clearErrs();
   const apiErr = document.getElementById('reg-api-error');
   if (apiErr) apiErr.style.display = 'none';
@@ -205,6 +206,7 @@ async function handleRegister() {
       apiErr.textContent = message;
       apiErr.style.display = 'block';
     }
+    showToast('Error: ' + message, 5000);
     if (btn) btn.disabled = false;
     if (txt) txt.style.display = 'inline';
     if (ldr) ldr.style.display = 'none';
@@ -226,6 +228,7 @@ function setLoading(on) {
 }
 
 async function handleLogin(e) {
+  console.log('[PathwayAI] handleLogin triggered');
   e.preventDefault();
   clearErrs();
   const apiErr = document.getElementById('api-error');
@@ -254,6 +257,7 @@ showToast('✓ Signed in successfully!');
       apiErr.textContent = err.message;
       apiErr.style.display = 'block';
     }
+    showToast('Error: ' + err.message, 5000);
     setLoading(false);
   }
 }
