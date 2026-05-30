@@ -145,7 +145,8 @@ function removeSkill(val, btn) {
   btn.parentElement.remove();
 }
 
-async function handleRegister() {
+async function handleRegister(e) {
+  if (e && e.preventDefault) e.preventDefault();
   console.log('[PathwayAI] handleRegister triggered');
   clearErrs();
   const apiErr = document.getElementById('reg-api-error');
