@@ -11,16 +11,12 @@ const firebaseConfig = {
   measurementId: "G-PDLJVXK3L5"
 };
 
-if (!firebase.apps?.length) firebase.initializeApp(firebaseConfig);
 try {
-  if (typeof firebase.analytics === 'function') {
-    window.fbAnalytics = firebase.analytics();
-  } else {
-    window.fbAnalytics = null;
-  }
-} catch (e) {
-  window.fbAnalytics = null;
+  if (!firebase.apps?.length) firebase.initializeApp(firebaseConfig);
+} catch(e) {
+  console.warn('Firebase init failed:', e.message);
 }
+window.fbAnalytics = null;
 
 // ─────────────────────────────────────────────
 // TOAST
@@ -277,37 +273,45 @@ showToast('✓ Signed in successfully!');
 // ─────────────────────────────────────────────
 async function signInWithGoogle() {
   try {
+    if (!firebase.apps?.length) throw new Error('Firebase not initialized');
     const provider = new firebase.auth.GoogleAuthProvider();
     provider.setCustomParameters({ prompt: 'select_account' });
-    firebase.auth().settings.appVerificationDisabledForTesting = false;
-    const result   = await firebase.auth().signInWithRedirect(provider);
-    const fbUser   = result.user;
-
-    // Send to our backend to create/link account
-    const res = await fetch((window.ENV_BACKEND_URL || 'https://pathwayai-backend-2qor.onrender.com') + '/api/auth/google', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email:    fbUser.email,
-        fname:    fbUser.displayName?.split(' ')[0] || '',
-        lname:    fbUser.displayName?.split(' ').slice(1).join(' ') || '',
-        googleId: fbUser.uid
-      })
-    });
-
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Google sign-in failed');
-
-    setToken(data.token);
-    syncUserToStorage(data.user);
-    if (window.fbAnalytics) window.fbAnalytics.logEvent('login', { method: 'google' });
-showToast('✓ Signed in with Google!');
-    const redirect = localStorage.getItem('authRedirect') || localStorage.getItem('redirectAfterLogin');
-    localStorage.removeItem('authRedirect');
-    localStorage.removeItem('redirectAfterLogin');
-    setTimeout(() => window.location.href = redirect || '../app/dashboard.html', 900);
-
+    await firebase.auth().signInWithRedirect(provider);
   } catch (err) {
     showToast('Google sign-in failed: ' + err.message);
   }
 }
+
+// Handle Google redirect result on page load
+(function() {
+  try {
+    if (!firebase.apps?.length) return;
+    firebase.auth().getRedirectResult().then(async (result) => {
+      if (!result || !result.user) return;
+      const fbUser = result.user;
+      const res = await fetch((window.ENV_BACKEND_URL || 'https://pathwayai-backend-2qor.onrender.com') + '/api/auth/google', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email:    fbUser.email,
+          fname:    fbUser.displayName?.split(' ')[0] || '',
+          lname:    fbUser.displayName?.split(' ').slice(1).join(' ') || '',
+          googleId: fbUser.uid
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Google sign-in failed');
+      setToken(data.token);
+      syncUserToStorage(data.user);
+      showToast('✓ Signed in with Google!');
+      const redirect = localStorage.getItem('authRedirect') || localStorage.getItem('redirectAfterLogin');
+      localStorage.removeItem('authRedirect');
+      localStorage.removeItem('redirectAfterLogin');
+      setTimeout(() => window.location.href = redirect || '../app/dashboard.html', 900);
+    }).catch((err) => {
+      if (err.code !== 'auth/no-auth-event') console.warn('Redirect result:', err.message);
+    });
+  } catch(e) {
+    console.warn('getRedirectResult skipped:', e.message);
+  }
+})();
