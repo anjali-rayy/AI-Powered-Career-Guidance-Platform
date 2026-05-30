@@ -192,6 +192,7 @@ function signOut() {
 }
 
 // Handle Google redirect result on page load
+if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length) {
 firebase.auth().getRedirectResult().then(async (result) => {
   if (!result || !result.user) return;
   const fbUser = result.user;
@@ -223,3 +224,4 @@ firebase.auth().getRedirectResult().then(async (result) => {
     console.error('Redirect result error:', err);
   }
 });
+} // end firebase check
