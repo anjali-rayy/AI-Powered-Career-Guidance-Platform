@@ -265,11 +265,18 @@ async function signInWithGoogle() {
   try {
     const provider = new firebase.auth.GoogleAuthProvider();
     provider.setCustomParameters({ prompt: 'select_account' });
-    firebase.auth().settings.appVerificationDisabledForTesting = false;
-    const result   = await firebase.auth().signInWithPopup(provider);
-    const fbUser   = result.user;
+    await firebase.auth().signInWithRedirect(provider);
+  } catch (err) {
+    showToast('Google sign-in failed: ' + err.message);
+  }
+}
 
-    // Send to our backend to create/link account
+async function handleGoogleRedirectResult() {
+  try {
+    const result = await firebase.auth().getRedirectResult();
+    if (!result || !result.user) return;
+
+    const fbUser = result.user;
     const res = await fetch((window.ENV_BACKEND_URL || 'https://pathwayai-backend-2qor.onrender.com') + '/api/auth/google', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -287,13 +294,17 @@ async function signInWithGoogle() {
     setToken(data.token);
     syncUserToStorage(data.user);
     if (window.fbAnalytics) window.fbAnalytics.logEvent('login', { method: 'google' });
-showToast('✓ Signed in with Google!');
+    showToast('✓ Signed in with Google!');
     const redirect = localStorage.getItem('authRedirect') || localStorage.getItem('redirectAfterLogin');
     localStorage.removeItem('authRedirect');
     localStorage.removeItem('redirectAfterLogin');
     setTimeout(() => window.location.href = redirect || '../app/dashboard.html', 900);
-
   } catch (err) {
-    showToast('Google sign-in failed: ' + err.message);
+    if (err.code !== 'auth/no-auth-event') {
+      showToast('Google sign-in failed: ' + err.message);
+    }
   }
 }
+
+// Call on page load to catch the redirect result
+handleGoogleRedirectResult();
