@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
     <div class="footer-top">
       <div class="footer-brand">
         <a href="${rootBase}/views/public/index.html" class="footer-logo">
-          <div class="footer-logo-mark">
+          <div class="footer-logo-mark" style="background:transparent!important;border:none!important;box-shadow:none!important;padding:0!important;">
 <img src="${rootBase}/assets/images/logo.png" alt="PathwayAI Logo">          </div>
           PathwayAI
         </a>
