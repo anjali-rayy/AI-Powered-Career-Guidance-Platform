@@ -21,7 +21,8 @@ app.use('/api/roadmap', require('./routes/roadmap'));
 
 const upload = multer({ storage: multer.memoryStorage() });
 
-const PYTHON_SERVICE = process.env.PYTHON_SERVICE_URL || 'http://localhost:5000';
+const PYTHON_SERVICE = process.env.PYTHON_SERVICE_URL;
+if (!PYTHON_SERVICE) console.error('❌ PYTHON_SERVICE_URL env variable is not set!');
 const JWT_SECRET = process.env.JWT_SECRET || 'pathwayai-secret-key';
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/pathwayai';
 
@@ -335,6 +336,7 @@ const path = require('path');
 app.post('/api/career-recommend', authMiddleware, async (req, res) => {
   const { skills } = req.body;
   if (!skills) return res.status(400).json({ error: 'Skills required' });
+  if (!PYTHON_SERVICE) return res.status(500).json({ error: 'Python service URL not configured' });
 
   try {
     const pyRes = await fetch(`${PYTHON_SERVICE}/recommend`, {
