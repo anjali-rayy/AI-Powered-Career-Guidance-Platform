@@ -3,7 +3,6 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import PyPDF2
 import pdfplumber
-import spacy
 import io
 import os
 import sys
@@ -15,13 +14,6 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 app = Flask(__name__)
 CORS(app)
-
-# Load NLP model
-try:
-    nlp = spacy.load("en_core_web_sm")
-except:
-    nlp = None
-    print("⚠ spaCy model not loaded — install with: python -m spacy download en_core_web_sm")
 
 # ─────────────────────────────────────────────
 # SKILLS DATABASE
