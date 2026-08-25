@@ -22,7 +22,7 @@ const CATEGORY_ICONS = {
 };
 
 // ── FLASK API URL — change to your tunnel URL when deployed ──
-const FLASK_URL = 'https://pathwayai-backend.up.railway.app';
+const FLASK_URL = 'https://ai-powered-career-guidance-platform.onrender.com';
 
 // ── FALLBACK DATA (used if API is offline) ──
 const FALLBACK_CAREERS = [
