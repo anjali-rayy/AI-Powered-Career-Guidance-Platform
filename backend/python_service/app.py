@@ -284,7 +284,7 @@ def get_roles():
     return jsonify({"roles": list(JOB_ROLES.keys())})
 
 
-@app.route('/api/career-recommend', methods=['POST'])
+@app.route('/recommend', methods=['POST'])
 def recommend():
     data = request.get_json()
     if not data or 'skills' not in data:
