@@ -2,7 +2,7 @@
 // FIREBASE CONFIG — replace with your actual config
 // ─────────────────────────────────────────────
 const firebaseConfig = {
-  apiKey: "AIzaSyDdThWS-WLwguBNzRqUp4GGmW4I9moG8pE",
+  apiKey: "AIzaSyCtWrU1mjgh4vyVuAlt4PCBwTJOz_Pd2k0",
   authDomain: "pathwayai-f5a92.firebaseapp.com",
   projectId: "pathwayai-f5a92",
   storageBucket: "pathwayai-f5a92.firebasestorage.app",
