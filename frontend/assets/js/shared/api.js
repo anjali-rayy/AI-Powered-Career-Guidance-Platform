@@ -1,4 +1,4 @@
-const API_URL = (window.ENV_BACKEND_URL || 'https://pathwayai-backend-2qor.onrender.com') + '/api';
+const API_URL = window.ENV_BACKEND_URL + '/api';
 
 // ── TOKEN HELPERS ──
 function getToken()         { return localStorage.getItem('token'); }
@@ -197,7 +197,7 @@ firebase.auth().getRedirectResult().then(async (result) => {
   if (!result || !result.user) return;
   const fbUser = result.user;
   try {
-    const res = await fetch((window.ENV_BACKEND_URL || 'https://pathwayai-backend-2qor.onrender.com') + '/api/auth/google', {
+    const res = await fetch(window.ENV_BACKEND_URL + '/api/auth/google', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
