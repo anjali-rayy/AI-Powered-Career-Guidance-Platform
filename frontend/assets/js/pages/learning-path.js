@@ -37,7 +37,7 @@ const goal = urlRole || selectedRole || lastRec?.career || profile.interest || p
   } catch {}
 
   /* ── 3. FETCH HELPERS ── */
-  const BASE = (window.ENV_BACKEND_URL || 'https://pathwayai-backend.up.railway.app') + '/api/roadmap';
+  const BASE = window.ENV_BACKEND_URL + '/api/roadmap';
 
   async function post(path, body) {
     const res = await fetch(BASE + path, {
