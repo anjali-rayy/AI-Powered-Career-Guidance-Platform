@@ -278,7 +278,7 @@ async function signInWithGoogle() {
     provider.setCustomParameters({ prompt: 'select_account' });
     const result = await firebase.auth().signInWithPopup(provider);
     const fbUser = result.user;
-    const res = await fetch((window.ENV_BACKEND_URL || 'https://pathwayai-backend-2qor.onrender.com') + '/api/auth/google', {
+    const res = await fetch((window.ENV_BACKEND_URL || 'https://ai-powered-career-guidance-platform-1.onrender.com') + '/api/auth/google', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -315,7 +315,7 @@ async function signInWithGoogle() {
     firebase.auth().getRedirectResult().then(async (result) => {
       if (!result || !result.user) return;
       const fbUser = result.user;
-      const res = await fetch((window.ENV_BACKEND_URL || 'https://pathwayai-backend-2qor.onrender.com') + '/api/auth/google', {
+      const res = await fetch((window.ENV_BACKEND_URL || 'https://ai-powered-career-guidance-platform-1.onrender.com') + '/api/auth/google', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
