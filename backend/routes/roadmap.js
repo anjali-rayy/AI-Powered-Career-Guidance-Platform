@@ -60,7 +60,7 @@ Rules:
         'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
+        model: 'openai/gpt-oss-120b',
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.7,
         max_tokens: 2000
@@ -109,7 +109,7 @@ router.post('/blogs', async (req, res) => {
         'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
+        model: 'openai/gpt-oss-120b',
         messages: [{
           role: 'user',
           content: `Generate 6 learning resource recommendations for someone learning "${role}".
@@ -171,7 +171,7 @@ router.post('/courses', async (req, res) => {
         'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
+        model: 'openai/gpt-oss-120b',
         messages: [{
           role: 'user',
           content: `You are a learning advisor. Suggest exactly 6 foundation courses for someone targeting the role: "${role}". ${missingText}

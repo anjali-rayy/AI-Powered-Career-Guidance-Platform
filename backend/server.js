@@ -276,7 +276,7 @@ app.post('/api/resume/analyze', async (req, res) => {
         'Authorization': `Bearer ${process.env.GROQ_API_KEY}`
       },
       body: JSON.stringify({
-        model: model || 'llama-3.3-70b-versatile',
+        model: model || 'openai/gpt-oss-120b',
         max_tokens: max_tokens || 4000,
         temperature: temperature || 0.3,
         messages: enhancedMessages
